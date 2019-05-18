@@ -39,4 +39,8 @@ dependencies {
     api('com.joanzapata.iconify:android-iconify-fontawesome:2.2.2') {
         exclude group: 'com.android.support'
     }
+
+    //单activity多Fragment框架依赖
+    api 'me.yokeyword:fragmentation:1.3.6'
+    api 'me.yokeyword:fragmentation-swipeback:1.3.6'
 }
