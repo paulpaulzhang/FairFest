@@ -1,7 +1,7 @@
 package cn.paulpaulzhang.fair.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.widget.FrameLayout;
 
 import com.paulpaulzhang.fair_core.R;
