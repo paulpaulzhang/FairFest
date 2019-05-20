@@ -52,9 +52,8 @@ public class Configurator {
     private void initIcons() {
         if (ICONS.size() > 0) {
             final Iconify.IconifyInitializer initializer = Iconify.with(ICONS.get(0));
-            for (int i = 1; i < ICONS.size(); i++) {
-                initializer.with(ICONS.get(i));
-            }
+
+            ICONS.forEach(initializer::with);
         }
     }
 

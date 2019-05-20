@@ -37,24 +37,9 @@ public class ExampleDelegate extends FairDelegate {
     private void testClient() {
         RestClient.builder()
                 .url("https://www.baidu.com/")
-                .success(new ISuccess() {
-                    @Override
-                    public void onSuccess(String response) {
-                        Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show();
-                    }
-                })
-                .error(new IError() {
-                    @Override
-                    public void onError(int code, String msg) {
-                        Toast.makeText(getContext(), "请求错误 " + code + "   " + msg, Toast.LENGTH_LONG).show();
-                    }
-                })
-                .failure(new IFailure() {
-                    @Override
-                    public void onFailure() {
-                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show();
-                    }
-                })
+                .success((response -> Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show()))
+                .error((code, msg) -> Toast.makeText(getContext(), "请求错误 " + code + "   " + msg, Toast.LENGTH_LONG).show())
+                .failure(() -> Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show())
                 .build()
                 .get();
     }
