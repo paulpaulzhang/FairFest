@@ -1,12 +1,16 @@
 package cn.paulpaulzhang.fairfest;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.paulpaulzhang.fairfest.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 
@@ -19,6 +23,8 @@ import cn.paulpaulzhang.fair.net.RestClient;
  * 描述：     测试程序
  */
 public class ExampleDelegate extends FairDelegate {
+    @BindView(R.id.text_view)
+    TextView textView;
     @Override
     public Object setLayout() {
         return R.layout.delegate_example;
@@ -27,14 +33,16 @@ public class ExampleDelegate extends FairDelegate {
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         testClient();
+
     }
 
+    @SuppressLint("SetTextI18n")
     private void testClient() {
         RestClient.builder()
-                .url("https://www.baidu.com/")
-                .success(response -> Toast.makeText(getContext(), response, Toast.LENGTH_LONG).show())
-                .error((code, msg) -> Toast.makeText(getContext(), "请求错误 " + code + "   " + msg, Toast.LENGTH_LONG).show())
-                .failure(() -> Toast.makeText(getContext(), "请求失败", Toast.LENGTH_LONG).show())
+                .url("http://127.0.0.1:5000/")
+                .success(response -> textView.setText(response))
+                .error((code, msg) -> textView.setText(code + "   " + msg))
+                .failure(throwable -> textView.setText(throwable.getMessage()))
                 .build()
                 .get();
     }

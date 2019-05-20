@@ -30,4 +30,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     api project(path: ':fair-core')
 
+    //ButterKnife依赖
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 }

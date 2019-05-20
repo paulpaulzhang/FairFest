@@ -10,5 +10,5 @@ package cn.paulpaulzhang.fair.net.callback;
  */
 public interface IFailure {
 
-    void onFailure();
+    void onFailure(Throwable throwable);
 }
