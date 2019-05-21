@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.net;
 
 import android.content.Context;
 
+import java.io.File;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -29,6 +30,7 @@ public class RestClientBuilder {
     private IError mIError;
     private IFailure mIFailure;
     private ResponseBody mBody;
+    private File mFile;
 
     RestClientBuilder() {
 
@@ -46,6 +48,16 @@ public class RestClientBuilder {
 
     public final RestClientBuilder params(String key, Object value) {
         PARAMS.put(key, value);
+        return this;
+    }
+
+    public final RestClientBuilder file(File file) {
+        this.mFile = file;
+        return this;
+    }
+
+    public final RestClientBuilder file(String file) {
+        this.mFile = new File(file);
         return this;
     }
 
@@ -75,6 +87,6 @@ public class RestClientBuilder {
     }
 
     public final RestClient build() {
-        return new RestClient(mUrl, PARAMS, mIRequest, mISuccess, mIError, mIFailure, mBody);
+        return new RestClient(mUrl, PARAMS, mIRequest, mISuccess, mIError, mIFailure, mBody, mFile);
     }
 }
