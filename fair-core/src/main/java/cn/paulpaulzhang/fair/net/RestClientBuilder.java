@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.net;
 
+import android.content.Context;
+
 import java.util.Map;
 import java.util.WeakHashMap;
 

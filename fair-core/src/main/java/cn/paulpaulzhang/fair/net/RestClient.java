@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.net;
 
+import android.content.Context;
+
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -8,6 +10,7 @@ import cn.paulpaulzhang.fair.net.callback.IFailure;
 import cn.paulpaulzhang.fair.net.callback.IRequest;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.net.callback.RequestCallbacks;
+import cn.paulpaulzhang.fair.ui.LoaderStyle;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;

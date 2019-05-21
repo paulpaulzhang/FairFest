@@ -33,6 +33,9 @@ public class RequestCallbacks implements Callback<String> {
                 if (SUCCESS != null) {
                     SUCCESS.onSuccess(response.body());
                 }
+                if (REQUEST != null) {
+                    REQUEST.onRequestEnd();
+                }
             }
         } else {
             if (ERROR != null) {
