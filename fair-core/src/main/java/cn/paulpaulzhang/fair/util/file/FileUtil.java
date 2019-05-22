@@ -1,15 +1,13 @@
-package cn.paulpaulzhang.fair.util;
+package cn.paulpaulzhang.fair.util.file;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.webkit.MimeTypeMap;

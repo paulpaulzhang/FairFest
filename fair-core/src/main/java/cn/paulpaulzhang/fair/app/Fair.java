@@ -2,7 +2,6 @@ package cn.paulpaulzhang.fair.app;
 
 import android.content.Context;
 
-import java.util.HashMap;
 
 /**
  * 项目名：   FairFest
@@ -14,15 +13,22 @@ import java.util.HashMap;
  */
 public final class Fair {
     public static Configurator init(Context context) {
-        getConfigurations().put(ConfigType.APPLICATION_CONTEXT.name(), context.getApplicationContext());
+        Configurator
+                .getInstance()
+                .getFairConfigs()
+                .put(ConfigKeys.APPLICATION_CONTEXT, context.getApplicationContext());
         return Configurator.getInstance();
     }
 
-    public static HashMap<String, Object> getConfigurations() {
-        return Configurator.getInstance().getLatteConfigs();
+    public static Configurator getConfigurator() {
+        return Configurator.getInstance();
+    }
+
+    public static <T> T getConfiguration(Object key) {
+        return getConfigurator().getConfiguration(key);
     }
 
     public static Context getApplicationContext() {
-        return (Context) getConfigurations().get(ConfigType.APPLICATION_CONTEXT.name());
+        return getConfiguration(ConfigKeys.APPLICATION_CONTEXT);
     }
 }

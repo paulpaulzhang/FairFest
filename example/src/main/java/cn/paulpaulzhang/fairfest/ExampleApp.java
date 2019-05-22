@@ -3,7 +3,10 @@ package cn.paulpaulzhang.fairfest;
 import android.app.Application;
 
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.paulpaulzhang.fairfest.R;
+
 import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
 
 /**
  * 项目名：   FairFest
@@ -20,6 +23,7 @@ public class ExampleApp extends Application {
         Fair.init(this)
                 .withIcon(new FontAwesomeModule())
                 .withApiHost("http://127.0.0.1/")
+                .withInterceptor(new DebugInterceptor("index", R.raw.test))
                 .configure();
     }
 }

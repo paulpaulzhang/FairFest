@@ -1,6 +1,5 @@
 package cn.paulpaulzhang.fair.ui;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.Window;
@@ -13,8 +12,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 
-import cn.paulpaulzhang.fair.app.Fair;
-import cn.paulpaulzhang.fair.util.DimenUtil;
+import cn.paulpaulzhang.fair.util.dimen.DimenUtil;
 
 /**
  * 项目名：   FairFest

@@ -48,7 +48,7 @@ public class ExampleDelegate extends FairDelegate {
     @SuppressLint("SetTextI18n")
     private void testClient() {
         RestClient.builder()
-                .url("http://127.0.0.1:5000/")
+                .url("http://127.0.0.1/index")
                 .request(new IRequest() {
                     @Override
                     public void onRequestStart() {
