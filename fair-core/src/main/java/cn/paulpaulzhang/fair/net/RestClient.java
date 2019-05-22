@@ -12,6 +12,7 @@ import cn.paulpaulzhang.fair.net.callback.IFailure;
 import cn.paulpaulzhang.fair.net.callback.IRequest;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.net.callback.RequestCallbacks;
+import cn.paulpaulzhang.fair.net.download.DownloadHandler;
 import cn.paulpaulzhang.fair.ui.LoaderStyle;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,6 +38,9 @@ public class RestClient {
     private final IFailure FAILURE;
     private final File FILE;
     private final ResponseBody BODY;
+    private final String DOWNLOAD_DIR;
+    private final String EXTENSION;
+    private final String NAME;
 
     public RestClient(String url,
                       Map<String, Object> params,
@@ -45,7 +49,10 @@ public class RestClient {
                       IError iError,
                       IFailure iFailure,
                       ResponseBody body,
-                      File file) {
+                      File file,
+                      String downloadDir,
+                      String extension,
+                      String name) {
         this.URL = url;
         PARAMS.putAll(params);
         this.REQUEST = iRequest;
@@ -54,6 +61,9 @@ public class RestClient {
         this.FAILURE = iFailure;
         this.BODY = body;
         this.FILE = file;
+        this.DOWNLOAD_DIR = downloadDir;
+        this.EXTENSION = extension;
+        this.NAME = name;
     }
 
     public static RestClientBuilder builder() {
@@ -140,5 +150,13 @@ public class RestClient {
 
     public final void delete() {
         request(HttpMethod.DELETE);
+    }
+
+    public final void upload() {
+        request(HttpMethod.UPLOAD);
+    }
+
+    public final void download() {
+        new DownloadHandler(URL, REQUEST, SUCCESS, ERROR, FAILURE, DOWNLOAD_DIR, EXTENSION, NAME).handleDownload();
     }
 }
