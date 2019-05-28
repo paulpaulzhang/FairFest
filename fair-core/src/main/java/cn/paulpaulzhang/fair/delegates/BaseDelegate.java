@@ -1,15 +1,17 @@
 package cn.paulpaulzhang.fair.delegates;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
 /**
  * 项目名：   FairFest
@@ -17,15 +19,25 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
  * 文件名：   BaseDelegate
  * 创建者：   PaulZhang
  * 创建时间： 2019/5/18 19:40
- * 描述：     基础Delegate
+ * 描述：     基础Delegate，继承自fragment，
+ * 已绑定ButterKnife，其子类可直接使用，不需要再次绑定或解绑，使用时请继承FairDelegate
  */
-public abstract class BaseDelegate extends SwipeBackFragment {
+public abstract class BaseDelegate extends Fragment {
 
     private Unbinder mUnbinder = null;
 
+    /**
+     * 绑定布局id，子类实现该方法传入布局id即可，不需要再实现onCreateView绑定布局
+     * @return id
+     */
     public abstract Object setLayout();
 
-    public abstract void onBindView(@Nullable Bundle savedInstanceState, View rootView);
+    /**
+     * 重写该方法实现自己的业务逻辑，该方法在onCreateView调用
+     * @param savedInstanceState savedInstanceState
+     * @param view view
+     */
+    public abstract void initView(@Nullable Bundle savedInstanceState, View view);
 
     @Nullable
     @Override
@@ -41,14 +53,9 @@ public abstract class BaseDelegate extends SwipeBackFragment {
         }
 
         mUnbinder = ButterKnife.bind(this, rootView);
-        onBindView(savedInstanceState, rootView);
+        initView(savedInstanceState, rootView);
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

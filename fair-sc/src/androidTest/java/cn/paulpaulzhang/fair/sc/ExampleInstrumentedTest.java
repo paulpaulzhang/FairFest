@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.ec;
+package cn.paulpaulzhang.fair.sc;
 
 import android.content.Context;
 import androidx.test.InstrumentationRegistry;

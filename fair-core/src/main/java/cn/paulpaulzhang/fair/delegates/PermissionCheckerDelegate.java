@@ -8,5 +8,5 @@ package cn.paulpaulzhang.fair.delegates;
  * 创建时间： 2019/5/18 19:41
  * 描述：     权限Delegate
  */
-public abstract class PermissionCheckerDelegate extends BaseDelegate {
+abstract class PermissionCheckerDelegate extends BaseDelegate {
 }
