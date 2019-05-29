@@ -3,7 +3,6 @@ package cn.paulpaulzhang.fairfest;
 import android.app.Application;
 
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
-import com.paulpaulzhang.fairfest.R;
 
 import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;

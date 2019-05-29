@@ -7,8 +7,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.paulpaulzhang.fairfest.R;
-
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.net.RestClient;

@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair_core;
+package cn.paulpaulzhang.fair;
 
 import org.junit.Test;
 

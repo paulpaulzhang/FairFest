@@ -3,8 +3,6 @@ package cn.paulpaulzhang.fairfest;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.View;
-
-import com.paulpaulzhang.fairfest.R;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 
 

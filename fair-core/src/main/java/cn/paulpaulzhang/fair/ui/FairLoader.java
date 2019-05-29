@@ -7,11 +7,11 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatDialog;
 
-import com.paulpaulzhang.fair_core.R;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 
+import cn.paulpaulzhang.fair.R;
 import cn.paulpaulzhang.fair.util.dimen.DimenUtil;
 
 /**
