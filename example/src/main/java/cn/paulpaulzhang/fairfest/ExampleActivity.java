@@ -28,6 +28,8 @@ public class ExampleActivity extends FairActivity {
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         testClient();
+
+        System.out.println();
     }
 
     @SuppressLint("SetTextI18n")
