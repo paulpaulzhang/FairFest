@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.ui;
+package cn.paulpaulzhang.fair.ui.loader;
 
 import android.content.Context;
 import android.view.Gravity;

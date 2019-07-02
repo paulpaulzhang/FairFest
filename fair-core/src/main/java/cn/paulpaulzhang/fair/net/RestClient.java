@@ -1,19 +1,15 @@
 package cn.paulpaulzhang.fair.net;
 
-import android.content.Context;
-
 import java.io.File;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.callback.IError;
 import cn.paulpaulzhang.fair.net.callback.IFailure;
 import cn.paulpaulzhang.fair.net.callback.IRequest;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.net.callback.RequestCallbacks;
 import cn.paulpaulzhang.fair.net.download.DownloadHandler;
-import cn.paulpaulzhang.fair.ui.LoaderStyle;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;

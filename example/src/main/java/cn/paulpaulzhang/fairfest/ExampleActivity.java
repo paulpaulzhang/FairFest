@@ -11,7 +11,7 @@ import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.IRequest;
-import cn.paulpaulzhang.fair.ui.FairLoader;
+import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 
 public class ExampleActivity extends FairActivity {
 
@@ -28,8 +28,6 @@ public class ExampleActivity extends FairActivity {
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         testClient();
-
-        System.out.println();
     }
 
     @SuppressLint("SetTextI18n")

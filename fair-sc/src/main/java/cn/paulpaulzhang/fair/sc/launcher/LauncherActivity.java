@@ -1,6 +1,8 @@
 package cn.paulpaulzhang.fair.sc.launcher;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -13,6 +15,7 @@ import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 
@@ -33,13 +36,25 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
 
     @OnClick(R2.id.tv_launcher_timer)
     void onClickTimerView() {
-
+        assert mTimer != null;
+        mTimer.cancel();
+        mTimer = null;
+        checkIsShowScroll();
     }
 
     private void initTimer() {
         mTimer = new Timer();
         final BaseTimerTask task = new BaseTimerTask(this);
         mTimer.schedule(task, 0, 1000);
+    }
+
+    private void checkIsShowScroll() {
+        if (!FairPreference.getAppFlag(ScrollLauncherTag.HAS_FIRST_LAUNCHER_APP.name())) {
+            startActivity(new Intent(LauncherActivity.this, LauncherScrollActivity.class));
+            finish();
+        } else {
+            //判断用户是否登陆
+        }
     }
 
     @Override
@@ -49,6 +64,7 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         initTimer();
     }
 
@@ -62,6 +78,7 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
                 assert mTimer != null;
                 mTimer.cancel();
                 mTimer = null;
+                checkIsShowScroll();
             }
         });
     }

@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.ui;
+package cn.paulpaulzhang.fair.ui.loader;
 
 /**
  * 项目名：   FairFest
