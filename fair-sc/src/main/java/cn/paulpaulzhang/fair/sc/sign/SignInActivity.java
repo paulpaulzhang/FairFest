@@ -1,6 +1,5 @@
 package cn.paulpaulzhang.fair.sc.sign;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.TextView;
@@ -20,8 +19,8 @@ import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 
-public class SignUpActivity extends FairActivity {
-    @BindView(R2.id.tb_sign_up)
+public class SignInActivity extends FairActivity {
+    @BindView(R2.id.tb_sign_in)
     Toolbar mToolbar;
     @BindView(R2.id.et_phone)
     TextInputEditText mPhone;
@@ -29,15 +28,14 @@ public class SignUpActivity extends FairActivity {
     TextInputEditText mCode;
     @BindView(R2.id.bt_get_code)
     MaterialButton mGetCode;
-    @BindView(R2.id.bt_quick_sign_up)
-    MaterialButton mQuickSignUp;
-    @BindView(R2.id.tv_sign_in)
-    TextView mSignIn;
-
+    @BindView(R2.id.bt_sign_in)
+    MaterialButton mSignIn;
+    @BindView(R2.id.tv_forget_psd)
+    TextView mForgetPsd;
 
     @Override
     public int setLayout() {
-        return R.layout.activity_sign_up;
+        return R.layout.activity_sign_in;
     }
 
     @Override
@@ -94,16 +92,15 @@ public class SignUpActivity extends FairActivity {
         }
     }
 
-    @OnClick(R2.id.bt_quick_sign_up)
-    void quickSignUp() {
+    @OnClick(R2.id.bt_sign_in)
+    void signIn() {
         if (checkForm()) {
-            //TODO 注册逻辑
+            //TODO 登陆逻辑
         }
     }
 
-    @OnClick(R2.id.tv_sign_in)
-    void toSignIn() {
-        startActivity(new Intent(SignUpActivity.this, SignInActivity.class));
-        finish();
+    @OnClick(R2.id.tv_forget_psd)
+    void toForgetPsd() {
+
     }
 }

@@ -8,4 +8,5 @@
     <string name="sign_in">登陆</string>
     <string name="error_phone_number">手机号码不正确</string>
     <string name="error_code">验证码不正确</string>
+    <string name="forget_psd">忘记密码？</string>
 </resources>
