@@ -17,14 +17,20 @@
 
         </activity>
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
+
+        </activity>
+        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
+
+        </activity>
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
+            android:label="@string/sign_up" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
-
         </activity>
     </application>
 
