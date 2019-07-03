@@ -1,11 +1,12 @@
-package cn.paulpaulzhang.fair.sc.launcher;
+package cn.paulpaulzhang.fair.ui.launcher;
 
 import android.view.View;
 
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bigkoo.convenientbanner.holder.Holder;
 
-import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.R;
+
 
 public class LauncherHolderCreator implements CBViewHolderCreator {
     @Override

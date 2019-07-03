@@ -3,9 +3,12 @@ package cn.paulpaulzhang.fairfest;
 import android.app.Application;
 
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 
 /**
  * 项目名：   FairFest
@@ -24,5 +27,7 @@ public class ExampleApp extends Application {
                 .withApiHost("http://127.0.0.1/")
                 .withInterceptor(new DebugInterceptor("index", R.raw.test))
                 .configure();
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        ObjectBox.init(this);
     }
 }

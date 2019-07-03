@@ -74,4 +74,7 @@ dependencies {
     //AHBottomNavigation
     api 'com.aurelhubert:ahbottomnavigation:2.3.4'
 
+    //logger
+    api 'com.orhanobut:logger:2.2.0'
+
 }

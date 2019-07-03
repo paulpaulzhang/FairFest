@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.launcher;
+package cn.paulpaulzhang.fair.ui.launcher;
 
 import android.view.View;
 
@@ -6,7 +6,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bigkoo.convenientbanner.holder.Holder;
 
-import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.R;
+
 
 public class LauncherHolder extends Holder<Integer> {
 

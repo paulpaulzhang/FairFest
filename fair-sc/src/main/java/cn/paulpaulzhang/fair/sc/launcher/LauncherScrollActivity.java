@@ -1,7 +1,9 @@
 package cn.paulpaulzhang.fair.sc.launcher;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -12,9 +14,14 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
-import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.app.AccountManager;
+import cn.paulpaulzhang.fair.app.IUserChecker;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
+import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
+import cn.paulpaulzhang.fair.ui.launcher.LauncherHolderCreator;
+import cn.paulpaulzhang.fair.ui.launcher.ScrollLauncherTag;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 
 public class LauncherScrollActivity extends FairActivity implements OnItemClickListener {
@@ -52,6 +59,17 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
         if (position == images.size() - 1) {
             FairPreference.setAppFlag(ScrollLauncherTag.HAS_FIRST_LAUNCHER_APP.name(), true);
             //检测用户是否已经登陆
+            AccountManager.checkAccount(new IUserChecker() {
+                @Override
+                public void onSignIn() {
+                    Toast.makeText(LauncherScrollActivity.this, "already sign", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onNotSignIn() {
+                    startActivity(new Intent(LauncherScrollActivity.this, SignUpActivity.class));
+                }
+            });
         }
     }
 }

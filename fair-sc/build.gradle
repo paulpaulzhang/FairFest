@@ -13,6 +13,11 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
     }
 
     buildTypes {
@@ -37,4 +42,8 @@ dependencies {
 
     //ButterKnife依赖
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:2.3.4"
+    releaseImplementation "io.objectbox:objectbox-android:2.3.4"
 }
+apply plugin: 'io.objectbox'
