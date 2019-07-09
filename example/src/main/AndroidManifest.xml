@@ -17,11 +17,7 @@
 
         </activity>
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
 
@@ -34,6 +30,13 @@
         <activity
             android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
             android:label="@string/sign_in" />
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

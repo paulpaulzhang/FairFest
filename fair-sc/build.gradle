@@ -43,7 +43,14 @@ dependencies {
     //ButterKnife依赖
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
+    //objectBox调试模式
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:2.3.4"
     releaseImplementation "io.objectbox:objectbox-android:2.3.4"
+
+    //圆形图片库
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+
+    //第三方tab layout
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 }
 apply plugin: 'io.objectbox'
