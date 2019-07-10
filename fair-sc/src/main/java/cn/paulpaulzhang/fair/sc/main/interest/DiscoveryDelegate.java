@@ -12,7 +12,7 @@ import cn.paulpaulzhang.fair.sc.R;
  * 包名：cn.paulpaulzhang.fair.sc.main.interest
  * 创建时间：7/10/19
  * 创建人： paulpaulzhang
- * 描述：
+ * 描述：发现页
  */
 public class DiscoveryDelegate extends FairDelegate {
     @Override
