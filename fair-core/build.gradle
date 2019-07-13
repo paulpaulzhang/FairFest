@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 24
+        minSdkVersion 26
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -39,8 +39,8 @@ dependencies {
     //Android Support
     api 'androidx.appcompat:appcompat:1.0.2'
     api 'androidx.constraintlayout:constraintlayout:1.1.3'
-    api 'androidx.recyclerview:recyclerview:1.1.0-alpha06'
-    api 'com.google.android.material:material:1.1.0-alpha07'
+    api 'androidx.recyclerview:recyclerview:1.1.0-beta01'
+    api 'com.google.android.material:material:1.1.0-alpha08'
     api 'androidx.cardview:cardview:1.0.0'
     api 'androidx.multidex:multidex:2.0.1'
 
@@ -76,5 +76,27 @@ dependencies {
 
     //logger
     api 'com.orhanobut:logger:2.2.0'
+
+    //Glide
+    api 'com.github.bumptech.glide:glide:4.9.0'
+
+    //圆形图片库
+    api 'de.hdodenhof:circleimageview:3.0.0'
+
+    //第三方tab layout
+    api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
+
+    //RecyclerViewAdapter库
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+
+    //ExpandableTextView
+    api 'com.github.MZCretin:ExpandableTextView:v1.6.1'
+
+    //九宫格图片
+    api 'com.github.maning0303:MNImageBrowser:V1.2.0'
+
+    //动态权限管理框架
+    api 'pub.devrel:easypermissions:3.0.0'
+
 
 }

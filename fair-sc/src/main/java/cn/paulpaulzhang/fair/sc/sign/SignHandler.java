@@ -4,9 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.paulpaulzhang.fair.app.AccountManager;
-import cn.paulpaulzhang.fair.app.IUserChecker;
+import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.User;
+import cn.paulpaulzhang.fair.sc.database.entity.User;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
 /**
@@ -18,7 +19,7 @@ import io.objectbox.Box;
 public class SignHandler {
     public static void onSignUp(String response, ISignUpListener signUpListener) {
         //TODO 需要与后端协商后修改
-        final JSONObject object = JSON.parseObject(response).getJSONObject("data");
+        final JSONObject object = JSON.parseObject(response).getJSONObject("user");
         final long id = object.getLong("id");
         final long phone = object.getLong("phone");
         final String username = object.getString("username");
@@ -26,6 +27,7 @@ public class SignHandler {
         final User user = new User(id, phone, username);
         Box<User> userBox = ObjectBox.get().boxFor(User.class);
         userBox.put(user);
+        FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
 
         AccountManager.setSignState(true);
         signUpListener.onSignUpSuccess();
@@ -33,7 +35,7 @@ public class SignHandler {
 
     public static void onSignIn(String response, ISignInListener signInListener) {
         //TODO 需要与后端协商后修改
-        final JSONObject object = JSON.parseObject(response).getJSONObject("data");
+        final JSONObject object = JSON.parseObject(response).getJSONObject("user");
         final long id = object.getLong("id");
         final long phone = object.getLong("phone");
         final String username = object.getString("username");
@@ -41,7 +43,7 @@ public class SignHandler {
         final User user = new User(id, phone, username);
         Box<User> userBox = ObjectBox.get().boxFor(User.class);
         userBox.put(user);
-
+        FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
         AccountManager.setSignState(true);
         signInListener.onSignInSuccess();
     }

@@ -26,6 +26,9 @@ public class ExampleApp extends Application {
                 .withIcon(new FontAwesomeModule())
                 .withApiHost("http://127.0.0.1/")
                 .withInterceptor(new DebugInterceptor("index", R.raw.test))
+                .withInterceptor(new DebugInterceptor("post", R.raw.post))
+                .withInterceptor(new DebugInterceptor("user", R.raw.user))
+                .withInterceptor(new DebugInterceptor("like", R.raw.like))
                 .configure();
         Logger.addLogAdapter(new AndroidLogAdapter());
         ObjectBox.init(this);

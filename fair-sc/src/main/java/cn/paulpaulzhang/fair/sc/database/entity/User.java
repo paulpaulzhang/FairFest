@@ -1,8 +1,15 @@
-package cn.paulpaulzhang.fair.sc.database;
+package cn.paulpaulzhang.fair.sc.database.entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Uid;
+
+/**
+ * 包名: cn.paulpaulzhang.fair.sc.database.entity
+ * 创建时间: 7/3/2019
+ * 创建人: zlm31
+ * 描述: 用户实体类
+ */
 
 @Entity
 public class User {
@@ -36,6 +43,10 @@ public class User {
     public String avatar; // 头像url
 
     public String background; // 背景图片url
+
+    public long time; //注册时间
+
+    public String features; //特征集合
 
     public User() {
     }
@@ -164,5 +175,21 @@ public class User {
 
     public void setBackground(String background) {
         this.background = background;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(String features) {
+        this.features = features;
     }
 }

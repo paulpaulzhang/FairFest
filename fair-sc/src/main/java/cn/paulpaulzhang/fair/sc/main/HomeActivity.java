@@ -1,13 +1,15 @@
 package cn.paulpaulzhang.fair.sc.main;
 
+import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -23,6 +25,10 @@ import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.user.UserCenterActivity;
+import de.hdodenhof.circleimageview.CircleImageView;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -30,10 +36,10 @@ import cn.paulpaulzhang.fair.sc.R2;
  * 创建人： paulpaulzhang
  * 描述：首页activity
  */
-public class HomeActivity extends FairActivity {
+public class HomeActivity extends FairActivity implements EasyPermissions.PermissionCallbacks {
 
-    @BindView(R2.id.iv_menu)
-    AppCompatImageView mMenu;
+    @BindView(R2.id.civ_user)
+    CircleImageView mUser;
 
     @BindView(R2.id.ll_search)
     LinearLayout mSearch;
@@ -47,8 +53,6 @@ public class HomeActivity extends FairActivity {
     @BindView(R2.id.view_pager)
     AHBottomNavigationViewPager mViewPager;
 
-    @BindView(R2.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
 
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
@@ -68,6 +72,12 @@ public class HomeActivity extends FairActivity {
     public void init(@Nullable Bundle savedInstanceState) {
         setSupportActionBar(mToolbar);
         initBottomNavigation();
+        requestPermissions();
+    }
+
+    private void requestPermissions() {
+        EasyPermissions.requestPermissions(this, "应用需要存取图片", 1000,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     private void initBottomNavigation() {
@@ -122,8 +132,18 @@ public class HomeActivity extends FairActivity {
         currentDelegate = mViewPagerAdapter.getCurrentDelegate();
     }
 
-    @OnClick(R2.id.iv_menu)
-    void isOpenMenu() {
-        mDrawerLayout.openDrawer(GravityCompat.START);
+    @OnClick(R2.id.civ_user)
+    void openUserCenter() {
+        //startActivity(new Intent(HomeActivity.this, UserCenterActivity.class));
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+        Toast.makeText(this, "拒绝权限可能会影响使用，请前往设置开启所需权限", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+
     }
 }

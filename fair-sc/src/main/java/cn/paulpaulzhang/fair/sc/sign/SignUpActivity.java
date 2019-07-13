@@ -2,7 +2,6 @@ package cn.paulpaulzhang.fair.sc.sign;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,28 +11,21 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.orhanobut.logger.Logger;
 
 import java.text.MessageFormat;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
-import cn.paulpaulzhang.fair.app.AccountManager;
 import cn.paulpaulzhang.fair.net.RestClient;
-import cn.paulpaulzhang.fair.net.RestClientBuilder;
-import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.User;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
-import io.objectbox.Box;
 
 public class SignUpActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.tb_sign_up)
@@ -125,7 +117,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
             RestClient.builder()
-                    .url("sign_up")
+                    .url("user")
                     .params("phone", phone)
                     .params("code", code)
                     .success(response -> {
@@ -133,6 +125,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
                         SignHandler.onSignUp(response, () -> {
                             //TODO 跳转逻辑
                             Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
                         });
                     })
                     .error((c, m) -> Toast.makeText(this, c + " " + m, Toast.LENGTH_SHORT).show())
