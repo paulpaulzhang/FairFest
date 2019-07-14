@@ -82,6 +82,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                 .get();
 
         int type = post.getType();
+        String topic = post.getTopic();
         String time = post.getTime();
         String device = post.getDevice();
         String content = post.getContent();
@@ -108,6 +109,16 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                             helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
                             AppCompatTextView textView = helper.getView(R.id.tv_like_article);
                             textView.setTextColor(mContext.getColor(R.color.colorAccent));
+                        }
+                    } else {
+                        if (item.getItemType() == DiscoveryItem.DYNAMIC) {
+                            helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                            AppCompatTextView textView = helper.getView(R.id.tv_like_dynamic);
+                            textView.setTextColor(mContext.getColor(R.color.font_default));
+                        } else {
+                            helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                            AppCompatTextView textView = helper.getView(R.id.tv_like_article);
+                            textView.setTextColor(mContext.getColor(R.color.font_default));
                         }
                     }
                 })

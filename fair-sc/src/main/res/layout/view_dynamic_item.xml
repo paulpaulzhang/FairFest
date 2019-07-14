@@ -98,7 +98,7 @@
             app:ep_need_self="true"
             app:ep_self_color="@color/colorAccent" />
 
-        <cn.paulpaulzhang.fair.sc.main.nineimage.MyGridView
+        <cn.paulpaulzhang.fair.ui.view.MyGridView
             android:id="@+id/gv_images_dynamic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -98,5 +98,14 @@ dependencies {
     //动态权限管理框架
     api 'pub.devrel:easypermissions:3.0.0'
 
+    //状态栏工具
+    api ('com.github.niorgai:StatusBarCompat:2.3.3', {
+        exclude group: 'androidx.appcompat:appcompat'
+        exclude group: 'com.google.android.material:material'
+    })
+
+    api 'com.facebook.fresco:fresco:2.0.0'
+    api 'com.facebook.fresco:animated-gif:2.0.0'
+
 
 }

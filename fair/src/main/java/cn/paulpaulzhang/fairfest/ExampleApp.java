@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fairfest;
 
 import android.app.Application;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -32,5 +33,6 @@ public class ExampleApp extends Application {
                 .configure();
         Logger.addLogAdapter(new AndroidLogAdapter());
         ObjectBox.init(this);
+        Fresco.initialize(this);
     }
 }

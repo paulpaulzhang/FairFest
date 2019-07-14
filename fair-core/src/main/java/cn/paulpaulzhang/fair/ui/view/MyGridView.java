@@ -1,14 +1,14 @@
-package cn.paulpaulzhang.fair.sc.main.nineimage;
+package cn.paulpaulzhang.fair.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.GridView;
 
 /**
- * 包名: cn.paulpaulzhang.fair.sc.main.nineimage
+ * 包名: cn.paulpaulzhang.fair.ui.view
  * 创建时间: 7/13/2019
  * 创建人: zlm31
- * 描述:
+ * 描述: 修复只显示第一行的grid view
  */
 public class MyGridView extends GridView {
     public MyGridView(Context context, AttributeSet attrs) {

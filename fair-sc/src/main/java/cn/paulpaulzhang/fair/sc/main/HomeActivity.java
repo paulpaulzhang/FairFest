@@ -38,24 +38,12 @@ import pub.devrel.easypermissions.EasyPermissions;
  */
 public class HomeActivity extends FairActivity implements EasyPermissions.PermissionCallbacks {
 
-    @BindView(R2.id.civ_user)
-    CircleImageView mUser;
-
-    @BindView(R2.id.ll_search)
-    LinearLayout mSearch;
-
-    @BindView(R2.id.iv_add)
-    AppCompatImageView mAdd;
-
     @BindView(R2.id.bottom_navigation)
     AHBottomNavigation mBottomNavigation;
 
     @BindView(R2.id.view_pager)
     AHBottomNavigationViewPager mViewPager;
 
-
-    @BindView(R2.id.toolbar)
-    Toolbar mToolbar;
 
     private AHBottomNavigationAdapter mAdapter;
     private BottomNavViewPagerAdapter mViewPagerAdapter;
@@ -70,7 +58,6 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        setSupportActionBar(mToolbar);
         initBottomNavigation();
         requestPermissions();
     }
@@ -132,18 +119,13 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
         currentDelegate = mViewPagerAdapter.getCurrentDelegate();
     }
 
-    @OnClick(R2.id.civ_user)
-    void openUserCenter() {
-        //startActivity(new Intent(HomeActivity.this, UserCenterActivity.class));
-    }
-
     @Override
     public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
-        Toast.makeText(this, "拒绝权限可能会影响使用，请前往设置开启所需权限", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
-
+        Toast.makeText(this, "拒绝权限可能会影响使用，请前往设置开启所需权限", Toast.LENGTH_SHORT).show();
     }
 }

@@ -26,10 +26,9 @@ import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
+import qiu.niorgai.StatusBarCompat;
 
 public class SignInActivity extends FairActivity implements ITimerListener {
-    @BindView(R2.id.tb_sign_in)
-    Toolbar mToolbar;
     @BindView(R2.id.et_phone)
     TextInputEditText mPhone;
     @BindView(R2.id.et_code)
@@ -51,7 +50,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        setSupportActionBar(mToolbar);
+        StatusBarCompat.translucentStatusBar(this);
     }
 
     private boolean checkForm() {

@@ -1,12 +1,15 @@
 package cn.paulpaulzhang.fair.sc.main;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.flyco.tablayout.SlidingTabLayout;
@@ -16,6 +19,8 @@ import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.main.interest.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.TabViewPagerAdapter;
 
 /**
@@ -33,6 +38,7 @@ public class InterestDelegate extends FairDelegate implements
     @BindView(R2.id.tl_interest)
     SlidingTabLayout mTabLayout;
 
+    private Toolbar mToolbar;
     private TabViewPagerAdapter mAdapter;
     private FairDelegate currentDelegate;
     private int lastPosition = 0;
@@ -44,7 +50,16 @@ public class InterestDelegate extends FairDelegate implements
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
+        initToolbar();
         initTab();
+    }
+
+    private void initToolbar() {
+        AppCompatActivity mActivity = (AppCompatActivity) getActivity();
+        if (mActivity != null) {
+            mToolbar = mActivity.findViewById(R.id.toolbar);
+            mActivity.setSupportActionBar(mToolbar);
+        }
     }
 
     private void initTab() {
@@ -77,10 +92,29 @@ public class InterestDelegate extends FairDelegate implements
         lastPosition = position;
     }
 
+    //双击刷新
+    private long time = 0;
+
     @Override
     public void onTabReselect(int position) {
-        Toast.makeText(getContext(), "Refresh", Toast.LENGTH_SHORT).show();
-        //TODO 刷新逻辑
+        if (position == lastPosition && (System.currentTimeMillis() - time < 2000)) {
+            if (position == 0) {
+
+            } else if (position == 1) {
+                DiscoveryDelegate fragment = (DiscoveryDelegate) getChildFragmentManager().getFragments().get(position);
+                @SuppressLint("InflateParams") View view = fragment.getView();
+                SwipeRefreshLayout swipeRefreshLayout;
+                if (view != null) {
+                    swipeRefreshLayout = view.findViewById(R.id.srl_discovery);
+                    swipeRefreshLayout.setRefreshing(true);
+                    fragment.loadData(Constant.REFRESH_DATA);
+                }
+            } else if (position == 2) {
+
+            }
+        } else {
+            time = System.currentTimeMillis();
+        }
         lastPosition = position;
     }
 

@@ -2,9 +2,9 @@ package cn.paulpaulzhang.fair.sc.main.nineimage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -13,20 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.fragment.app.FragmentActivity;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.generic.RoundingParams;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 import com.maning.imagebrowserlibrary.MNImageBrowser;
-import com.maning.imagebrowserlibrary.listeners.OnClickListener;
-import com.maning.imagebrowserlibrary.listeners.OnLongClickListener;
-import com.maning.imagebrowserlibrary.listeners.OnPageChangeListener;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
 
 import java.io.File;
@@ -78,11 +72,13 @@ public class NineAdapter extends BaseAdapter {
         }
         mViewHolder.imageView = view.findViewById(R.id.iv_nine);
 
-        Glide.with(mContext)
-                .asBitmap()
-                .load(imagesUrl.get(i))
-                .apply(new RequestOptions().fitCenter().error(R.mipmap.ic_launcher).placeholder(R.drawable.default_placeholder))
-                .into(mViewHolder.imageView);
+        Uri uri = Uri.parse(imagesUrl.get(i));
+        RoundingParams params = RoundingParams.fromCornersRadius(9);
+        GenericDraweeHierarchy hierarchy = new GenericDraweeHierarchyBuilder(mContext.getResources())
+                .setRoundingParams(params)
+                .build();
+        mViewHolder.imageView.setImageURI(uri);
+        mViewHolder.imageView.setHierarchy(hierarchy);
 
         mViewHolder.imageView.setOnClickListener(v -> MNImageBrowser
                 .with(mContext)
@@ -93,10 +89,8 @@ public class NineAdapter extends BaseAdapter {
                 .setCurrentPosition(i)
                 .setImageEngine(new GlideImageEngine())
                 .setImageList((ArrayList<String>) imagesUrl)
-                .setScreenOrientationType(ImageBrowserConfig.ScreenOrientationType.Screenorientation_Default)
-                .setOnClickListener((fragmentActivity, imageView, i1, s) -> {
-                    MNImageBrowser.finishImageBrowser();
-                })
+                .setScreenOrientationType(ImageBrowserConfig.ScreenOrientationType.ScreenOrientation_Portrait)
+                .setOnClickListener((fragmentActivity, imageView, i1, s) -> MNImageBrowser.finishImageBrowser())
                 .setOnLongClickListener((fragmentActivity, imageView, i12, s) -> {
                     fragmentActivity.setTheme(R.style.DialogTheme);
                     new MaterialAlertDialogBuilder(fragmentActivity)
@@ -116,9 +110,7 @@ public class NineAdapter extends BaseAdapter {
                                     }
                                 });
                             })
-                            .setNegativeButton("取消", (dialogInterface, i13) -> {
-                                dialogInterface.cancel();
-                            })
+                            .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
                             .show();
                 })
                 .setFullScreenMode(false)
@@ -129,7 +121,7 @@ public class NineAdapter extends BaseAdapter {
     }
 
     public final class ViewHolder {
-        AppCompatImageView imageView;
+        SimpleDraweeView imageView;
     }
 
     private void convertLayoutToBitmap(Window window, View view, Bitmap dest,
