@@ -13,6 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ import cn.paulpaulzhang.fair.sc.database.entity.Post;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.system.IdUtil;
 import io.objectbox.Box;
 
 /**
@@ -146,6 +149,10 @@ public class DiscoveryDelegate extends FairDelegate {
      *
      * @param start 开始位置
      * @param type  加载类型（刷新数据，加载更多）
+     *              <p>
+     *              新建一个浏览用户表
+     *              每一次请求帖子数据成功后在ISuccess回调接口里面
+     *              请求发贴用户的数据并保存或更新至数据库的浏览用户表
      */
     private void requestData(long start, int type) {
         Box<Post> postBox = ObjectBox.get().boxFor(Post.class);
@@ -154,19 +161,7 @@ public class DiscoveryDelegate extends FairDelegate {
                     .url("post")
                     .params("position", 0)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> {
-                        List<Post> posts = JsonParseUtil.parsePost(r);
-                        postBox.removeAll();
-                        postBox.put(posts);
-                    })
-                    .build()
-                    .get();
-            RestClient.builder()
-                    .url("user")
-                    .params("", "")
-                    .success(r -> {
-
-                    })
+                    .success(r -> JsonParseUtil.parsePost(r, type))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
@@ -174,10 +169,7 @@ public class DiscoveryDelegate extends FairDelegate {
                     .url("post")
                     .params("position", start)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> {
-                        List<Post> posts = JsonParseUtil.parsePost(r);
-                        postBox.put(posts);
-                    })
+                    .success(r -> JsonParseUtil.parsePost(r, type))
                     .build()
                     .get();
         }

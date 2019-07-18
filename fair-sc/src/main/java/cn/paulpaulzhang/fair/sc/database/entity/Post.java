@@ -2,6 +2,8 @@ package cn.paulpaulzhang.fair.sc.database.entity;
 
 import androidx.annotation.NonNull;
 
+import java.util.Date;
+
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Uid;
@@ -22,8 +24,6 @@ public class Post {
 
     private int type; //帖子类型 0为动态 1为文章
 
-    private String topic; //所属话题
-
     private String title; //标题 动态为空 文章不为空
 
     private String content; //内容
@@ -36,7 +36,7 @@ public class Post {
 
     private int shareCount; //分享数
 
-    private String time; //发布时间
+    private Date time; //发布时间
 
     private String device; //设备型号
 
@@ -46,19 +46,17 @@ public class Post {
     public Post(long id,
                 long uid,
                 int type,
-                String topic,
                 String title,
                 String content,
                 String imagesUrl,
                 int likeCount,
                 int commentCount,
                 int shareCount,
-                String time,
+                Date time,
                 String device) {
         this.id = id;
         this.uid = uid;
         this.type = type;
-        this.topic = topic;
         this.title = title;
         this.content = content;
         this.imagesUrl = imagesUrl;
@@ -91,14 +89,6 @@ public class Post {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public String getTopic() {
-        return topic;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
     }
 
     public String getTitle() {
@@ -149,11 +139,11 @@ public class Post {
         this.shareCount = shareCount;
     }
 
-    public String getTime() {
+    public Date getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(Date time) {
         this.time = time;
     }
 
@@ -171,7 +161,6 @@ public class Post {
         return "id:" + id + "\n" +
                 "uid:" + uid + "\n" +
                 "type:" + type + "\n" +
-                "topic:" + topic + "\n" +
                 "title:" + title + "\n" +
                 "content:" + content + "\n" +
                 "imagesUrl:" + imagesUrl + "\n" +

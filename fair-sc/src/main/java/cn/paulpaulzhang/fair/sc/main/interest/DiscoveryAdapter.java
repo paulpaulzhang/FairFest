@@ -24,7 +24,11 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
+import cn.paulpaulzhang.fair.sc.database.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.database.entity.Like;
+import cn.paulpaulzhang.fair.sc.database.entity.Like_;
+import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
 import cn.paulpaulzhang.fair.sc.database.entity.MyObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.Post;
 import cn.paulpaulzhang.fair.sc.database.entity.User;
@@ -55,121 +59,79 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
 
     @Override
     protected void convert(BaseViewHolder helper, DiscoveryItem item) {
-        Post post = item.getPost();
-        long id = post.getId();
-        long uid = post.getUid();
-        Box<User> userBox = ObjectBox.get().boxFor(User.class);
-        User current = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-
-        //请求user并加载用户名和头像
-        RestClient.builder()
-                //TODO User请求
-                .url("user")
-                .params("id", uid)
-                .success(response -> {
-                    User user = JsonParseUtil.parseUser(response);
-                    if (item.getItemType() == DiscoveryItem.DYNAMIC) {
-                        helper.setText(R.id.tv_username_dynamic, user.getUsername());
-                        CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
-                        Glide.with(mContext).load(user.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
-                    } else {
-                        helper.setText(R.id.tv_username_article, user.getUsername());
-                        CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
-                        Glide.with(mContext).load(user.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
-                    }
-                })
-                .build()
-                .get();
-
-        int type = post.getType();
-        String topic = post.getTopic();
-        String time = post.getTime();
-        String device = post.getDevice();
-        String content = post.getContent();
-        String title = post.getTitle();
-        ArrayList<String> imgs = getImgs(post.getImagesUrl());
-        int likeCount = post.getLikeCount();
-        int commentCount = post.getCommentCount();
-        int shareCount = post.getShareCount();
-
-        //判断当前用户是否对当前文章点赞点赞
-        RestClient.builder()
-                //TODO 点赞请求
-                .url("like")
-                .params("id", id)
-                .params("uid", current.getId())
-                .success(r -> {
-                    boolean like = JSON.parseObject(r).getBoolean("like");
-                    if (like) {
-                        if (item.getItemType() == DiscoveryItem.DYNAMIC) {
-                            helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
-                            AppCompatTextView textView = helper.getView(R.id.tv_like_dynamic);
-                            textView.setTextColor(mContext.getColor(R.color.colorAccent));
-                        } else {
-                            helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
-                            AppCompatTextView textView = helper.getView(R.id.tv_like_article);
-                            textView.setTextColor(mContext.getColor(R.color.colorAccent));
-                        }
-                    } else {
-                        if (item.getItemType() == DiscoveryItem.DYNAMIC) {
-                            helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
-                            AppCompatTextView textView = helper.getView(R.id.tv_like_dynamic);
-                            textView.setTextColor(mContext.getColor(R.color.font_default));
-                        } else {
-                            helper.setImageResource(R.id.iv_like_article, R.drawable.like);
-                            AppCompatTextView textView = helper.getView(R.id.tv_like_article);
-                            textView.setTextColor(mContext.getColor(R.color.font_default));
-                        }
-                    }
-                })
-                .build()
-                .get();
-
         if (item.getItemType() == DiscoveryItem.DYNAMIC) {
+            Post post = item.getPost();
+            long id = post.getId();
+            long uid = post.getUid();
+            Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
+            LocalUser current = localUserBox.get(
+                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+            String time = post.getTime().toString();
+            String device = post.getDevice();
+            String content = post.getContent();
+            ArrayList<String> imgs = getImgs(post.getImagesUrl());
+            int likeCount = post.getLikeCount();
+            int commentCount = post.getCommentCount();
+            int shareCount = post.getShareCount();
+
+            Box<User> userBox = ObjectBox.get().boxFor(User.class);
+            User user = userBox.get(uid);
+
+            //判断当前用户是否对当前文章点赞点赞
+            Box<Like> likeBox = ObjectBox.get().boxFor(Like.class);
+            Like like = likeBox.query().equal(Like_.pid, id).build().findFirst();
+            boolean isLike = false;
+            if (like != null) {
+                isLike = like.isLike();
+            }
+
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
             LinearLayout mComment = helper.getView(R.id.ll_comment_dynamic);
             LinearLayout mShare = helper.getView(R.id.ll_share_dynamic);
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_dynamic);
-
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
+
+            helper.setText(R.id.tv_username_dynamic, user.getUsername());
+            Glide.with(mContext).load(user.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
-            mLike.setOnClickListener(v -> RestClient.builder()
-                    //TODO 点赞请求
-                    .url("like")
-                    .params("id", id)
-                    .params("uid", current.getId())
-                    .success(r -> {
-                        boolean like = JSON.parseObject(r).getBoolean("like");
-                        Toast.makeText(mContext, like + "", Toast.LENGTH_SHORT).show();
-                        if (like) {
-                            helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
-                            int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                            mLikeCount.setText(String.valueOf(count));
-                            mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
-                            RestClient.builder()
-                                    //TODO 点赞请求
-                                    .url("set_dislike")
-                                    .params("id", id)
-                                    .params("uid", current.getId())
-                                    .build().post();
-                        } else {
-                            helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
-                            int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                            mLikeCount.setText(String.valueOf(count));
-                            mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
-                            RestClient.builder()
-                                    //TODO 点赞请求
-                                    .url("set_like")
-                                    .params("id", id)
-                                    .params("count", count)
-                                    .params("uid", current.getId())
-                                    .build().post();
-                        }
-                    })
-                    .build()
-                    .post());
+            boolean finalIsLike = isLike;
+            if (finalIsLike) {
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+            } else {
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+            }
+            mLike.setOnClickListener(v -> {
+
+                if (finalIsLike) {
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
+                    mLikeCount.setText(String.valueOf(count));
+                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                    RestClient.builder()
+                            //TODO 点赞请求
+                            .url("set_dislike")
+                            .params("id", id)
+                            .params("uid", current.getId())
+                            .build().post();
+                } else {
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
+                    mLikeCount.setText(String.valueOf(count));
+                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    RestClient.builder()
+                            //TODO 点赞请求
+                            .url("set_like")
+                            .params("id", id)
+                            .params("count", count)
+                            .params("uid", current.getId())
+                            .build().post();
+                }
+            });
 
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
@@ -206,49 +168,79 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                 }
             }, false);
         } else if (item.getItemType() == DiscoveryItem.ARTICLE) {
+            Post post = item.getPost();
+            long id = post.getId();
+            long uid = post.getUid();
+            Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
+            LocalUser current = localUserBox.get(
+                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+
+            String time = post.getTime().toString();
+            String device = post.getDevice();
+            String content = post.getContent();
+            String title = post.getTitle();
+            ArrayList<String> imgs = getImgs(post.getImagesUrl());
+            int likeCount = post.getLikeCount();
+            int commentCount = post.getCommentCount();
+            int shareCount = post.getShareCount();
+
+            Box<User> userBox = ObjectBox.get().boxFor(User.class);
+            User user = userBox.get(uid);
+
+            //判断当前用户是否对当前文章点赞点赞
+            Box<Like> likeBox = ObjectBox.get().boxFor(Like.class);
+            Like like = likeBox.query().equal(Like_.pid, id).build().findFirst();
+            boolean isLike = false;
+            if (like != null) {
+                isLike = like.isLike();
+            }
+
             GridView mArticleImg = helper.getView(R.id.gv_images_article);
             LinearLayout mLike = helper.getView(R.id.ll_like_article);
             LinearLayout mComment = helper.getView(R.id.ll_comment_article);
             LinearLayout mShare = helper.getView(R.id.ll_share_article);
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_article);
-
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
+
+            helper.setText(R.id.tv_username_article, user.getUsername());
+            Glide.with(mContext).load(user.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
-            mLike.setOnClickListener(v -> RestClient.builder()
-                    .url("like")
-                    .params("id", id)
-                    .params("uid", current.getId())
-                    .success(r -> {
-                        boolean like = JSON.parseObject(r).getBoolean("like");
-                        Toast.makeText(mContext, like + "", Toast.LENGTH_SHORT).show();
-                        if (like) {
-                            helper.setImageResource(R.id.iv_like_article, R.drawable.like);
-                            int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                            mLikeCount.setText(String.valueOf(count));
-                            mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
-                            RestClient.builder()
-                                    //TODO 点赞请求
-                                    .url("set_dislike")
-                                    .params("id", id)
-                                    .params("uid", current.getId())
-                                    .build().post();
-                        } else {
-                            helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
-                            int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                            mLikeCount.setText(String.valueOf(count));
-                            mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
-                            RestClient.builder()
-                                    //TODO 点赞请求
-                                    .url("set_like")
-                                    .params("id", id)
-                                    .params("count", count)
-                                    .params("uid", current.getId())
-                                    .build().post();
-                        }
-                    })
-                    .build()
-                    .post());
+            boolean finalIsLike = isLike;
+            if (finalIsLike) {
+                helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+            } else {
+                helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+            }
+            mLike.setOnClickListener(v -> {
+                if (finalIsLike) {
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
+                    mLikeCount.setText(String.valueOf(count));
+                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                    RestClient.builder()
+                            //TODO 点赞请求
+                            .url("set_dislike")
+                            .params("id", id)
+                            .params("uid", current.getId())
+                            .build().post();
+                } else {
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
+                    mLikeCount.setText(String.valueOf(count));
+                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    RestClient.builder()
+                            //TODO 点赞请求
+                            .url("set_like")
+                            .params("id", id)
+                            .params("count", count)
+                            .params("uid", current.getId())
+                            .build().post();
+                }
+            });
 
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());

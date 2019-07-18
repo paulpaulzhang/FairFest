@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.database.entity;
 
+
 import java.util.Date;
 
 import io.objectbox.annotation.Entity;
@@ -8,16 +9,18 @@ import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
- * 创建时间: 7/16/2019
+ * 创建时间: 7/3/2019
  * 创建人: zlm31
- * 描述:
+ * 描述: 用户实体类
  */
 @Entity
-public class User {
+public class LocalUser {
     @Id(assignable = true)
     private long id; //用户id
 
     private String username; //用户名
+
+    private String password; //密码
 
     private String birthday; //生日
 
@@ -27,7 +30,15 @@ public class User {
 
     private int fans; //粉丝数
 
+    private long phone; //电话号
+
+    private String email; // 邮箱
+
     private String school; //学校
+
+    private long studentId; // 学号
+
+    private int permission; //权限组
 
     private String introduction; // 个人简介
 
@@ -37,31 +48,51 @@ public class User {
 
     private Date time; //注册时间
 
-    public User() {
+    private String features; //特征集合
+
+    public LocalUser() {
     }
 
-    public User(long id,
-                String username,
-                String birthday,
-                String gender,
-                int followers,
-                int fans,
-                String school,
-                String introduction,
-                String avatar,
-                String background,
-                Date time) {
+    public LocalUser(long id, long phone, String username) {
+        this.id = id;
+        this.phone = phone;
+        this.username = username;
+    }
+
+    public LocalUser(long id,
+                     String username,
+                     String password,
+                     String birthday,
+                     String gender,
+                     int followers,
+                     int fans,
+                     long phone,
+                     String email,
+                     String school,
+                     long studentId,
+                     int permission,
+                     String introduction,
+                     String avatar,
+                     String background,
+                     Date time,
+                     String features) {
         this.id = id;
         this.username = username;
+        this.password = password;
         this.birthday = birthday;
         this.gender = gender;
         this.followers = followers;
         this.fans = fans;
+        this.phone = phone;
+        this.email = email;
         this.school = school;
+        this.studentId = studentId;
+        this.permission = permission;
         this.introduction = introduction;
         this.avatar = avatar;
         this.background = background;
         this.time = time;
+        this.features = features;
     }
 
     public long getId() {
@@ -78,6 +109,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getBirthday() {
@@ -112,12 +151,44 @@ public class User {
         this.fans = fans;
     }
 
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getSchool() {
         return school;
     }
 
     public void setSchool(String school) {
         this.school = school;
+    }
+
+    public long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(long studentId) {
+        this.studentId = studentId;
+    }
+
+    public int getPermission() {
+        return permission;
+    }
+
+    public void setPermission(int permission) {
+        this.permission = permission;
     }
 
     public String getIntroduction() {
@@ -150,5 +221,13 @@ public class User {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public void setFeatures(String features) {
+        this.features = features;
     }
 }
