@@ -20,7 +20,7 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Constant;
-import cn.paulpaulzhang.fair.sc.main.interest.DiscoveryDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.TabViewPagerAdapter;
 
 /**
