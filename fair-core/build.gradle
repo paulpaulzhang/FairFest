@@ -107,5 +107,7 @@ dependencies {
     api 'com.facebook.fresco:fresco:2.0.0'
     api 'com.facebook.fresco:animated-gif:2.0.0'
 
+    api 'com.github.GrenderG:Toasty:1.4.2'
+
 
 }

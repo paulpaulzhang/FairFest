@@ -2,7 +2,7 @@ package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
-import cn.paulpaulzhang.fair.sc.database.entity.Post;
+import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest
@@ -12,17 +12,17 @@ import cn.paulpaulzhang.fair.sc.database.entity.Post;
  */
 public class DiscoveryItem implements MultiItemEntity {
 
-    public static final int DYNAMIC = 0;
+    static final int DYNAMIC = 0;
 
-    public static final int ARTICLE = 1;
+    static final int ARTICLE = 1;
 
     private int itemType;
 
-    private Post post;
+    private DiscoveryPostCache discoveryPostCache;
 
-    public DiscoveryItem(int itemType, Post post) {
+    DiscoveryItem(int itemType, DiscoveryPostCache discoveryPostCache) {
         this.itemType = itemType;
-        this.post = post;
+        this.discoveryPostCache = discoveryPostCache;
     }
 
     @Override
@@ -30,11 +30,7 @@ public class DiscoveryItem implements MultiItemEntity {
         return itemType;
     }
 
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
+    DiscoveryPostCache getDiscoveryPostCache() {
+        return discoveryPostCache;
     }
 }

@@ -4,7 +4,7 @@
     package="cn.paulpaulzhang.fairfest">
 
     <application
-        android:name="cn.paulpaulzhang.fairfest.ExampleApp"
+        android:name="cn.paulpaulzhang.fairfest.FairApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,9 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name="cn.paulpaulzhang.fairfest.ExampleActivity">
-
-        </activity>
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
 
         </activity>

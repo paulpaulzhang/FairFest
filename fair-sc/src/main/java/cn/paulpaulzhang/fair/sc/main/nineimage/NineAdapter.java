@@ -29,6 +29,7 @@ import java.util.List;
 
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
+import es.dmoral.toasty.Toasty;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.nineimage
@@ -103,9 +104,9 @@ public class NineAdapter extends BaseAdapter {
                                         File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
                                         if (file != null) {
                                             dialogInterface.dismiss();
-                                            Toast.makeText(fragmentActivity, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
+                                            Toasty.success(fragmentActivity, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            Toast.makeText(fragmentActivity, "保存失败", Toast.LENGTH_SHORT).show();
+                                            Toasty.error(fragmentActivity, "保存失败", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });

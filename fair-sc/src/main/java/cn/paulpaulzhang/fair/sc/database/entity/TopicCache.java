@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.database.entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -9,19 +10,24 @@ import io.objectbox.annotation.Id;
  * 创建人: zlm31
  * 描述:
  */
+
 @Entity
-public class Topic {
-    @Id
+public class TopicCache {
+    @Id(assignable = true)
     private long id;
 
     private String name;
+
+    private String img;
 
     private int follow; //关注数
 
     private int post; //帖子数
 
-    public Topic(String name, int follow, int post) {
+    public TopicCache(long id, String name, String img, int follow, int post) {
+        this.id = id;
         this.name = name;
+        this.img = img;
         this.follow = follow;
         this.post = post;
     }
@@ -40,6 +46,14 @@ public class Topic {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 
     public int getFollow() {

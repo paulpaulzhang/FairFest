@@ -2,20 +2,17 @@ package cn.paulpaulzhang.fair.sc.database.entity;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
-
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
- * 创建时间: 7/12/2019
+ * 创建时间: 7/21/2019
  * 创建人: zlm31
  * 描述: 帖子实体类
  */
 @Entity
-public class Post {
+public class FollowPostCache {
 
     @Id(assignable = true)
     private long id; //帖子id
@@ -36,24 +33,21 @@ public class Post {
 
     private int shareCount; //分享数
 
-    private Date time; //发布时间
+    private String time; //发布时间
 
     private String device; //设备型号
 
-    public Post() {
-    }
-
-    public Post(long id,
-                long uid,
-                int type,
-                String title,
-                String content,
-                String imagesUrl,
-                int likeCount,
-                int commentCount,
-                int shareCount,
-                Date time,
-                String device) {
+    public FollowPostCache(long id,
+                           long uid,
+                           int type,
+                           String title,
+                           String content,
+                           String imagesUrl,
+                           int likeCount,
+                           int commentCount,
+                           int shareCount,
+                           String time,
+                           String device) {
         this.id = id;
         this.uid = uid;
         this.type = type;
@@ -139,11 +133,11 @@ public class Post {
         this.shareCount = shareCount;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 

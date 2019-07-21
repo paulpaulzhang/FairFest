@@ -1,7 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +14,7 @@ import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
@@ -23,10 +23,10 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.Post;
+import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -63,10 +63,7 @@ public class DiscoveryDelegate extends FairDelegate {
     private void initSwipeRefresh() {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
-        mSwipeRefresh.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-            mSwipeRefresh.setRefreshing(false);
-            loadData(Constant.REFRESH_DATA);
-        }, 1000));
+        mSwipeRefresh.setOnRefreshListener(() -> loadData(Constant.REFRESH_DATA));
     }
 
     private void initRecycler() {
@@ -78,8 +75,13 @@ public class DiscoveryDelegate extends FairDelegate {
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setLoadMoreView(new SimpleLoadMoreView());
         mAdapter.setPreLoadNumber(3);
-        mAdapter.disableLoadMoreIfNotFullPage(mRecyclerView);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            DiscoveryItem item = (DiscoveryItem) adapter.getItem(position);
+            if (item != null) {
+                Toasty.info(Objects.requireNonNull(getContext()), item.getDiscoveryPostCache().getId() + "", Toasty.LENGTH_SHORT, true).show();
+            }
+        });
     }
 
     private void initBanner(View view) {
@@ -102,17 +104,17 @@ public class DiscoveryDelegate extends FairDelegate {
      * @param type 加载类型（刷新数据，加载更多）
      */
     public void loadData(int type) {
-        Box<Post> postBox = ObjectBox.get().boxFor(Post.class);
+        Box<DiscoveryPostCache> postBox = ObjectBox.get().boxFor(DiscoveryPostCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA);
-            List<Post> posts = postBox.getAll();
+            List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
             //TODO 加载列表用户数据
             List<DiscoveryItem> items = new ArrayList<>();
             long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
             for (int i = 0; i < count; i++) {
-                Post post = posts.get(i);
-                items.add(new DiscoveryItem(post.getType(), post));
+                DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
+                items.add(new DiscoveryItem(discoveryPostCache.getType(), discoveryPostCache));
             }
             mAdapter.setNewData(items);
             mSwipeRefresh.setRefreshing(false);
@@ -122,18 +124,17 @@ public class DiscoveryDelegate extends FairDelegate {
             if (position + Constant.LOAD_MAX_DATABASE > size) {
                 requestData(size, Constant.LOAD_MORE_DATA);
                 if (size == postBox.count()) {
-                    FairLogger.d("没有更多数据");
                     mAdapter.loadMoreEnd(true);
                     return;
                 }
             }
-            List<Post> posts = postBox.getAll();
+            List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
             List<DiscoveryItem> items = new ArrayList<>();
 
             long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
             for (int i = position; i < count; i++) {
-                Post post = posts.get(i);
-                items.add(new DiscoveryItem(post.getType(), post));
+                DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
+                items.add(new DiscoveryItem(discoveryPostCache.getType(), discoveryPostCache));
             }
             mAdapter.addData(items);
             mAdapter.loadMoreComplete();
@@ -145,13 +146,8 @@ public class DiscoveryDelegate extends FairDelegate {
      *
      * @param start 开始位置
      * @param type  加载类型（刷新数据，加载更多）
-     *              <p>
-     *              新建一个浏览用户表
-     *              每一次请求帖子数据成功后在ISuccess回调接口里面
-     *              请求发贴用户的数据并保存或更新至数据库的浏览用户表
      */
     private void requestData(long start, int type) {
-        Box<Post> postBox = ObjectBox.get().boxFor(Post.class);
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url("post")

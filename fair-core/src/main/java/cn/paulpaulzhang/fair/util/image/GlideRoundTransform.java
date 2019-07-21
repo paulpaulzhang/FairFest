@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ import java.security.MessageDigest;
  * 创建人: zlm31
  * 描述:
  */
-public class GlideRoundTransform extends BitmapTransformation {
+public class GlideRoundTransform extends CenterCrop {
     private static float radius = 0f;
 
     public GlideRoundTransform(Context context) {
@@ -38,7 +39,8 @@ public class GlideRoundTransform extends BitmapTransformation {
     @Override
     protected Bitmap transform(@NotNull BitmapPool pool, @NotNull Bitmap toTransform,
                                int outWidth, int outHeight) {
-        return roundCrop(pool, toTransform);
+        Bitmap transform = super.transform(pool, toTransform, outWidth, outHeight);
+        return roundCrop(pool, transform);
     }
 
     private Bitmap roundCrop(BitmapPool pool, Bitmap source) {

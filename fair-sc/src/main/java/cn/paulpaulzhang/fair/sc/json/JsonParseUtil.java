@@ -5,17 +5,17 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.Like;
+import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryLikeCache;
+import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
+import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryUserCache;
 import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
-import cn.paulpaulzhang.fair.sc.database.entity.Post;
-import cn.paulpaulzhang.fair.sc.database.entity.Topic;
-import cn.paulpaulzhang.fair.sc.database.entity.User;
+import cn.paulpaulzhang.fair.sc.database.entity.TopicCache;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -27,9 +27,9 @@ import io.objectbox.Box;
  */
 public final class JsonParseUtil {
     public static void parsePost(String response, int requestType) {
-        List<Post> posts = new ArrayList<>();
-        List<User> users = new ArrayList<>();
-        List<Like> likes = new ArrayList<>();
+        List<DiscoveryPostCache> discoveryPostCaches = new ArrayList<>();
+        List<DiscoveryUserCache> discoveryUserCaches = new ArrayList<>();
+        List<DiscoveryLikeCache> discoveryLikeCaches = new ArrayList<>();
         JSONObject result = JSON.parseObject(response).getJSONObject("result");
         JSONArray postArr = result.getJSONArray("post");
         JSONArray userArr = result.getJSONArray("user");
@@ -46,11 +46,13 @@ public final class JsonParseUtil {
             int likeCount = object.getInteger("likeCount");
             int commentCount = object.getInteger("commentCount");
             int shareCount = object.getInteger("shareCount");
-            Date time = object.getDate("time");
+            String time = object.getString("time");
             String device = object.getString("device");
-            Post post = new Post(id, uid, type, title, content, imagesUrl,
+            DiscoveryPostCache discoveryPostCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
-            posts.add(post);
+            discoveryPostCaches.add(discoveryPostCache);
+
+
         }
 
         for (int i = 0; i < userArr.size(); i++) {
@@ -65,32 +67,32 @@ public final class JsonParseUtil {
             String introduction = object.getString("introduction");
             String avatar = object.getString("avatar");
             String background = object.getString("background");
-            Date time = object.getDate("time");
+            String time = object.getString("time");
 
-            User user = new User(id, username, birthday, gender, followers,
+            DiscoveryUserCache discoveryUserCache = new DiscoveryUserCache(id, username, birthday, gender, followers,
                     fans, school, introduction, avatar, background, time);
-            users.add(user);
+            discoveryUserCaches.add(discoveryUserCache);
         }
 
         for (int i = 0; i < likeArr.size(); i++) {
             JSONObject object = likeArr.getJSONObject(i);
             long pid = object.getLong("pid");
-            boolean isLike = object.getBoolean("like");
-            Like like = new Like(pid, isLike);
-            likes.add(like);
+            boolean isLike = object.getBoolean("isLike");
+            DiscoveryLikeCache discoveryLikeCache = new DiscoveryLikeCache(pid, isLike);
+            discoveryLikeCaches.add(discoveryLikeCache);
         }
 
-        Box<Post> postBox = ObjectBox.get().boxFor(Post.class);
-        Box<User> userBox = ObjectBox.get().boxFor(User.class);
-        Box<Like> likeBox = ObjectBox.get().boxFor(Like.class);
+        Box<DiscoveryPostCache> postBox = ObjectBox.get().boxFor(DiscoveryPostCache.class);
+        Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
+        Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
         if (requestType == Constant.REFRESH_DATA) {
             postBox.removeAll();
             userBox.removeAll();
             likeBox.removeAll();
         }
-        postBox.put(posts);
-        userBox.put(users);
-        likeBox.put(likes);
+        postBox.put(discoveryPostCaches);
+        userBox.put(discoveryUserCaches);
+        likeBox.put(discoveryLikeCaches);
     }
 
     public static void parseLocalUser(String response) {
@@ -111,7 +113,7 @@ public final class JsonParseUtil {
         String introduction = object.getString("introduction");
         String avatar = object.getString("avatar");
         String background = object.getString("background");
-        Date time = object.getDate("time");
+        String time = object.getString("time");
         String features = object.getString("features");
 
         LocalUser user = new LocalUser(id, username, password, birthday, gender,
@@ -122,18 +124,32 @@ public final class JsonParseUtil {
         localUserBox.put(user);
     }
 
-    public static void parseTopic(String response) {
-        JSONArray array = JSON.parseArray("result");
-        List<Topic> topics = new ArrayList<>();
+    public static void parseTopic(String response, int type) {
+        JSONArray array = JSON.parseObject(response).getJSONArray("result");
+        List<TopicCache> topicCaches = new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             JSONObject object = array.getJSONObject(i);
+            long id = object.getLong("id");
             String name = object.getString("name");
+            String img = object.getString("img");
             int follow = object.getInteger("follow");
             int post = object.getInteger("post");
-            topics.add(new Topic(name, follow, post));
+            topicCaches.add(new TopicCache(id, name, img, follow, post));
         }
 
-        Box<Topic> topicBox = ObjectBox.get().boxFor(Topic.class);
-        topicBox.put(topics);
+        Box<TopicCache> topicBox = ObjectBox.get().boxFor(TopicCache.class);
+        if (type == Constant.REFRESH_DATA) {
+            topicBox.removeAll();
+        }
+        topicBox.put(topicCaches);
+    }
+
+    public static ArrayList<String> parseImgs(String imgUrl) {
+        JSONArray array = JSON.parseArray(imgUrl);
+        ArrayList<String> imgs = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            imgs.add(array.getString(i));
+        }
+        return imgs;
     }
 }

@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#03A9F4</color>
     <color name="colorAccent">#03A9F4</color>
     <color name="font_menu">#000000</color>
-    <color name="font_default">#8a8a8a</color>
+    <color name="font_default">#8A000000</color>
+    <color name="background">#F7F7F7</color>
+    <color name="font_tab">#F5F5F5</color>
 </resources>

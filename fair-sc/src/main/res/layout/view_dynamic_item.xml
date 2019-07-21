@@ -5,8 +5,10 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="8dp"
     app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
@@ -23,7 +25,7 @@
                 android:id="@+id/civ_user_dynamic"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@color/colorAccent"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="Paul张"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -46,7 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="2019-1-4"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/civ_user_dynamic"
@@ -68,7 +68,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
-                android:text="小米CC9"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_from_dynamic"
@@ -80,20 +79,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:ellipsize="end"
             android:lineSpacingExtra="5dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             app:ep_expand_color="@color/colorAccent"
             app:ep_expand_text="@string/more"
             app:ep_link_color="@color/colorAccent"
+            app:ep_link_res="@drawable/link"
             app:ep_max_line="5"
+            app:ep_mention_color="@color/colorAccent"
             app:ep_need_always_showright="true"
             app:ep_need_animation="true"
             app:ep_need_expand="true"
             app:ep_need_link="true"
-            android:ellipsize="end"
-            app:ep_mention_color="@color/colorAccent"
-            app:ep_link_res="@drawable/link"
             app:ep_need_mention="true"
             app:ep_need_self="true"
             app:ep_self_color="@color/colorAccent" />
@@ -123,9 +122,9 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_like_dynamic"
                     android:layout_width="@dimen/item_menu_size"
                     android:layout_height="@dimen/item_menu_size"
-                    android:id="@+id/iv_like_dynamic"
                     android:src="@drawable/like" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -134,7 +133,6 @@
                     android:layout_height="@dimen/item_menu_size"
                     android:layout_marginLeft="2dp"
                     android:gravity="center"
-                    android:text="12"
                     android:textSize="14sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>
@@ -157,7 +155,6 @@
                     android:layout_height="@dimen/item_menu_size"
                     android:layout_marginLeft="2dp"
                     android:gravity="center"
-                    android:text="12"
                     android:textSize="14sp"
                     tools:ignore="RtlHardcoded" />
             </LinearLayout>

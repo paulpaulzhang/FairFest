@@ -1,19 +1,16 @@
 package cn.paulpaulzhang.fair.sc.database.entity;
 
-import java.util.Date;
-
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
- * 创建时间: 7/16/2019
+ * 创建时间: 7/21/2019
  * 创建人: zlm31
  * 描述:
  */
 @Entity
-public class User {
+public class FollowUserCache {
     @Id(assignable = true)
     private long id; //用户id
 
@@ -35,22 +32,19 @@ public class User {
 
     private String background; // 背景图片url
 
-    private Date time; //注册时间
+    private String time; //注册时间
 
-    public User() {
-    }
-
-    public User(long id,
-                String username,
-                String birthday,
-                String gender,
-                int followers,
-                int fans,
-                String school,
-                String introduction,
-                String avatar,
-                String background,
-                Date time) {
+    public FollowUserCache(long id,
+                           String username,
+                           String birthday,
+                           String gender,
+                           int followers,
+                           int fans,
+                           String school,
+                           String introduction,
+                           String avatar,
+                           String background,
+                           String time) {
         this.id = id;
         this.username = username;
         this.birthday = birthday;
@@ -144,11 +138,11 @@ public class User {
         this.background = background;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setTime(String time) {
         this.time = time;
     }
 }

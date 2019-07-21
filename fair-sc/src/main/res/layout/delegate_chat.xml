@@ -79,4 +79,9 @@
         android:layout_margin="40dp"
         android:scaleType="centerCrop"
         app:roundedCornerRadius="30dp" />
+    <ImageView
+        android:src="@drawable/topic"
+        android:scaleType="centerCrop"
+        android:layout_width="80dp"
+        android:layout_height="80dp" />
 </LinearLayout>

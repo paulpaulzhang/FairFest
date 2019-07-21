@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -90,7 +91,7 @@
             app:tl_indicator_width="12dp"
             app:tl_tab_space_equal="true"
             app:tl_textSelectColor="@android:color/white"
-            app:tl_textUnselectColor="@color/font_default"
+            app:tl_textUnselectColor="@color/font_tab"
             app:tl_textsize="17sp" />
     </com.google.android.material.appbar.AppBarLayout>
 

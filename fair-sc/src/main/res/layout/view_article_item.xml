@@ -5,8 +5,10 @@
     style="@style/Widget.MaterialComponents.CardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="8dp"
     app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
@@ -126,8 +128,8 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="@dimen/item_menu_size"
                     android:id="@+id/iv_like_article"
+                    android:layout_width="@dimen/item_menu_size"
                     android:layout_height="@dimen/item_menu_size"
                     android:src="@drawable/like" />
 

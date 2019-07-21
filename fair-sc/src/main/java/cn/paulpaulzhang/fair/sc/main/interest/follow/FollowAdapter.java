@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main.interest.discovery;
+package cn.paulpaulzhang.fair.sc.main.interest.follow;
 
 import android.content.Intent;
 import android.widget.GridView;
@@ -7,8 +7,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -23,11 +21,11 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryLikeCache;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryLikeCache_;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryUserCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowLikeCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowLikeCache_;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.ArticleActivity;
@@ -37,50 +35,50 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.objectbox.Box;
 
 /**
- * 包名: cn.paulpaulzhang.fair.sc.main.interest
- * 创建时间: 7/12/2019
+ * 包名: cn.paulpaulzhang.fair.sc.main.interest.follow
+ * 创建时间: 7/21/2019
  * 创建人: zlm31
  * 描述:
  */
-public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, BaseViewHolder> {
+public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseViewHolder> {
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
      *
      * @param data A new list is created out of this one to avoid mutable list
      */
-    public DiscoveryAdapter(List<DiscoveryItem> data) {
+    public FollowAdapter(List<FollowItem> data) {
         super(data);
-        addItemType(DiscoveryItem.DYNAMIC, R.layout.view_dynamic_item);
-        addItemType(DiscoveryItem.ARTICLE, R.layout.view_article_item);
+        addItemType(FollowItem.DYNAMIC, R.layout.view_dynamic_item);
+        addItemType(FollowItem.ARTICLE, R.layout.view_article_item);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, DiscoveryItem item) {
-        if (item.getItemType() == DiscoveryItem.DYNAMIC) {
-            DiscoveryPostCache discoveryPostCache = item.getDiscoveryPostCache();
-            long id = discoveryPostCache.getId();
-            long uid = discoveryPostCache.getUid();
+    protected void convert(BaseViewHolder helper, FollowItem item) {
+        if (item.getItemType() == FollowItem.DYNAMIC) {
+            FollowPostCache followPostCache = item.getFollowPostCache();
+            long id = followPostCache.getId();
+            long uid = followPostCache.getUid();
             Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
             LocalUser current = localUserBox.get(
                     FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-            String time = discoveryPostCache.getTime();
-            String device = discoveryPostCache.getDevice();
-            String content = discoveryPostCache.getContent();
-            ArrayList<String> imgs = JsonParseUtil.parseImgs(discoveryPostCache.getImagesUrl());
-            int likeCount = discoveryPostCache.getLikeCount();
-            int commentCount = discoveryPostCache.getCommentCount();
-            int shareCount = discoveryPostCache.getShareCount();
+            String time = followPostCache.getTime();
+            String device = followPostCache.getDevice();
+            String content = followPostCache.getContent();
+            ArrayList<String> imgs = JsonParseUtil.parseImgs(followPostCache.getImagesUrl());
+            int likeCount = followPostCache.getLikeCount();
+            int commentCount = followPostCache.getCommentCount();
+            int shareCount = followPostCache.getShareCount();
 
-            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
-            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
+            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
+            FollowUserCache followUserCache = userBox.get(uid);
 
             //判断当前用户是否对当前文章点赞点赞
-            Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
-            DiscoveryLikeCache discoveryLikeCache = likeBox.query().equal(DiscoveryLikeCache_.pid, id).build().findFirst();
+            Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
+            FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
             boolean isLike = false;
-            if (discoveryLikeCache != null) {
-                isLike = discoveryLikeCache.isLike();
+            if (followLikeCache != null) {
+                isLike = followLikeCache.isLike();
             }
 
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
@@ -90,8 +88,8 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_dynamic);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
 
-            helper.setText(R.id.tv_username_dynamic, discoveryUserCache.getUsername());
-            Glide.with(mContext).load(discoveryUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.setText(R.id.tv_username_dynamic, followUserCache.getUsername());
+            Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
@@ -165,32 +163,32 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                     mContext.startActivity(new Intent(mContext, DynamicActivity.class));
                 }
             }, false);
-        } else if (item.getItemType() == DiscoveryItem.ARTICLE) {
-            DiscoveryPostCache discoveryPostCache = item.getDiscoveryPostCache();
-            long id = discoveryPostCache.getId();
-            long uid = discoveryPostCache.getUid();
+        } else if (item.getItemType() == FollowItem.ARTICLE) {
+            FollowPostCache followPostCache = item.getFollowPostCache();
+            long id = followPostCache.getId();
+            long uid = followPostCache.getUid();
             Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
             LocalUser current = localUserBox.get(
                     FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
 
-            String time = discoveryPostCache.getTime();
-            String device = discoveryPostCache.getDevice();
-            String content = discoveryPostCache.getContent();
-            String title = discoveryPostCache.getTitle();
-            ArrayList<String> imgs = JsonParseUtil.parseImgs(discoveryPostCache.getImagesUrl());
-            int likeCount = discoveryPostCache.getLikeCount();
-            int commentCount = discoveryPostCache.getCommentCount();
-            int shareCount = discoveryPostCache.getShareCount();
+            String time = followPostCache.getTime();
+            String device = followPostCache.getDevice();
+            String content = followPostCache.getContent();
+            String title = followPostCache.getTitle();
+            ArrayList<String> imgs = JsonParseUtil.parseImgs(followPostCache.getImagesUrl());
+            int likeCount = followPostCache.getLikeCount();
+            int commentCount = followPostCache.getCommentCount();
+            int shareCount = followPostCache.getShareCount();
 
-            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
-            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
+            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
+            FollowUserCache followUserCache = userBox.get(uid);
 
             //判断当前用户是否对当前文章点赞点赞
-            Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
-            DiscoveryLikeCache discoveryLikeCache = likeBox.query().equal(DiscoveryLikeCache_.pid, id).build().findFirst();
+            Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
+            FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
             boolean isLike = false;
-            if (discoveryLikeCache != null) {
-                isLike = discoveryLikeCache.isLike();
+            if (followLikeCache != null) {
+                isLike = followLikeCache.isLike();
             }
 
             GridView mArticleImg = helper.getView(R.id.gv_images_article);
@@ -200,8 +198,8 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_article);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
 
-            helper.setText(R.id.tv_username_article, discoveryUserCache.getUsername());
-            Glide.with(mContext).load(discoveryUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.setText(R.id.tv_username_article, followUserCache.getUsername());
+            Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
@@ -277,6 +275,5 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                 }
             }, false);
         }
-
     }
 }
