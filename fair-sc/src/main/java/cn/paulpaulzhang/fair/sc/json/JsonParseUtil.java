@@ -8,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
-import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryUserCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowLikeCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
 import cn.paulpaulzhang.fair.sc.database.entity.TopicCache;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
@@ -26,7 +29,7 @@ import io.objectbox.Box;
  * 描述: Json解析工具类
  */
 public final class JsonParseUtil {
-    public static void parsePost(String response, int requestType) {
+    public static void parseDiscoveryPost(String response, int requestType) {
         List<DiscoveryPostCache> discoveryPostCaches = new ArrayList<>();
         List<DiscoveryUserCache> discoveryUserCaches = new ArrayList<>();
         List<DiscoveryLikeCache> discoveryLikeCaches = new ArrayList<>();
@@ -59,18 +62,9 @@ public final class JsonParseUtil {
             JSONObject object = userArr.getJSONObject(i);
             long id = object.getLong("id");
             String username = object.getString("username");
-            String birthday = object.getString("birthday");
-            String gender = object.getString("gender");
-            int followers = object.getInteger("followers");
-            int fans = object.getInteger("fans");
-            String school = object.getString("school");
-            String introduction = object.getString("introduction");
             String avatar = object.getString("avatar");
-            String background = object.getString("background");
-            String time = object.getString("time");
 
-            DiscoveryUserCache discoveryUserCache = new DiscoveryUserCache(id, username, birthday, gender, followers,
-                    fans, school, introduction, avatar, background, time);
+            DiscoveryUserCache discoveryUserCache = new DiscoveryUserCache(id, username, avatar);
             discoveryUserCaches.add(discoveryUserCache);
         }
 
@@ -93,6 +87,65 @@ public final class JsonParseUtil {
         postBox.put(discoveryPostCaches);
         userBox.put(discoveryUserCaches);
         likeBox.put(discoveryLikeCaches);
+    }
+
+    public static void parseFollowPost(String response, int requestType) {
+        List<FollowPostCache> followPostCaches = new ArrayList<>();
+        List<FollowUserCache> followUserCaches = new ArrayList<>();
+        List<FollowLikeCache> followLikeCaches = new ArrayList<>();
+        JSONObject result = JSON.parseObject(response).getJSONObject("result");
+        JSONArray postArr = result.getJSONArray("post");
+        JSONArray userArr = result.getJSONArray("user");
+        JSONArray likeArr = result.getJSONArray("like");
+
+        for (int i = 0; i < postArr.size(); i++) {
+            JSONObject object = postArr.getJSONObject(i);
+            long id = object.getLong("id");
+            long uid = object.getLong("uid");
+            int type = object.getInteger("type");
+            String title = object.getString("title");
+            String content = object.getString("content");
+            String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
+            int likeCount = object.getInteger("likeCount");
+            int commentCount = object.getInteger("commentCount");
+            int shareCount = object.getInteger("shareCount");
+            String time = object.getString("time");
+            String device = object.getString("device");
+            FollowPostCache followPostCache = new FollowPostCache(id, uid, type, title, content, imagesUrl,
+                    likeCount, commentCount, shareCount, time, device);
+            followPostCaches.add(followPostCache);
+        }
+
+        for (int i = 0; i < userArr.size(); i++) {
+            JSONObject object = userArr.getJSONObject(i);
+            long id = object.getLong("id");
+            String username = object.getString("username");
+            String avatar = object.getString("avatar");
+
+            FollowUserCache followUserCache = new FollowUserCache(id, username, avatar);
+            followUserCaches.add(followUserCache);
+        }
+
+        for (int i = 0; i < likeArr.size(); i++) {
+            JSONObject object = likeArr.getJSONObject(i);
+            long pid = object.getLong("pid");
+            boolean isLike = object.getBoolean("isLike");
+            FollowLikeCache discoveryLikeCache = new FollowLikeCache(pid, isLike);
+            followLikeCaches.add(discoveryLikeCache);
+        }
+
+        Box<FollowPostCache> postBox = ObjectBox.get().boxFor(FollowPostCache.class);
+        Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
+        Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
+        if (requestType == Constant.REFRESH_DATA) {
+            postBox.removeAll();
+            userBox.removeAll();
+            likeBox.removeAll();
+        }
+
+        postBox.put(followPostCaches);
+        userBox.put(followUserCaches);
+        likeBox.put(followLikeCaches);
     }
 
     public static void parseLocalUser(String response) {

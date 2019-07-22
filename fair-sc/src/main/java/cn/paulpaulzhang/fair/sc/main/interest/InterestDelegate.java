@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main;
+package cn.paulpaulzhang.fair.sc.main.interest;
 
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
@@ -19,9 +19,11 @@ import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.TabViewPagerAdapter;
+import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDelegate;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -99,7 +101,14 @@ public class InterestDelegate extends FairDelegate implements
     public void onTabReselect(int position) {
         if (position == lastPosition && (System.currentTimeMillis() - time < 2000)) {
             if (position == 0) {
-
+                FollowDelegate fragment = (FollowDelegate) getChildFragmentManager().getFragments().get(position);
+                @SuppressLint("InflateParams") View view = fragment.getView();
+                SwipeRefreshLayout swipeRefreshLayout;
+                if (view != null) {
+                    swipeRefreshLayout = view.findViewById(R.id.srl_follow);
+                    swipeRefreshLayout.setRefreshing(true);
+                    fragment.loadData(Constant.REFRESH_DATA);
+                }
             } else if (position == 1) {
                 DiscoveryDelegate fragment = (DiscoveryDelegate) getChildFragmentManager().getFragments().get(position);
                 @SuppressLint("InflateParams") View view = fragment.getView();
@@ -110,7 +119,14 @@ public class InterestDelegate extends FairDelegate implements
                     fragment.loadData(Constant.REFRESH_DATA);
                 }
             } else if (position == 2) {
-
+                TopicDelegate fragment = (TopicDelegate) getChildFragmentManager().getFragments().get(position);
+                @SuppressLint("InflateParams") View view = fragment.getView();
+                SwipeRefreshLayout swipeRefreshLayout;
+                if (view != null) {
+                    swipeRefreshLayout = view.findViewById(R.id.srl_topic);
+                    swipeRefreshLayout.setRefreshing(true);
+                    fragment.loadData(Constant.REFRESH_DATA);
+                }
             }
         } else {
             time = System.currentTimeMillis();

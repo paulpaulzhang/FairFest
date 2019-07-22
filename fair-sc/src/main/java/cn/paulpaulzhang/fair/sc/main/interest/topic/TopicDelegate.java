@@ -19,7 +19,7 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;

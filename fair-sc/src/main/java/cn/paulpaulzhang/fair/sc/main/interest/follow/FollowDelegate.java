@@ -19,7 +19,7 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
@@ -81,7 +81,6 @@ public class FollowDelegate extends FairDelegate {
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA);
             List<FollowPostCache> followPostCaches = postBox.getAll();
-            //TODO 加载列表用户数据
             List<FollowItem> items = new ArrayList<>();
             long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
             for (int i = 0; i < count; i++) {
@@ -125,7 +124,7 @@ public class FollowDelegate extends FairDelegate {
                     .url("post")
                     .params("position", 0)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parsePost(r, type))
+                    .success(r -> JsonParseUtil.parseFollowPost(r, type))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
@@ -133,7 +132,7 @@ public class FollowDelegate extends FairDelegate {
                     .url("post")
                     .params("position", start)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parsePost(r, type))
+                    .success(r -> JsonParseUtil.parseFollowPost(r, type))
                     .build()
                     .get();
         }

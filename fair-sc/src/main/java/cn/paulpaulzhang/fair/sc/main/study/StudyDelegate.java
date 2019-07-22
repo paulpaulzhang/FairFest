@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main;
+package cn.paulpaulzhang.fair.sc.main.study;
 
 import android.os.Bundle;
 import android.view.View;

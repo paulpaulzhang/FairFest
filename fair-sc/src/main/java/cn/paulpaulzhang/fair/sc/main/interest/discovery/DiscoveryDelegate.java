@@ -21,11 +21,13 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Constant;
+import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
+import cn.paulpaulzhang.fair.sc.database.entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
@@ -77,6 +79,9 @@ public class DiscoveryDelegate extends FairDelegate {
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (position == Constant.USER_POSITION) {
+                return;
+            }
             DiscoveryItem item = (DiscoveryItem) adapter.getItem(position);
             if (item != null) {
                 Toasty.info(Objects.requireNonNull(getContext()), item.getDiscoveryPostCache().getId() + "", Toasty.LENGTH_SHORT, true).show();
@@ -109,13 +114,14 @@ public class DiscoveryDelegate extends FairDelegate {
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA);
             List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
-            //TODO 加载列表用户数据
             List<DiscoveryItem> items = new ArrayList<>();
             long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
             for (int i = 0; i < count; i++) {
                 DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
                 items.add(new DiscoveryItem(discoveryPostCache.getType(), discoveryPostCache));
             }
+            Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
+            items.add(Constant.USER_POSITION, new DiscoveryItem(2, userBox.getAll()));
             mAdapter.setNewData(items);
             mSwipeRefresh.setRefreshing(false);
 
@@ -153,7 +159,7 @@ public class DiscoveryDelegate extends FairDelegate {
                     .url("post")
                     .params("position", 0)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parsePost(r, type))
+                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, type))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
@@ -161,7 +167,7 @@ public class DiscoveryDelegate extends FairDelegate {
                     .url("post")
                     .params("position", start)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parsePost(r, type))
+                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, type))
                     .build()
                     .get();
         }

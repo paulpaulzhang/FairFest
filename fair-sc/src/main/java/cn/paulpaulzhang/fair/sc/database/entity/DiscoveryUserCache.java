@@ -19,46 +19,12 @@ public class DiscoveryUserCache {
 
     private String username; //用户名
 
-    private String birthday; //生日
-
-    private String gender; //性别
-
-    private int followers; //关注数
-
-    private int fans; //粉丝数
-
-    private String school; //学校
-
-    private String introduction; // 个人简介
-
     private String avatar; // 头像url
 
-    private String background; // 背景图片url
-
-    private String time; //注册时间
-
-    public DiscoveryUserCache(long id,
-                              String username,
-                              String birthday,
-                              String gender,
-                              int followers,
-                              int fans,
-                              String school,
-                              String introduction,
-                              String avatar,
-                              String background,
-                              String time) {
+    public DiscoveryUserCache(long id, String username, String avatar) {
         this.id = id;
         this.username = username;
-        this.birthday = birthday;
-        this.gender = gender;
-        this.followers = followers;
-        this.fans = fans;
-        this.school = school;
-        this.introduction = introduction;
         this.avatar = avatar;
-        this.background = background;
-        this.time = time;
     }
 
     public long getId() {
@@ -77,75 +43,11 @@ public class DiscoveryUserCache {
         this.username = username;
     }
 
-    public String getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public int getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(int followers) {
-        this.followers = followers;
-    }
-
-    public int getFans() {
-        return fans;
-    }
-
-    public void setFans(int fans) {
-        this.fans = fans;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
-
-    public String getIntroduction() {
-        return introduction;
-    }
-
-    public void setIntroduction(String introduction) {
-        this.introduction = introduction;
-    }
-
     public String getAvatar() {
         return avatar;
     }
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 }

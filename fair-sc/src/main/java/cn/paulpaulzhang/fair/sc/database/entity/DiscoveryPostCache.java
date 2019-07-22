@@ -2,11 +2,8 @@ package cn.paulpaulzhang.fair.sc.database.entity;
 
 import androidx.annotation.NonNull;
 
-import java.util.Date;
-
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity

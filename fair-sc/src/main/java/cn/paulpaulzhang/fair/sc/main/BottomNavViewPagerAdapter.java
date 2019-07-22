@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
+import cn.paulpaulzhang.fair.sc.main.chat.ChatDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.InterestDelegate;
+import cn.paulpaulzhang.fair.sc.main.market.MarketDelegate;
+import cn.paulpaulzhang.fair.sc.main.study.StudyDelegate;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main

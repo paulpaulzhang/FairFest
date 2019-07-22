@@ -43,28 +43,12 @@
       {
         "id": 10000,
         "username": "大水怪",
-        "birthday": "2019-9-1",
-        "gender": "男",
-        "followers": 20,
-        "fans": 10,
-        "school": "天津师范大学",
-        "introduction": "你踩踩",
-        "avatar": "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg",
-        "background": "http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg",
-        "time": "2019-7-11"
+        "avatar": "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg"
       },
       {
         "id": 10001,
         "username": "小水怪",
-        "birthday": "2019-6-1",
-        "gender": "男",
-        "followers": 10,
-        "fans": 0,
-        "school": "天津师范大学",
-        "introduction": "你踩踩",
-        "avatar": "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg",
-        "background": "http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg",
-        "time": "2019-7-10"
+        "avatar": "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg"
       }
     ],
     "like": [

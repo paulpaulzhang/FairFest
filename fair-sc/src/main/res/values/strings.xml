@@ -28,4 +28,6 @@
     <string name="more">查看更多</string>
     <string name="register">注册</string>
     <string name="discuss">讨论</string>
+    <string name="you_may_follow_student">你可能会关注的同学</string>
+    <string name="guess_you_like">猜你喜欢</string>
 </resources>

@@ -1,16 +1,20 @@
 package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.LinkType;
@@ -34,6 +38,7 @@ import cn.paulpaulzhang.fair.sc.main.post.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.DynamicActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -53,6 +58,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
         super(data);
         addItemType(DiscoveryItem.DYNAMIC, R.layout.view_dynamic_item);
         addItemType(DiscoveryItem.ARTICLE, R.layout.view_article_item);
+        addItemType(DiscoveryItem.USER, R.layout.view_user_item);
     }
 
     @Override
@@ -276,6 +282,20 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                     mContext.startActivity(new Intent(mContext, ArticleActivity.class));
                 }
             }, false);
+        } else if (item.getItemType() == DiscoveryItem.USER) {
+            List<RecommendUserItem> items = new ArrayList<>();
+            for (int i = 0; i < 10; i++) {
+                items.add(new RecommendUserItem());
+            }
+            RecyclerView mRecyclerView = helper.getView(R.id.rv_user);
+            RecommendUserAdapter mAdapter = new RecommendUserAdapter
+                    (R.layout.view_user_item_inner, items);
+            mRecyclerView.setAdapter(mAdapter);
+            LinearLayoutManager manager = new LinearLayoutManager(mContext);
+            manager.setOrientation(RecyclerView.HORIZONTAL);
+            mRecyclerView.setLayoutManager(manager);
+            mAdapter.setOnItemClickListener(
+                    (adapter, view, position) -> Toasty.info(mContext, position + "", Toasty.LENGTH_SHORT).show());
         }
 
     }

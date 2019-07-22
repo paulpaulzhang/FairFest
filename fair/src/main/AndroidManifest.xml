@@ -34,6 +34,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.DynamicActivity">
+
+        </activity>
+
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.ArticleActivity">
+
+        </activity>
     </application>
 
 </manifest>

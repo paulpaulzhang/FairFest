@@ -90,7 +90,6 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
 
             helper.setText(R.id.tv_username_dynamic, followUserCache.getUsername());
             Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
-
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
             boolean finalIsLike = isLike;

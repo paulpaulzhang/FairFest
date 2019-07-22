@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main;
+package cn.paulpaulzhang.fair.sc.main.chat;
 
 import android.net.Uri;
 import android.os.Bundle;
