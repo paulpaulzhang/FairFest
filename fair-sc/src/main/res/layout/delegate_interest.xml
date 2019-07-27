@@ -14,7 +14,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_height"
+            android:layout_height="@dimen/statusbar_height"
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -28,6 +28,7 @@
                     android:id="@+id/civ_user"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@android:color/holo_orange_dark"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -50,7 +51,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/outline_search_24"
+                        android:src="@drawable/ic_search"
                         tools:ignore="ContentDescription,RtlHardcoded" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -66,10 +67,11 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_add"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
-                    android:layout_marginRight="8dp"
-                    android:src="@drawable/outline_add_24"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/ic_add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toTopOf="parent"

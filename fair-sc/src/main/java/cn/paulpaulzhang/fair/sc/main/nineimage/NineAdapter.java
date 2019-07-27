@@ -22,6 +22,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.maning.imagebrowserlibrary.MNImageBrowser;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
+import com.maning.imagebrowserlibrary.utils.StatusBarUtil;
 
 import java.io.File;
 import java.util.ArrayList;

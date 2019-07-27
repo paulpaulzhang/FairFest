@@ -7,4 +7,6 @@
     <color name="font_default">#8A000000</color>
     <color name="background">#F7F7F7</color>
     <color name="font_tab">#F5F5F5</color>
+    <color name="font_user_card">#F5F5F5</color>
+    <color name="divider">#d5d5d5</color>
 </resources>

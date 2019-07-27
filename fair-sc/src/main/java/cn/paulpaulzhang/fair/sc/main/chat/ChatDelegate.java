@@ -27,7 +27,7 @@ public class ChatDelegate extends FairDelegate {
 
     @Override
     public Object setLayout() {
-        return R.layout.delegate_chat;
+        return R.layout.delegate_message;
     }
 
     @Override

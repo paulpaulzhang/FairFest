@@ -21,8 +21,6 @@ public class RecommendUserCache {
 
     private int fans; //粉丝数
 
-    private String school; //学校
-
     private String avatar; //头像url
 
     private String time; //注册时间
@@ -31,14 +29,12 @@ public class RecommendUserCache {
                               String username,
                               int followers,
                               int fans,
-                              String school,
                               String avatar,
                               String time) {
         this.id = id;
         this.username = username;
         this.followers = followers;
         this.fans = fans;
-        this.school = school;
         this.avatar = avatar;
         this.time = time;
     }
@@ -73,14 +69,6 @@ public class RecommendUserCache {
 
     public void setFans(int fans) {
         this.fans = fans;
-    }
-
-    public String getSchool() {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
     }
 
     public String getAvatar() {

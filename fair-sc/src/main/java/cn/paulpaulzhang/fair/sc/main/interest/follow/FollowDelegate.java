@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.follow;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -23,6 +24,8 @@ import cn.paulpaulzhang.fair.sc.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.post.ArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.DynamicActivity;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
@@ -49,7 +52,7 @@ public class FollowDelegate extends FairDelegate {
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         initSwipeRefresh();
-        initRecycler();
+        initRecyclerView();
         mSwipeRefresh.setRefreshing(true);
         loadData(Constant.REFRESH_DATA);
     }
@@ -60,7 +63,7 @@ public class FollowDelegate extends FairDelegate {
         mSwipeRefresh.setOnRefreshListener(() -> loadData(Constant.REFRESH_DATA));
     }
 
-    private void initRecycler() {
+    private void initRecyclerView() {
         mAdapter = new FollowAdapter(new ArrayList<>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
@@ -70,7 +73,16 @@ public class FollowDelegate extends FairDelegate {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             FollowItem item = (FollowItem) adapter.getItem(position);
             if (item != null) {
-                Toasty.info(Objects.requireNonNull(getContext()), item.getFollowPostCache().getId() + "", Toasty.LENGTH_SHORT, true).show();
+                if (item.getItemType() == FollowItem.DYNAMIC) {
+                    Intent intent = new Intent(getContext(), DynamicActivity.class);
+                    intent.putExtra("id", item.getFollowPostCache().getId());
+                    startActivity(intent);
+                } else if (item.getItemType() == FollowItem.ARTICLE) {
+                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    intent.putExtra("id", item.getFollowPostCache().getId());
+                    startActivity(intent);
+                }
+
             }
         });
     }

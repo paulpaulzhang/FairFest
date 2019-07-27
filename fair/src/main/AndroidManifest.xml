@@ -35,13 +35,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.DynamicActivity">
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.post.DynamicActivity"
+            android:label="@string/dynamic" />
 
-        </activity>
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.post.ArticleActivity"
+            android:label="@string/article"
+            android:theme="@style/TopicToolBarTheme"/>
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.ArticleActivity">
-
-        </activity>
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDetailActivity"
+            android:theme="@style/TopicToolBarTheme" />
     </application>
 
 </manifest>

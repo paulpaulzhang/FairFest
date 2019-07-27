@@ -1,7 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
 import android.content.Intent;
-import android.view.View;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -10,11 +9,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.LinkType;
@@ -54,7 +50,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
      *
      * @param data A new list is created out of this one to avoid mutable list
      */
-    public DiscoveryAdapter(List<DiscoveryItem> data) {
+    DiscoveryAdapter(List<DiscoveryItem> data) {
         super(data);
         addItemType(DiscoveryItem.DYNAMIC, R.layout.view_dynamic_item);
         addItemType(DiscoveryItem.ARTICLE, R.layout.view_article_item);
@@ -78,9 +74,6 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             int commentCount = discoveryPostCache.getCommentCount();
             int shareCount = discoveryPostCache.getShareCount();
 
-            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
-            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
-
             //判断当前用户是否对当前文章点赞点赞
             Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
             DiscoveryLikeCache discoveryLikeCache = likeBox.query().equal(DiscoveryLikeCache_.pid, id).build().findFirst();
@@ -96,6 +89,9 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_dynamic);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
 
+            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
+            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
+
             helper.setText(R.id.tv_username_dynamic, discoveryUserCache.getUsername());
             Glide.with(mContext).load(discoveryUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
@@ -103,16 +99,16 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
 
             boolean finalIsLike = isLike;
             if (finalIsLike) {
-                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
-                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
 
                 if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
@@ -123,7 +119,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                             .params("uid", current.getId())
                             .build().post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
@@ -168,7 +164,9 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             });
             mDynamicContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, DynamicActivity.class));
+                    Intent intent = new Intent(mContext, DynamicActivity.class);
+                    intent.putExtra("id", id);
+                    mContext.startActivity(intent);
                 }
             }, false);
         } else if (item.getItemType() == DiscoveryItem.ARTICLE) {
@@ -188,9 +186,6 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             int commentCount = discoveryPostCache.getCommentCount();
             int shareCount = discoveryPostCache.getShareCount();
 
-            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
-            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
-
             //判断当前用户是否对当前文章点赞点赞
             Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
             DiscoveryLikeCache discoveryLikeCache = likeBox.query().equal(DiscoveryLikeCache_.pid, id).build().findFirst();
@@ -206,6 +201,9 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_article);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
 
+            Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
+            DiscoveryUserCache discoveryUserCache = userBox.get(uid);
+
             helper.setText(R.id.tv_username_article, discoveryUserCache.getUsername());
             Glide.with(mContext).load(discoveryUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
@@ -213,15 +211,15 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
 
             boolean finalIsLike = isLike;
             if (finalIsLike) {
-                helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
-                helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
                 if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
@@ -232,7 +230,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
                             .params("uid", current.getId())
                             .build().post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
@@ -279,17 +277,15 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<DiscoveryItem, B
             });
             mArticleContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, ArticleActivity.class));
+                    Intent intent = new Intent(mContext, ArticleActivity.class);
+                    intent.putExtra("id", id);
+                    mContext.startActivity(intent);
                 }
             }, false);
         } else if (item.getItemType() == DiscoveryItem.USER) {
-            List<RecommendUserItem> items = new ArrayList<>();
-            for (int i = 0; i < 10; i++) {
-                items.add(new RecommendUserItem());
-            }
             RecyclerView mRecyclerView = helper.getView(R.id.rv_user);
             RecommendUserAdapter mAdapter = new RecommendUserAdapter
-                    (R.layout.view_user_item_inner, items);
+                    (R.layout.view_user_item_inner, item.getUserItems());
             mRecyclerView.setAdapter(mAdapter);
             LinearLayoutManager manager = new LinearLayoutManager(mContext);
             manager.setOrientation(RecyclerView.HORIZONTAL);

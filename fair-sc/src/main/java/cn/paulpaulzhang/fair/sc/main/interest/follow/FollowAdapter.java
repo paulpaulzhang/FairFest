@@ -47,7 +47,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
      *
      * @param data A new list is created out of this one to avoid mutable list
      */
-    public FollowAdapter(List<FollowItem> data) {
+    FollowAdapter(List<FollowItem> data) {
         super(data);
         addItemType(FollowItem.DYNAMIC, R.layout.view_dynamic_item);
         addItemType(FollowItem.ARTICLE, R.layout.view_article_item);
@@ -70,9 +70,6 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             int commentCount = followPostCache.getCommentCount();
             int shareCount = followPostCache.getShareCount();
 
-            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
-            FollowUserCache followUserCache = userBox.get(uid);
-
             //判断当前用户是否对当前文章点赞点赞
             Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
             FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
@@ -88,22 +85,26 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_dynamic);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
 
+            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
+            FollowUserCache followUserCache = userBox.get(uid);
+
             helper.setText(R.id.tv_username_dynamic, followUserCache.getUsername());
             Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+
             mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
 
             boolean finalIsLike = isLike;
             if (finalIsLike) {
-                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
-                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
 
                 if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.like);
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
@@ -114,7 +115,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
                             .params("uid", current.getId())
                             .build().post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.liked);
+                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
@@ -159,7 +160,9 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             });
             mDynamicContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, DynamicActivity.class));
+                    Intent intent = new Intent(mContext, DynamicActivity.class);
+                    intent.putExtra("id", id);
+                    mContext.startActivity(intent);
                 }
             }, false);
         } else if (item.getItemType() == FollowItem.ARTICLE) {
@@ -179,9 +182,6 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             int commentCount = followPostCache.getCommentCount();
             int shareCount = followPostCache.getShareCount();
 
-            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
-            FollowUserCache followUserCache = userBox.get(uid);
-
             //判断当前用户是否对当前文章点赞点赞
             Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
             FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
@@ -197,6 +197,9 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_article);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
 
+            Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
+            FollowUserCache followUserCache = userBox.get(uid);
+
             helper.setText(R.id.tv_username_article, followUserCache.getUsername());
             Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
@@ -204,15 +207,15 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
 
             boolean finalIsLike = isLike;
             if (finalIsLike) {
-                helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
-                helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
                 if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.like);
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
@@ -223,7 +226,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
                             .params("uid", current.getId())
                             .build().post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.liked);
+                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
                     mLikeCount.setText(String.valueOf(count));
                     mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
@@ -270,7 +273,9 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<FollowItem, BaseVie
             });
             mArticleContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, ArticleActivity.class));
+                    Intent intent = new Intent(mContext, ArticleActivity.class);
+                    intent.putExtra("id", id);
+                    mContext.startActivity(intent);
                 }
             }, false);
         }

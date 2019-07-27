@@ -25,16 +25,16 @@ public class DiscoveryItem implements MultiItemEntity {
 
     private DiscoveryPostCache discoveryPostCache;
 
-    private List<RecommendUserCache> userCaches;
+    private List<RecommendUserItem> userItems;
 
     DiscoveryItem(int itemType, DiscoveryPostCache discoveryPostCache) {
         this.itemType = itemType;
         this.discoveryPostCache = discoveryPostCache;
     }
 
-    DiscoveryItem(int itemType, List<RecommendUserCache> userCaches) {
+    DiscoveryItem(int itemType, List<RecommendUserItem> userItems) {
         this.itemType = itemType;
-        this.userCaches = userCaches;
+        this.userItems = userItems;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DiscoveryItem implements MultiItemEntity {
         return discoveryPostCache;
     }
 
-    public List<RecommendUserCache> getUserCaches() {
-        return userCaches;
+    public List<RecommendUserItem> getUserItems() {
+        return userItems;
     }
 }

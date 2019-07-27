@@ -19,7 +19,7 @@ public class FollowItem implements MultiItemEntity {
 
     private FollowPostCache followPostCache;
 
-    public FollowItem(int itemType, FollowPostCache followPostCache) {
+    FollowItem(int itemType, FollowPostCache followPostCache) {
         this.itemType = itemType;
         this.followPostCache = followPostCache;
     }

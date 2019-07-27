@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main.study;
+package cn.paulpaulzhang.fair.sc.main.user;
 
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +14,10 @@ import cn.paulpaulzhang.fair.sc.R;
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class StudyDelegate extends FairDelegate {
+public class UserDelegate extends FairDelegate {
     @Override
     public Object setLayout() {
-        return R.layout.delegate_study;
+        return R.layout.delegate_user;
     }
 
     @Override

@@ -14,7 +14,7 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.util.image.GlideRoundTransform;
 
 /**
- * 包名: cn.paulpaulzhang.fair.sc.main.interest.topic
+ * 包名: cn.paulpaulzhang.fair.sc.main.interest.ic_topic
  * 创建时间: 7/20/2019
  * 创建人: zlm31
  * 描述:
@@ -35,7 +35,7 @@ public class TopicAdapter extends BaseQuickAdapter<TopicItem, BaseViewHolder> {
                 .load(item.getTopicCache().getImg())
                 .apply(RequestOptions
                         .bitmapTransform(new GlideRoundTransform(mContext, 4))
-                        .placeholder(R.drawable.topic))
+                        .placeholder(R.drawable.ic_topic))
                 .into(mImageView);
     }
 }

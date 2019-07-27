@@ -20,8 +20,8 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.constant.Constant;
-import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.TabViewPagerAdapter;
+import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDelegate;
 
@@ -73,14 +73,14 @@ public class InterestDelegate extends FairDelegate implements
         mAdapter = new TabViewPagerAdapter
                 (getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setCurrentItem(0);
+        mViewPager.setCurrentItem(1);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setViewPager(mViewPager, titles);
-        mTabLayout.setCurrentTab(0);
+        mTabLayout.setCurrentTab(1);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.getTitleView(0).setTextSize(18);
-        mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mTabLayout.getTitleView(1).setTextSize(18);
+        mTabLayout.getTitleView(1).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
 
     @Override

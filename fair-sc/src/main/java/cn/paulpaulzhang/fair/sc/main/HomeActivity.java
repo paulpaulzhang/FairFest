@@ -1,15 +1,11 @@
 package cn.paulpaulzhang.fair.sc.main;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.Toolbar;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
@@ -20,14 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.user.UserCenterActivity;
-import de.hdodenhof.circleimageview.CircleImageView;
-import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -68,19 +60,20 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     }
 
     private void initBottomNavigation() {
-        AHBottomNavigationItem study = new AHBottomNavigationItem
-                (getString(R.string.study), R.drawable.outline_school_24);
-        AHBottomNavigationItem interest = new AHBottomNavigationItem
-                (getString(R.string.interest), R.drawable.outline_bubble_chart_24);
-        AHBottomNavigationItem market = new AHBottomNavigationItem
-                (getString(R.string.market), R.drawable.outline_local_mall_24);
-        AHBottomNavigationItem chat = new AHBottomNavigationItem
-                (getString(R.string.chat), R.drawable.outline_chat_24);
 
-        items.add(study);
+        AHBottomNavigationItem interest = new AHBottomNavigationItem
+                (getString(R.string.interest), R.drawable.ic_interest);
+        AHBottomNavigationItem market = new AHBottomNavigationItem
+                (getString(R.string.market), R.drawable.ic_mall);
+        AHBottomNavigationItem message = new AHBottomNavigationItem
+                (getString(R.string.message), R.drawable.ic_message);
+        AHBottomNavigationItem user = new AHBottomNavigationItem
+                (getString(R.string.mine), R.drawable.ic_mine);
+
         items.add(interest);
         items.add(market);
-        items.add(chat);
+        items.add(message);
+        items.add(user);
 
         mBottomNavigation.addItems(items);
         mBottomNavigation.setTranslucentNavigationEnabled(true);
@@ -98,7 +91,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 return true;
             }
 
-            mViewPager.setCurrentItem(position);
+            mViewPager.setCurrentItem(position, false);
 
             if (currentDelegate == null) {
                 return true;
@@ -113,8 +106,8 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 (getSupportFragmentManager(),
                         BottomNavViewPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mViewPagerAdapter);
-        mViewPager.setCurrentItem(1);
-        mBottomNavigation.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
+        mBottomNavigation.setCurrentItem(0);
 
         currentDelegate = mViewPagerAdapter.getCurrentDelegate();
     }

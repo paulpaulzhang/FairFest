@@ -30,8 +30,9 @@ public class FairApp extends Application {
                 .withInterceptor(new DebugInterceptor("index", R.raw.test))
                 .withInterceptor(new DebugInterceptor("post", R.raw.post))
                 .withInterceptor(new DebugInterceptor("user", R.raw.user))
-                .withInterceptor(new DebugInterceptor("like", R.raw.like))
-                .withInterceptor(new DebugInterceptor("topic", R.raw.topic))
+                .withInterceptor(new DebugInterceptor("ic_like", R.raw.like))
+                .withInterceptor(new DebugInterceptor("ic_topic", R.raw.topic))
+                .withInterceptor(new DebugInterceptor("recommend", R.raw.recommend_user))
                 .configure();
         Logger.addLogAdapter(new AndroidLogAdapter());
         ObjectBox.init(this);

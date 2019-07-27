@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.topic;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -70,7 +71,9 @@ public class TopicDelegate extends FairDelegate {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             TopicItem item = (TopicItem) adapter.getItem(position);
             if (item != null) {
-                Toasty.info(Objects.requireNonNull(getContext()), item.getTopicCache().getName(), Toasty.LENGTH_SHORT, true).show();
+                Intent intent = new Intent(getContext(), TopicDetailActivity.class);
+                intent.putExtra("name", item.getTopicCache().getName());
+                startActivity(intent);
             }
         });
     }
@@ -115,7 +118,7 @@ public class TopicDelegate extends FairDelegate {
     private void requestData(long start, int type) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url("topic")
+                    .url("ic_topic")
                     .params("position", 0)
                     .params("number", Constant.LOAD_MAX_SEVER)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
@@ -123,7 +126,7 @@ public class TopicDelegate extends FairDelegate {
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url("topic")
+                    .url("ic_topic")
                     .params("position", start)
                     .params("number", Constant.LOAD_MAX_SEVER)
                     .success(r -> JsonParseUtil.parseTopic(r, type))

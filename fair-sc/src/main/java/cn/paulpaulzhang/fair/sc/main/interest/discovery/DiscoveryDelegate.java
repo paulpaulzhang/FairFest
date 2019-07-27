@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.sc.main.post.ArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.DynamicActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
@@ -84,7 +87,16 @@ public class DiscoveryDelegate extends FairDelegate {
             }
             DiscoveryItem item = (DiscoveryItem) adapter.getItem(position);
             if (item != null) {
-                Toasty.info(Objects.requireNonNull(getContext()), item.getDiscoveryPostCache().getId() + "", Toasty.LENGTH_SHORT, true).show();
+                if (item.getItemType() == DiscoveryItem.DYNAMIC) {
+                    Intent intent = new Intent(getContext(), DynamicActivity.class);
+                    intent.putExtra("id", item.getDiscoveryPostCache().getId());
+                    startActivity(intent);
+                } else if (item.getItemType() == DiscoveryItem.ARTICLE) {
+                    Intent intent = new Intent(getContext(), ArticleActivity.class);
+                    intent.putExtra("id", item.getDiscoveryPostCache().getId());
+                    startActivity(intent);
+                }
+
             }
         });
     }
@@ -113,6 +125,7 @@ public class DiscoveryDelegate extends FairDelegate {
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA);
+            //load post data
             List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
             List<DiscoveryItem> items = new ArrayList<>();
             long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
@@ -120,8 +133,13 @@ public class DiscoveryDelegate extends FairDelegate {
                 DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
                 items.add(new DiscoveryItem(discoveryPostCache.getType(), discoveryPostCache));
             }
+            //load user data
             Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
-            items.add(Constant.USER_POSITION, new DiscoveryItem(2, userBox.getAll()));
+            List<RecommendUserItem> userItems = new ArrayList<>();
+            for (RecommendUserCache user : userBox.getAll()) {
+                userItems.add(new RecommendUserItem(user));
+            }
+            items.add(Constant.USER_POSITION, new DiscoveryItem(2, userItems));
             mAdapter.setNewData(items);
             mSwipeRefresh.setRefreshing(false);
 
@@ -159,15 +177,21 @@ public class DiscoveryDelegate extends FairDelegate {
                     .url("post")
                     .params("position", 0)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, type))
+                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, Constant.REFRESH_DATA))
                     .build()
                     .get();
+            RestClient.builder()
+                    .url("recommend")
+                    .success(JsonParseUtil::parseRecommendUsers)
+                    .build()
+                    .get();
+
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
                     .url("post")
                     .params("position", start)
                     .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, type))
+                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, Constant.REFRESH_DATA))
                     .build()
                     .get();
         }
