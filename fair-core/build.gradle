@@ -99,10 +99,8 @@ dependencies {
     api 'pub.devrel:easypermissions:3.0.0'
 
     //状态栏工具
-    api('com.github.niorgai:StatusBarCompat:2.3.3', {
-        exclude group: 'androidx.appcompat:appcompat'
-        exclude group: 'com.google.android.material:material'
-    })
+    api 'com.gyf.immersionbar:immersionbar:3.0.0-beta05'
+    api 'com.gyf.immersionbar:immersionbar-components:3.0.0-beta05'
 
     api 'com.facebook.fresco:fresco:2.0.0'
     api 'com.facebook.fresco:animated-gif:2.0.0'
@@ -123,6 +121,10 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
     }
+
+    api 'top.zibin:Luban:1.1.8'
+
+    api 'com.zhihu.android:matisse:0.5.2-beta5'
 
 
 }

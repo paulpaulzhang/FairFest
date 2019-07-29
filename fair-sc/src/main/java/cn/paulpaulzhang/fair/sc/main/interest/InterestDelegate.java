@@ -1,6 +1,7 @@
 package cn.paulpaulzhang.fair.sc.main.interest;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
@@ -24,6 +26,7 @@ import cn.paulpaulzhang.fair.sc.main.interest.TabViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDelegate;
+import cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -136,7 +139,6 @@ public class InterestDelegate extends FairDelegate implements
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
     }
 
     @Override
@@ -152,6 +154,20 @@ public class InterestDelegate extends FairDelegate implements
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    @OnClick(R2.id.iv_add)
+    void openCreateDialog() {
+        startActivity(new Intent(getContext(), CreateDynamicActivity.class));
+    }
+
+    @OnClick(R2.id.ll_search)
+    void openSearchBar() {
+
+    }
+
+    @OnClick(R2.id.civ_user)
+    void openUserCenter() {
 
     }
 }

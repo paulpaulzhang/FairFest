@@ -2,4 +2,9 @@
 <resources>
     <dimen name="statusbar_height">44dp</dimen>
     <dimen name="item_menu_size">22dp</dimen>
+    <dimen name="bottom_icon">24dp</dimen>
+    <dimen name="grid_expected_size">120dp</dimen>
+    <dimen name="item_margin_horizontal">24dp</dimen>
+    <dimen name="item_margin_vertical">8dp</dimen>
+    <dimen name="img_picker_size">120dp</dimen>
 </resources>

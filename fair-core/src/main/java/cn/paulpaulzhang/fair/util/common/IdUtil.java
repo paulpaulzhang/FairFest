@@ -1,7 +1,5 @@
-package cn.paulpaulzhang.fair.util.system;
+package cn.paulpaulzhang.fair.util.common;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.regex.Matcher;

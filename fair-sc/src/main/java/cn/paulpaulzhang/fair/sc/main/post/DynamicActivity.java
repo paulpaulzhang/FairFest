@@ -38,6 +38,7 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
+import cn.paulpaulzhang.fair.util.common.CommonUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -104,7 +105,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
 
         Toasty.info(this, id + "", Toasty.LENGTH_SHORT).show();
 
-        initToolbar();
+        initToolbar(mToolbar);
         initTab();
 
         mUsername.setText("PaulPaulZhang");
@@ -117,14 +118,6 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         list.add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-oi9W7QkQ4yu3xHUYOngWam_JckiY4ic0SeESz8oGjbXvLDEH");
         list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563891473309&di=d4702b7ea26cd7b17ba45920f5d27f46&imgtype=0&src=http%3A%2F%2Ftx.haiqq.com%2Fuploads%2Fallimg%2F170506%2F0054524r5-2.jpg");
         mGridView.setAdapter(new NineAdapter(list, this));
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private void initTab() {
@@ -173,22 +166,9 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         customerView.findViewById(R.id.iv_topic).setOnClickListener(this);
         customerView.findViewById(R.id.iv_send).setOnClickListener(this);
         AppCompatEditText mEditText = customerView.findViewById(R.id.et_edit);
-        new Handler().postDelayed(() -> showKeyboard(mEditText), 10);
+        new Handler().postDelayed(() -> CommonUtil.showKeyboard(mEditText), 10);
     }
 
-    private void showKeyboard(AppCompatEditText editText) {
-        //其中editText为dialog中的输入框的 EditText
-        if (editText != null) {
-            //设置可获得焦点
-            editText.setFocusable(true);
-            editText.setFocusableInTouchMode(true);
-            //请求获得焦点
-            editText.requestFocus();
-            //调用系统输入法
-            InputMethodManager inputManager = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.showSoftInput(editText, 0);
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -16,4 +16,5 @@ public class Constant {
     public static final int LOAD_MAX_SEVER = 100; //每一次从服务器加载最大数量
 
     public static final int USER_POSITION = 1; // the position of recommend_user user list
+    public static final int REQUEST_CODE_CHOOSE = 300;
 }

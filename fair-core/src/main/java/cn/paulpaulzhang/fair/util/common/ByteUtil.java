@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.util.system;
+package cn.paulpaulzhang.fair.util.common;
 
 import java.util.regex.Pattern;
 

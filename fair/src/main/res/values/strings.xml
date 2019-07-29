@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Fair School</string>
     <string name="sign_up">注册</string>
+    <string name="post_dynamic">发表动态</string>
 </resources>

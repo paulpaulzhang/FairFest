@@ -37,7 +37,6 @@ import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowItem;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
-import qiu.niorgai.StatusBarCompat;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest.ic_topic
@@ -82,25 +81,16 @@ public class TopicDetailActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        StatusBarCompat.translucentStatusBar(this);
 
         Intent intent = getIntent();
         String name = intent.getStringExtra("name");
 
-        initToolbar();
+        initToolbar(mToolbar);
         initCollapsing();
         initSwipeRefresh();
         initRecyclerView();
         mSwipeRefresh.setRefreshing(true);
         loadData(Constant.REFRESH_DATA);
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private void initCollapsing() {

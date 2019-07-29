@@ -27,6 +27,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
+import cn.paulpaulzhang.fair.util.common.CommonUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -98,6 +100,9 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
     @BindView(R2.id.app_bar)
     AppBarLayout mAppBar;
 
+    @BindView(R2.id.tv_title)
+    AppCompatTextView mTitle;
+
     @Override
     public int setLayout() {
         return R.layout.activity_article;
@@ -108,19 +113,13 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
         Intent intent = getIntent();
         long id = intent.getLongExtra("id", -1);
 
+        ImmersionBar.with(this).titleBar(mToolbar).init();
+
         Toasty.info(this, id + "", Toasty.LENGTH_SHORT).show();
 
-        initToolbar();
+        initToolbar(mToolbar);
         initTab();
         initCollapsing();
-    }
-
-    private void initToolbar() {
-        setSupportActionBar(mToolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     private void initCollapsing() {
@@ -128,6 +127,7 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
         mTime.setText("2019-1-1");
         mDevice.setText("MI CC 9");
         mContent.setText("你猜猜");
+        mTitle.setText("文章");
 
         List<String> list = new ArrayList<>();
         list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563891473309&di=d4702b7ea26cd7b17ba45920f5d27f46&imgtype=0&src=http%3A%2F%2Ftx.haiqq.com%2Fuploads%2Fallimg%2F170506%2F0054524r5-2.jpg");
@@ -140,8 +140,10 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
                 if (state == State.EXPANDED) {
                     mToolbar.setTitle("");
+                    mTitle.setVisibility(View.VISIBLE);
                 } else if (state == State.COLLAPSED) {
-                    mToolbar.setTitle("文章");
+                    mToolbar.setTitle(mTitle.getText());
+                    mTitle.setVisibility(View.GONE);
                     mCollapsing.setContentScrimColor(getColor(R.color.colorAccent));
                 } else {
                     mCollapsing.setContentScrimColor(getColor(android.R.color.transparent));
@@ -197,21 +199,7 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
         customerView.findViewById(R.id.iv_topic).setOnClickListener(this);
         customerView.findViewById(R.id.iv_send).setOnClickListener(this);
         AppCompatEditText mEditText = customerView.findViewById(R.id.et_edit);
-        new Handler().postDelayed(() -> showKeyboard(mEditText), 10);
-    }
-
-    private void showKeyboard(AppCompatEditText editText) {
-        //其中editText为dialog中的输入框的 EditText
-        if (editText != null) {
-            //设置可获得焦点
-            editText.setFocusable(true);
-            editText.setFocusableInTouchMode(true);
-            //请求获得焦点
-            editText.requestFocus();
-            //调用系统输入法
-            InputMethodManager inputManager = (InputMethodManager) editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.showSoftInput(editText, 0);
-        }
+        new Handler().postDelayed(() -> CommonUtil.showKeyboard(mEditText), 10);
     }
 
     @Override

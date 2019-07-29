@@ -20,7 +20,9 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.gyf.immersionbar.ImmersionBar;
 import com.maning.imagebrowserlibrary.MNImageBrowser;
+import com.maning.imagebrowserlibrary.MNImageBrowserActivity;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
 import com.maning.imagebrowserlibrary.utils.StatusBarUtil;
 
@@ -82,43 +84,44 @@ public class NineAdapter extends BaseAdapter {
         mViewHolder.imageView.setImageURI(uri);
         mViewHolder.imageView.setHierarchy(hierarchy);
 
-        mViewHolder.imageView.setOnClickListener(v -> MNImageBrowser
-                .with(mContext)
-                .setTransformType(ImageBrowserConfig.TransformType.Transform_Default)
-                .setIndicatorType(ImageBrowserConfig.IndicatorType.Indicator_Number)
-                .setIndicatorHide(false)
-                .setCustomProgressViewLayoutID(R.layout.view_custom_progress)
-                .setCurrentPosition(i)
-                .setImageEngine(new GlideImageEngine())
-                .setImageList((ArrayList<String>) imagesUrl)
-                .setScreenOrientationType(ImageBrowserConfig.ScreenOrientationType.ScreenOrientation_Portrait)
-                .setOnClickListener((fragmentActivity, imageView, i1, s) -> MNImageBrowser.finishImageBrowser())
-                .setOnLongClickListener((fragmentActivity, imageView, i12, s) -> {
-                    fragmentActivity.setTheme(R.style.DialogTheme);
-                    new MaterialAlertDialogBuilder(fragmentActivity)
-                            .setTitle("保存图片")
-                            .setMessage("点击确认保存图片到本地")
-                            .setPositiveButton("确认", (dialogInterface, i14) -> {
-                                final Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888, true);
-                                convertLayoutToBitmap(fragmentActivity.getWindow(), imageView, bitmap, i15 -> {
-                                    if (i15 == PixelCopy.SUCCESS) {
-                                        File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
-                                        if (file != null) {
-                                            dialogInterface.dismiss();
-                                            Toasty.success(fragmentActivity, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toasty.error(fragmentActivity, "保存失败", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                            })
-                            .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
-                            .show();
-                })
-                .setFullScreenMode(false)
-                .setActivityOpenAnime(R.anim.activity_in)
-                .setActivityExitAnime(R.anim.activity_out)
-                .show(mViewHolder.imageView));
+        mViewHolder.imageView.setOnClickListener(v ->
+                MNImageBrowser
+                        .with(mContext)
+                        .setTransformType(ImageBrowserConfig.TransformType.Transform_Default)
+                        .setIndicatorType(ImageBrowserConfig.IndicatorType.Indicator_Number)
+                        .setIndicatorHide(false)
+                        .setCustomProgressViewLayoutID(R.layout.view_custom_progress)
+                        .setCurrentPosition(i)
+                        .setImageEngine(new GlideImageEngine())
+                        .setImageList((ArrayList<String>) imagesUrl)
+                        .setScreenOrientationType(ImageBrowserConfig.ScreenOrientationType.ScreenOrientation_Portrait)
+                        .setOnClickListener((fragmentActivity, imageView, i1, s) -> MNImageBrowser.finishImageBrowser())
+                        .setOnLongClickListener((fragmentActivity, imageView, i12, s) -> {
+                            fragmentActivity.setTheme(R.style.DialogTheme);
+                            new MaterialAlertDialogBuilder(fragmentActivity)
+                                    .setTitle("保存图片")
+                                    .setMessage("点击确认保存图片到本地")
+                                    .setPositiveButton("确认", (dialogInterface, i14) -> {
+                                        final Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888, true);
+                                        convertLayoutToBitmap(fragmentActivity.getWindow(), imageView, bitmap, i15 -> {
+                                            if (i15 == PixelCopy.SUCCESS) {
+                                                File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
+                                                if (file != null) {
+                                                    dialogInterface.dismiss();
+                                                    Toasty.success(fragmentActivity, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toasty.error(fragmentActivity, "保存失败", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                                    })
+                                    .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
+                                    .show();
+                        })
+                        .setFullScreenMode(false)
+                        .setActivityOpenAnime(R.anim.activity_in)
+                        .setActivityExitAnime(R.anim.activity_out)
+                        .show(mViewHolder.imageView));
         return view;
     }
 

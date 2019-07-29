@@ -5,11 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.maning.imagebrowserlibrary.utils.StatusBarUtil;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import qiu.niorgai.StatusBarCompat;
 
 /**
  * 项目名：   FairFest

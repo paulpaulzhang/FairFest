@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.maning.imagebrowserlibrary.utils.StatusBarUtil;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -27,7 +27,6 @@ import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
-import qiu.niorgai.StatusBarCompat;
 
 public class SignUpActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.et_phone)
@@ -51,7 +50,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        StatusBarCompat.translucentStatusBar(this);
+        ImmersionBar.with(this).init();
     }
 
     private boolean checkForm() {

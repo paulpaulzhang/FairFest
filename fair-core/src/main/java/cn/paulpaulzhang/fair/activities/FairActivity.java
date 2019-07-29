@@ -1,5 +1,8 @@
 package cn.paulpaulzhang.fair.activities;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+
 /**
  * 项目名：   FairFest
  * 包名：     cn.paulpaulzhang.fair.activities
@@ -9,4 +12,12 @@ package cn.paulpaulzhang.fair.activities;
  * 描述：     应用activity
  */
 public abstract class FairActivity extends PermissionCheckerActivity {
+
+    public void initToolbar(Toolbar mToolbar) {
+        setSupportActionBar(mToolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 }

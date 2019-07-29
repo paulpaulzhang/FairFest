@@ -13,6 +13,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="cn.paulpaulzhang.fairfest.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
 
         </activity>
@@ -41,12 +64,15 @@
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.post.ArticleActivity"
-            android:label="@string/article"
-            android:theme="@style/TopicToolBarTheme"/>
+            android:label="@string/article" />
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDetailActivity"
             android:theme="@style/TopicToolBarTheme" />
+
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:label="@string/post_dynamic"/>
     </application>
 
 </manifest>

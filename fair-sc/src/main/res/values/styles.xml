@@ -50,4 +50,13 @@
         <item name="android:indeterminateTintMode">src_atop</item>
     </style>
 
+    <style name="Matisse.Zhihu.Custom" parent="Matisse.Zhihu">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="toolbar">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="bottomToolbar.apply.textColor">@color/colorAccent</item>
+        <item name="preview.bottomToolbar.apply.textColor">@color/colorAccent</item>
+        <item name="item.checkCircle.backgroundColor">@color/colorAccent</item>
+    </style>
+
 </resources>
