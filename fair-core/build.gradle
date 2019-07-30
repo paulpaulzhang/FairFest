@@ -126,5 +126,7 @@ dependencies {
 
     api 'com.zhihu.android:matisse:0.5.2-beta5'
 
+    api 'com.github.chrisbanes:PhotoView:2.3.0'
+
 
 }

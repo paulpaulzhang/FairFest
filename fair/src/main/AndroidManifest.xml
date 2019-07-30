@@ -70,9 +70,11 @@
             android:name="cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDetailActivity"
             android:theme="@style/TopicToolBarTheme" />
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:label="@string/post_dynamic"/>
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity"
+            android:label="@string/post_dynamic"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.PhotoPreviewActivity" />
     </application>
 
 </manifest>

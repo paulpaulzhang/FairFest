@@ -32,6 +32,7 @@ import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.constant.Constant;
+import cn.paulpaulzhang.fair.sc.main.PhotoPreviewActivity;
 import cn.paulpaulzhang.fair.util.common.CommonUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import es.dmoral.toasty.Toasty;
@@ -91,7 +92,12 @@ public class CreateDynamicActivity extends FairActivity {
 
         mAdapter.setFooterViewAsFlow(true);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-
+            Intent intent = new Intent(CreateDynamicActivity.this, PhotoPreviewActivity.class);
+            ImageItem item = (ImageItem) adapter.getItem(position);
+            if (item != null) {
+                intent.putExtra("path", item.getUrl());
+                startActivity(intent);
+            }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             adapter.remove(position);
