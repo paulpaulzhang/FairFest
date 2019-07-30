@@ -23,12 +23,14 @@ public abstract class ProxyActivity extends AppCompatActivity {
 
     /**
      * 绑定布局id，子类实现该方法传入布局id即可，不需要再实现onCreate绑定布局
+     *
      * @return id
      */
     public abstract int setLayout();
 
     /**
      * 重写该方法实现自己的业务逻辑，该方法在onCreate调用
+     *
      * @param savedInstanceState savedInstanceState
      */
     public abstract void init(@Nullable Bundle savedInstanceState);

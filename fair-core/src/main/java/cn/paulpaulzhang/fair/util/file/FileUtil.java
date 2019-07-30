@@ -127,7 +127,7 @@ public final class FileUtil {
         }
         FileOutputStream fos = null;
         BufferedOutputStream bos = null;
-        File fileName = createFileByTime(dir, "DOWN_LOAD", "jpg");
+        File fileName = createFileByTime(dir, "FairSchool", "jpg");
         try {
             fos = new FileOutputStream(fileName);
             bos = new BufferedOutputStream(fos);

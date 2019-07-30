@@ -1,0 +1,34 @@
+{
+  "post": [
+    post1, post2, post3, post4...
+  ],
+
+  "like": [
+    {
+      "post1id": 123456,
+      "like": true
+    },
+    {
+      "post2id": 123456,
+      "like": true
+    },
+    {
+      "post3id": 123456,
+      "like": true
+    },
+    ......
+  ],
+  "user": [
+    user1, user2, user3, user4...
+  ],
+
+  或者
+  "like": [
+    true,
+    false,
+    true,
+    false,
+    true
+  ],
+  顺序与post里面的帖子顺序一致就行
+}

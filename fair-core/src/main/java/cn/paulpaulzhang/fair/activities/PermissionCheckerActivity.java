@@ -1,5 +1,9 @@
 package cn.paulpaulzhang.fair.activities;
 
+import androidx.annotation.NonNull;
+
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * 项目名：   FairFest
  * 包名：     cn.paulpaulzhang.fair.activities
@@ -9,4 +13,9 @@ package cn.paulpaulzhang.fair.activities;
  * 描述：     权限activity
  */
 public abstract class PermissionCheckerActivity extends ProxyActivity {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
 }

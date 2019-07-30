@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.sign;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -21,13 +23,12 @@ import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 
 public class SignInActivity extends FairActivity implements ITimerListener {
-    @BindView(R2.id.tb_sign_in)
-    Toolbar mToolbar;
     @BindView(R2.id.et_phone)
     TextInputEditText mPhone;
     @BindView(R2.id.et_code)
@@ -49,7 +50,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        setSupportActionBar(mToolbar);
+        ImmersionBar.with(this).init();
     }
 
     private boolean checkForm() {
@@ -114,13 +115,14 @@ public class SignInActivity extends FairActivity implements ITimerListener {
             final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
             RestClient.builder()
-                    .url("sign_up")
+                    .url("user")
                     .params("phone", phone)
                     .params("code", code)
                     .success(response -> {
                         FairLogger.json("USER", response);
                         SignHandler.onSignIn(response, () -> {
                             //TODO 跳转逻辑
+                            startActivity(new Intent(SignInActivity.this, HomeActivity.class));
                         });
                     })
                     .error((c, m) -> Toast.makeText(this, c + " " + m, Toast.LENGTH_SHORT).show())

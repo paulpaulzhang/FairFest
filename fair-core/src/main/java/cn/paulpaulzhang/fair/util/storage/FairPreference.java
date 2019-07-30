@@ -81,7 +81,18 @@ public class FairPreference {
                 .apply();
     }
 
+    public static void addCustomAppProfile(String key, Long val) {
+        getAppPreference()
+                .edit()
+                .putLong(key, val)
+                .apply();
+    }
+
     public static String getCustomAppProfile(String key) {
         return getAppPreference().getString(key, "");
+    }
+
+    public static Long getCustomAppProfileL(String key) {
+        return getAppPreference().getLong(key, 0L);
     }
 }

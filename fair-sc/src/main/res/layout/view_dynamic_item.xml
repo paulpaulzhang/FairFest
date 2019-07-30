@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    android:background="@android:color/white"
+    app:cardCornerRadius="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_user_dynamic"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/ic_launcher"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_username_dynamic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@id/civ_user_dynamic"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlHardcoded" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_time_dynamic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/civ_user_dynamic"
+                tools:ignore="RtlHardcoded" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_from_dynamic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:text="@string/from"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tv_time_dynamic"
+                tools:ignore="RtlHardcoded" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_device_dynamic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:textSize="13sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/tv_from_dynamic"
+                tools:ignore="RtlHardcoded" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
+            android:id="@+id/etv_content_dynamic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="5dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:ep_expand_color="@color/colorAccent"
+            app:ep_expand_text="@string/more"
+            app:ep_link_color="@color/colorAccent"
+            app:ep_link_res="@drawable/ic_link"
+            app:ep_max_line="5"
+            app:ep_mention_color="@color/colorAccent"
+            app:ep_need_always_showright="true"
+            app:ep_need_animation="true"
+            app:ep_need_expand="true"
+            app:ep_need_link="true"
+            app:ep_need_mention="true"
+            app:ep_need_self="true"
+            app:ep_self_color="@color/colorAccent" />
+
+        <cn.paulpaulzhang.fair.ui.view.MyGridView
+            android:id="@+id/gv_images_dynamic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:horizontalSpacing="5dp"
+            android:numColumns="3"
+            android:verticalSpacing="5dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_like_dynamic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_like_dynamic"
+                    android:layout_width="@dimen/item_menu_size"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:src="@drawable/ic_like" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_like_dynamic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_comment_dynamic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/item_menu_size"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:src="@drawable/ic_comment" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_comment_dynamic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_share_dynamic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/item_menu_size"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:src="@drawable/ic_share" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_share_dynamic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/item_menu_size"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    tools:ignore="RtlHardcoded" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

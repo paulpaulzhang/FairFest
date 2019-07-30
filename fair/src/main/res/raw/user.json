@@ -1,0 +1,29 @@
+{
+  "ok": 200,
+  "msg": "ok",
+  "user": {
+    "id": 123456,
+    "username": "paulpaulzhang",
+    "password": "123456",
+    "birthday": "1999-3-15",
+    "gender": "男",
+    "followers": 123,
+    "fans": 12,
+    "phone": 17725354095,
+    "email": "1259998344@qq.com",
+    "school": "天津理工大学",
+    "studentId": 20175289,
+    "permission": 10,
+    "introduction": "大家好",
+    "avatar": "http://img4.imgtn.bdimg.com/it/u=3328407446,2075123598&fm=26&gp=0.jpg",
+    "background": "http://pic29.nipic.com/20130531/12122227_094948253000_2.jpg",
+    "time": "2019-1-1",
+    "features": [
+      12,
+      14,
+      1,
+      34,
+      67
+    ]
+  }
+}
