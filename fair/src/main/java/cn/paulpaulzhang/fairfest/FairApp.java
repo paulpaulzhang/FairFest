@@ -7,9 +7,9 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
-import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.base.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.database.ObjectBox;
 import es.dmoral.toasty.Toasty;
 
 /**

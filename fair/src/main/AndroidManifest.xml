@@ -36,21 +36,21 @@
             android:name="android.notch_support"
             android:value="true" />
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
+        <activity android:name="cn.paulpaulzhang.fair.ui.launcher.LauncherActivity">
 
         </activity>
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
+        <activity android:name="cn.paulpaulzhang.fair.ui.launcher.LauncherScrollActivity">
 
         </activity>
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
+            android:name="cn.paulpaulzhang.fair.ui.sign.SignUpActivity"
             android:label="@string/sign_up">
 
         </activity>
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
+            android:name="cn.paulpaulzhang.fair.ui.sign.SignInActivity"
             android:label="@string/sign_in" />
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity">
+        <activity android:name="cn.paulpaulzhang.fair.ui.main.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -59,22 +59,22 @@
         </activity>
 
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.DynamicActivity"
+            android:name="cn.paulpaulzhang.fair.ui.main.post.DynamicActivity"
             android:label="@string/dynamic" />
 
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.ArticleActivity"
+            android:name="cn.paulpaulzhang.fair.ui.main.post.ArticleActivity"
             android:label="@string/article" />
 
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDetailActivity"
+            android:name="cn.paulpaulzhang.fair.ui.main.interest.topic.TopicDetailActivity"
             android:theme="@style/TopicToolBarTheme" />
 
         <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity"
+            android:name="cn.paulpaulzhang.fair.ui.main.post.CreateDynamicActivity"
             android:label="@string/post_dynamic"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.PhotoPreviewActivity" />
+        <activity android:name="cn.paulpaulzhang.fair.ui.main.PhotoPreviewActivity" />
     </application>
 
 </manifest>

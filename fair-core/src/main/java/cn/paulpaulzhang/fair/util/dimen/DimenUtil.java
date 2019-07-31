@@ -3,7 +3,7 @@ package cn.paulpaulzhang.fair.util.dimen;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 
-import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.base.app.Fair;
 
 /**
  * 项目名：   FairFest

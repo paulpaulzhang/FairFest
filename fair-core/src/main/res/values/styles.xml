@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="dialog" parent="@android:style/Theme.Dialog">
         <!--去除边框-->
         <item name="android:windowFrame">@null</item>
@@ -16,5 +17,63 @@
         <!--全屏-->
         <item name="android:windowFullscreen">true</item>
     </style>
-    
+
+    <style name="ToolbarTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MyMaterialButton.OutLine.White" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/font_user_card</item>
+        <item name="rippleColor">#FF9e9e9e</item>
+    </style>
+
+    <style name="MyMaterialButton.OutLine.Blue" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/colorAccent</item>
+        <item name="rippleColor">#FF9e9e9e</item>
+    </style>
+
+    <style name="ToolbarTitleText" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/font_tab</item>
+    </style>
+
+    <style name="transparentTextMedium" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/font_tab</item>
+        <item name="android:textSize">26sp</item>
+    </style>
+
+    <style name="transparentText" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/font_tab</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TopicToolBarTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="MyProgressBar" parent="Base.Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateTint">@color/colorAccent</item>
+        <item name="android:indeterminateTintMode">src_atop</item>
+    </style>
+
+    <style name="Matisse.Zhihu.Custom" parent="Matisse.Zhihu">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="toolbar">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="bottomToolbar.apply.textColor">@color/colorAccent</item>
+        <item name="preview.bottomToolbar.apply.textColor">@color/colorAccent</item>
+        <item name="item.checkCircle.backgroundColor">@color/colorAccent</item>
+    </style>
+
 </resources>

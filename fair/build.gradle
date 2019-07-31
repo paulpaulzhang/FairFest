@@ -28,9 +28,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    annotationProcessor project(path: ':fair-compiler')
-    implementation project(path: ':fair-sc')
-
-    //ButterKnife依赖
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    implementation project(path: ':fair-core')
 }

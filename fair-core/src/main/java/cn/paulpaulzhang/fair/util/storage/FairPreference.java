@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
-import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.base.app.Fair;
 
 /**
  * 项目名：   FairFest

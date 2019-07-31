@@ -1,12 +1,11 @@
 package cn.paulpaulzhang.fair.net;
 
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.WeakHashMap;
 import java.util.concurrent.TimeUnit;
 
-import cn.paulpaulzhang.fair.app.ConfigKeys;
-import cn.paulpaulzhang.fair.app.Fair;
+import cn.paulpaulzhang.fair.base.app.ConfigKeys;
+import cn.paulpaulzhang.fair.base.app.Fair;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
