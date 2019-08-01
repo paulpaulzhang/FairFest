@@ -4,12 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -32,12 +30,11 @@ import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.interest.discovery.DiscoveryDelegate;
-import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowDelegate;
-import cn.paulpaulzhang.fair.sc.main.interest.topic.TopicDelegate;
-import cn.paulpaulzhang.fair.sc.main.post.CreateArticleActivity;
-import cn.paulpaulzhang.fair.sc.main.post.CreateDynamicActivity;
-import cn.paulpaulzhang.fair.util.common.CommonUtil;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.DiscoveryDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main

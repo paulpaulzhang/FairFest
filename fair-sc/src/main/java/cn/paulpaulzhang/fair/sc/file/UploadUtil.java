@@ -67,7 +67,7 @@ public class UploadUtil {
             ftp.setControlEncoding("UTF-8");
             ftp.setFileType(FTP.BINARY_FILE_TYPE);
             ftp.storeFile(filename, input);
-            path = "http://" + FTP_HOST + FTP_PATH + "/" + filename;
+            path = "http://" + FTP_HOST + "/" + filename;
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

@@ -24,9 +24,11 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.main.HomeActivity;
+import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
+import es.dmoral.toasty.Toasty;
 
 public class SignUpActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.et_phone)
@@ -115,19 +117,17 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             //TODO 注册逻辑
             final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
+            FairLoader.showLoading(this);
             RestClient.builder()
                     .url("user")
                     .params("phone", phone)
                     .params("code", code)
-                    .success(response -> {
-                        FairLogger.json("USER", response);
-                        SignHandler.onSignUp(response, () -> {
-                            //TODO 跳转逻辑
-                            Toast.makeText(this, "注册成功", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
-                        });
-                    })
-                    .error((c, m) -> Toast.makeText(this, c + " " + m, Toast.LENGTH_SHORT).show())
+                    .success(response -> SignHandler.onSignUp(response, () -> {
+                        FairLoader.stopLoading();
+                        Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+                    }))
+                    .error((c, m) -> Toasty.error(this, c + " " + m, Toast.LENGTH_SHORT).show())
                     .build()
                     .post();
         }

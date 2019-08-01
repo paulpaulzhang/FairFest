@@ -52,6 +52,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     public void init(@Nullable Bundle savedInstanceState) {
         initBottomNavigation();
         requestPermissions();
+
     }
 
     private void requestPermissions() {
@@ -67,13 +68,10 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 (getString(R.string.market), R.drawable.ic_mall);
         AHBottomNavigationItem message = new AHBottomNavigationItem
                 (getString(R.string.message), R.drawable.ic_message);
-        AHBottomNavigationItem user = new AHBottomNavigationItem
-                (getString(R.string.mine), R.drawable.ic_mine);
 
         items.add(interest);
         items.add(market);
         items.add(message);
-        items.add(user);
 
         mBottomNavigation.addItems(items);
         mBottomNavigation.setTranslucentNavigationEnabled(true);

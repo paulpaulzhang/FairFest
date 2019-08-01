@@ -14,7 +14,6 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.main.chat.ChatDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.InterestDelegate;
 import cn.paulpaulzhang.fair.sc.main.market.MarketDelegate;
-import cn.paulpaulzhang.fair.sc.main.user.UserDelegate;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -33,7 +32,6 @@ public class BottomNavViewPagerAdapter extends FragmentPagerAdapter {
         delegates.add(new InterestDelegate());
         delegates.add(new MarketDelegate());
         delegates.add(new ChatDelegate());
-        delegates.add(new UserDelegate());
     }
 
     @NonNull

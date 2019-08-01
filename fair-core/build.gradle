@@ -13,6 +13,17 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi-v7a', 'armeabi-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "cn.paulpaulzhang.fairfest",
+                JPUSH_APPKEY : "b9cdaa1b53fd063d528bafbb",
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
+
     }
 
     buildTypes {
@@ -128,4 +139,9 @@ dependencies {
     api 'com.github.chrisbanes:PhotoView:2.3.0'
 
     api 'com.github.stfalcon:chatkit:0.3.3'
+
+    //JPush JMessage
+    api 'cn.jiguang.sdk:jpush:3.3.4'
+    api 'cn.jiguang.sdk:jcore:2.1.2'
+    api 'cn.jiguang.sdk:jmessage:2.9.0'
 }

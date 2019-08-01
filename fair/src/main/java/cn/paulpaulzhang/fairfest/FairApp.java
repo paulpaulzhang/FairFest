@@ -7,9 +7,12 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.im.android.api.JMessageClient;
 import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.chat.MyReceiver;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -37,5 +40,10 @@ public class FairApp extends Application {
         ObjectBox.init(this);
         Fresco.initialize(this);
         Toasty.Config.getInstance().apply();
+        JMessageClient.setDebugMode(true);
+        JMessageClient.init(this);
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
+        JMessageClient.registerEventReceiver(MyReceiver.INSTANCE());
     }
 }

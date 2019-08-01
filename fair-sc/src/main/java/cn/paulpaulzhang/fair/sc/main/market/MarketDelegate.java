@@ -30,6 +30,6 @@ public class MarketDelegate extends FairDelegate {
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-        Glide.with(this).load("ftp://www.matchstickmen.club/data/ftp/pub/img/test1.jpg").into(imageView);
+        Glide.with(this).load("http://www.matchstickmen.club/test1.jpg").into(imageView);
     }
 }

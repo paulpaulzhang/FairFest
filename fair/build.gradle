@@ -9,6 +9,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : "cn.paulpaulzhang.fairfest",
+                JPUSH_APPKEY : "b9cdaa1b53fd063d528bafbb",
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
     }
     buildTypes {
         release {

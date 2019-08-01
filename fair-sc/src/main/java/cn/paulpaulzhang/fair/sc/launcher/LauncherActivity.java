@@ -13,17 +13,25 @@ import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.app.AccountManager;
 import cn.paulpaulzhang.fair.app.IUserChecker;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
 import cn.paulpaulzhang.fair.ui.launcher.ScrollLauncherTag;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
+import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 
 /**
  * 项目名：   FairFest
@@ -63,7 +71,19 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
             AccountManager.checkAccount(new IUserChecker() {
                 @Override
                 public void onSignIn() {
-                    Toast.makeText(LauncherActivity.this, "already sign", Toast.LENGTH_SHORT).show();
+                    Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
+                    LocalUser user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+                    JMessageClient.login(String.valueOf(user.getId()), "admin", new BasicCallback() {
+                        @Override
+                        public void gotResult(int i, String s) {
+                            if (i == 0) {
+                                startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
+                            } else {
+                                Toasty.error(LauncherActivity.this, "登陆失败", Toasty.LENGTH_SHORT).show();
+                                startActivity(new Intent(LauncherActivity.this, SignInActivity.class));
+                            }
+                        }
+                    });
                 }
 
                 @Override
