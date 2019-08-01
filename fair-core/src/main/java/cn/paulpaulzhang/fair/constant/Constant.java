@@ -18,7 +18,7 @@ public class Constant {
     public static final int USER_POSITION = 1; // the position of recommend_user user list
     public static final int REQUEST_CODE_CHOOSE = 300;
 
-    public static final String FTP_HOST = "49.234.88.29";
+    public static final String FTP_HOST = "www.matchstickmen.club";
 
     public static final String FTP_PATH = "/data/ftp/pub/img";
 

@@ -25,7 +25,6 @@ public class FairApp extends Application {
     public void onCreate() {
         super.onCreate();
         Fair.init(this)
-                .withIcon(new FontAwesomeModule())
                 .withApiHost("http://127.0.0.1/")
                 .withInterceptor(new DebugInterceptor("index", R.raw.test))
                 .withInterceptor(new DebugInterceptor("post", R.raw.post))

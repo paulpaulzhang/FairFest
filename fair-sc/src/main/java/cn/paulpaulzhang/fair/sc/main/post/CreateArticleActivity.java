@@ -211,7 +211,7 @@ public class CreateArticleActivity extends FairActivity {
         UploadUtil util = UploadUtil.INSTANCE();
         util.uploadFile(this, files, new IUploadFileListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(List<String> paths) {
                 FairLoader.stopLoading();
                 FairLogger.d("success");
             }

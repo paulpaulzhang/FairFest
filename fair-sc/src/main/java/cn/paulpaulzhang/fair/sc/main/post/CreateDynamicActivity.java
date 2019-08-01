@@ -15,6 +15,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
@@ -217,7 +219,8 @@ public class CreateDynamicActivity extends FairActivity {
         UploadUtil util = UploadUtil.INSTANCE();
         util.uploadFile(this, files, new IUploadFileListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(List<String> paths) {
+                paths.forEach(FairLogger::d);
                 FairLoader.stopLoading();
                 FairLogger.d("success");
             }

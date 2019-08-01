@@ -4,9 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
+import com.bumptech.glide.Glide;
+
+import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.sc.R2;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -15,6 +20,9 @@ import cn.paulpaulzhang.fair.sc.R;
  * 描述：
  */
 public class MarketDelegate extends FairDelegate {
+    @BindView(R2.id.imageView)
+    AppCompatImageView imageView;
+
     @Override
     public Object setLayout() {
         return R.layout.delegate_market;
@@ -22,6 +30,6 @@ public class MarketDelegate extends FairDelegate {
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-
+        Glide.with(this).load("ftp://www.matchstickmen.club/data/ftp/pub/img/test1.jpg").into(imageView);
     }
 }
