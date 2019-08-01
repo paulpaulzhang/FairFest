@@ -1,8 +1,7 @@
-package cn.paulpaulzhang.fair.sc.database.entity;
+package cn.paulpaulzhang.fair.sc.database.model;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity

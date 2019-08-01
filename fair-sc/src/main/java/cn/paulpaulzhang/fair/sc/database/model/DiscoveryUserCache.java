@@ -1,17 +1,16 @@
-package cn.paulpaulzhang.fair.sc.database.entity;
+package cn.paulpaulzhang.fair.sc.database.model;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
-import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
- * 创建时间: 7/21/2019
+ * 创建时间: 7/16/2019
  * 创建人: zlm31
  * 描述:
  */
 @Entity
-public class FollowUserCache {
+public class DiscoveryUserCache {
     @Id(assignable = true)
     private long id; //用户id
 
@@ -19,7 +18,7 @@ public class FollowUserCache {
 
     private String avatar; // 头像url
 
-    public FollowUserCache(long id, String username, String avatar) {
+    public DiscoveryUserCache(long id, String username, String avatar) {
         this.id = id;
         this.username = username;
         this.avatar = avatar;
@@ -48,5 +47,4 @@ public class FollowUserCache {
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-
 }

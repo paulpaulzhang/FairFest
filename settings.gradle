@@ -1,1 +1,1 @@
-include ':fair', ':fair-annotations', ':fair-compiler', ':fair-core', ':fair-sc'
+include ':fair', ':fair-core', ':fair-sc'

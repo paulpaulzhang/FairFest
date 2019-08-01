@@ -4,8 +4,7 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import java.util.List;
 
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
-import cn.paulpaulzhang.fair.sc.database.entity.RecommendUserCache;
+import cn.paulpaulzhang.fair.sc.database.model.DiscoveryPostCache;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest

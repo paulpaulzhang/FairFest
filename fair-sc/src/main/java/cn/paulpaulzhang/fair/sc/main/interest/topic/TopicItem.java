@@ -1,6 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.topic;
 
-import cn.paulpaulzhang.fair.sc.database.entity.TopicCache;
+import cn.paulpaulzhang.fair.sc.database.model.TopicCache;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest.topicCache

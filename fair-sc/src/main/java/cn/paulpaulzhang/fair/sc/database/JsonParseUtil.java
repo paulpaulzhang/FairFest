@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.json;
+package cn.paulpaulzhang.fair.sc.database;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -7,22 +7,20 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
-import cn.paulpaulzhang.fair.sc.constant.Constant;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryLikeCache;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryPostCache;
-import cn.paulpaulzhang.fair.sc.database.entity.DiscoveryUserCache;
-import cn.paulpaulzhang.fair.sc.database.entity.FollowLikeCache;
-import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
-import cn.paulpaulzhang.fair.sc.database.entity.FollowUserCache;
-import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
-import cn.paulpaulzhang.fair.sc.database.entity.RecommendUserCache;
-import cn.paulpaulzhang.fair.sc.database.entity.TopicCache;
-import cn.paulpaulzhang.fair.sc.database.entity.TopicLikeCache;
-import cn.paulpaulzhang.fair.sc.database.entity.TopicPostCache;
-import cn.paulpaulzhang.fair.sc.database.entity.TopicUserCache;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.sc.database.model.DiscoveryLikeCache;
+import cn.paulpaulzhang.fair.sc.database.model.DiscoveryPostCache;
+import cn.paulpaulzhang.fair.sc.database.model.DiscoveryUserCache;
+import cn.paulpaulzhang.fair.sc.database.model.FollowLikeCache;
+import cn.paulpaulzhang.fair.sc.database.model.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.model.FollowUserCache;
+import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
+import cn.paulpaulzhang.fair.sc.database.model.RecommendUserCache;
+import cn.paulpaulzhang.fair.sc.database.model.TopicCache;
+import cn.paulpaulzhang.fair.sc.database.model.TopicLikeCache;
+import cn.paulpaulzhang.fair.sc.database.model.TopicPostCache;
+import cn.paulpaulzhang.fair.sc.database.model.TopicUserCache;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 

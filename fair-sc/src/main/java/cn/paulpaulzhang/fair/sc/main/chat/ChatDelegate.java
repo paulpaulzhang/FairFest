@@ -7,10 +7,10 @@ import android.view.View;
 import androidx.annotation.Nullable;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.stfalcon.chatkit.dialogs.DialogsList;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
-
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 
@@ -22,8 +22,8 @@ import cn.paulpaulzhang.fair.sc.R2;
  * 描述：
  */
 public class ChatDelegate extends FairDelegate {
-    @BindView(R2.id.dv)
-    SimpleDraweeView imageView;
+    @BindView(R2.id.dialog_list)
+    DialogsList mDialogList;
 
     @Override
     public Object setLayout() {
@@ -32,7 +32,6 @@ public class ChatDelegate extends FairDelegate {
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-        Uri uri = Uri.parse("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
-        imageView.setImageURI(uri);
+
     }
 }

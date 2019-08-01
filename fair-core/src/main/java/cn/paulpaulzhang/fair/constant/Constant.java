@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.constant;
+package cn.paulpaulzhang.fair.constant;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database
@@ -17,4 +17,14 @@ public class Constant {
 
     public static final int USER_POSITION = 1; // the position of recommend_user user list
     public static final int REQUEST_CODE_CHOOSE = 300;
+
+    public static final String FTP_HOST = "49.234.88.29";
+
+    public static final String FTP_PATH = "/data/ftp/pub/img";
+
+    public static final String FTP_USERNAME = "zhangluming";
+
+    public static final String FTP_PASSWORD = "17725354095";
+
+    public static final int FTP_PORT = 21;
 }

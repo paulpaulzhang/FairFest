@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.paulpaulzhang.fair.app.AccountManager;
-import cn.paulpaulzhang.fair.sc.constant.UserConfigs;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.LocalUser;
+import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 

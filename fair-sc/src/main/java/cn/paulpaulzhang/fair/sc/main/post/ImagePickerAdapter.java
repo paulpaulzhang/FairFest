@@ -26,7 +26,7 @@ public class ImagePickerAdapter extends BaseQuickAdapter<ImageItem, BaseViewHold
     protected void convert(BaseViewHolder helper, ImageItem item) {
         helper.addOnClickListener(R.id.iv_delete);
         AppCompatImageView mImageView = helper.getView(R.id.image_view);
-        Glide.with(mContext).load(item.getUrl()).centerCrop().into(mImageView);
+        Glide.with(mContext).load(item.getFile().getPath()).centerCrop().into(mImageView);
     }
 
 }

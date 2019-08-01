@@ -13,20 +13,18 @@ import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.constant.Constant;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
-import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.database.model.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.post.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.DynamicActivity;
-import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**

@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.icon;
+package cn.paulpaulzhang.fair.icon;
 
 import com.joanzapata.iconify.Icon;
 import com.joanzapata.iconify.IconFontDescriptor;

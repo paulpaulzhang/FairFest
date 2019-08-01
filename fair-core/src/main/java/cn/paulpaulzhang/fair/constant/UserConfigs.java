@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.constant;
+package cn.paulpaulzhang.fair.constant;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.constant

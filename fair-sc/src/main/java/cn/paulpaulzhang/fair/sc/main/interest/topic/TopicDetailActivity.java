@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,20 +19,16 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.constant.Constant;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.entity.FollowPostCache;
-import cn.paulpaulzhang.fair.sc.database.entity.TopicPostCache;
-import cn.paulpaulzhang.fair.sc.json.JsonParseUtil;
-import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowAdapter;
-import cn.paulpaulzhang.fair.sc.main.interest.follow.FollowItem;
+import cn.paulpaulzhang.fair.sc.database.model.TopicPostCache;
+import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;

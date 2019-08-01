@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.sc.main.post;
 
+import java.io.File;
+
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.post
  * 创建时间: 7/29/2019
@@ -7,17 +9,17 @@ package cn.paulpaulzhang.fair.sc.main.post;
  * 描述: 九宫格图片展示item
  */
 public class ImageItem {
-    private String url;
+    private File file;
 
-    public ImageItem(String url) {
-        this.url = url;
+    public ImageItem(File file) {
+        this.file = file;
     }
 
-    public String getUrl() {
-        return url;
+    public File getFile() {
+        return file;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setFile(File file) {
+        this.file = file;
     }
 }

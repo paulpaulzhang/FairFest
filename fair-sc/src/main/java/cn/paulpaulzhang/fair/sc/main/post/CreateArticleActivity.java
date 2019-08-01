@@ -21,8 +21,6 @@ import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +30,6 @@ import butterknife.OnClick;
 
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Constant;
-
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
@@ -40,12 +37,9 @@ import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.main.PhotoPreviewActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.common.CommonUtil;
-
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
-
 import es.dmoral.toasty.Toasty;
-import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
@@ -56,7 +50,7 @@ import top.zibin.luban.OnCompressListener;
  * 创建人: zlm31
  * 描述:
  */
-public class CreateDynamicActivity extends FairActivity {
+public class CreateArticleActivity extends FairActivity {
 
     @BindView(R2.id.et_edit)
     AppCompatEditText mEdit;
@@ -82,7 +76,7 @@ public class CreateDynamicActivity extends FairActivity {
 
     @Override
     public int setLayout() {
-        return R.layout.activity_create_dynamic;
+        return R.layout.activity_create_article;
     }
 
     @Override
@@ -102,7 +96,7 @@ public class CreateDynamicActivity extends FairActivity {
 
         mAdapter.setFooterViewAsFlow(true);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(CreateDynamicActivity.this, PhotoPreviewActivity.class);
+            Intent intent = new Intent(CreateArticleActivity.this, PhotoPreviewActivity.class);
             ImageItem item = (ImageItem) adapter.getItem(position);
             if (item != null) {
                 intent.putExtra("path", item.getFile().getPath());
@@ -192,7 +186,7 @@ public class CreateDynamicActivity extends FairActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.error(CreateDynamicActivity.this, "加载失败", Toasty.LENGTH_SHORT).show();
+                        Toasty.error(CreateArticleActivity.this, "加载失败", Toasty.LENGTH_SHORT).show();
                     }
                 }).launch();
     }

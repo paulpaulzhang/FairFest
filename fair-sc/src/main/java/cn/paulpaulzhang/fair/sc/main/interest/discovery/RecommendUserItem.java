@@ -1,6 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.discovery;
 
-import cn.paulpaulzhang.fair.sc.database.entity.RecommendUserCache;
+import cn.paulpaulzhang.fair.sc.database.model.RecommendUserCache;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest.discovery
