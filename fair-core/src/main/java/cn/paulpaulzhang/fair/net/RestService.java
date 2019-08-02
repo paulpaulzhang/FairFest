@@ -7,9 +7,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -34,6 +37,10 @@ public interface RestService {
     @FormUrlEncoded
     @POST
     Call<String> post(@Url String url, @FieldMap Map<String, Object> params);
+
+    @FormUrlEncoded
+    @POST
+    Call<String> post(@Url String url, @Header("Cookie") String header, @FieldMap Map<String, Object> params);
 
     @POST
     Call<String> postRaw(@Url String url, @Body ResponseBody body);

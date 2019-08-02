@@ -2,10 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:orientation="vertical">
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -21,8 +22,8 @@
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/civ_user"
                 android:layout_width="30dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_height="30dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@android:color/holo_orange_dark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -61,10 +62,10 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_more"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_marginRight="12dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_more_vert"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -73,8 +74,9 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.appcompat.widget.Toolbar>
-<TextView
-    android:text="@string/market"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

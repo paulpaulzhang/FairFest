@@ -10,10 +10,10 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.paulpaulzhang.fair.base.delegates.FairDelegate;
-import cn.paulpaulzhang.fair.ui.main.chat.ChatDelegate;
-import cn.paulpaulzhang.fair.ui.main.interest.InterestDelegate;
-import cn.paulpaulzhang.fair.ui.main.market.MarketDelegate;
+import cn.paulpaulzhang.fair.delegates.FairDelegate;
+import cn.paulpaulzhang.fair.sc.main.chat.ChatDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.InterestDelegate;
+import cn.paulpaulzhang.fair.sc.main.market.MarketDelegate;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main

@@ -12,6 +12,7 @@ public enum HttpMethod {
     GET,
     POST,
     POST_RAW,
+    POST_HEADER,
     PUT,
     PUT_RAW,
     DELETE,

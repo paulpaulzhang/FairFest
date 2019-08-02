@@ -13,19 +13,28 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.LayoutMode;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
+import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.paulpaulzhang.fair.base.delegates.FairDelegate;
-import cn.paulpaulzhang.fair.R;
-import cn.paulpaulzhang.fair.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
-import cn.paulpaulzhang.fair.ui.main.interest.discovery.DiscoveryDelegate;
-import cn.paulpaulzhang.fair.ui.main.interest.follow.FollowDelegate;
-import cn.paulpaulzhang.fair.ui.main.interest.topic.TopicDelegate;
-import cn.paulpaulzhang.fair.ui.main.post.CreateDynamicActivity;
+
+import cn.paulpaulzhang.fair.delegates.FairDelegate;
+import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.DiscoveryDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -157,7 +166,7 @@ public class InterestDelegate extends FairDelegate implements
 
     @OnClick(R2.id.iv_add)
     void openCreateDialog() {
-        startActivity(new Intent(getContext(), CreateDynamicActivity.class));
+        initBottomDialog();
     }
 
     @OnClick(R2.id.ll_search)
@@ -168,5 +177,25 @@ public class InterestDelegate extends FairDelegate implements
     @OnClick(R2.id.civ_user)
     void openUserCenter() {
 
+    }
+
+    private void initBottomDialog() {
+        MaterialDialog dialog = new MaterialDialog(Objects.requireNonNull(getContext()), new BottomSheet(LayoutMode.WRAP_CONTENT));
+        DialogCustomViewExtKt.customView(dialog, R.layout.view_create_bottom_dialog,
+                null, false, true, false, true);
+        LifecycleExtKt.lifecycleOwner(dialog, this);
+        dialog.cornerRadius(8f, null);
+        dialog.show();
+
+        View customerView = DialogCustomViewExtKt.getCustomView(dialog);
+
+        customerView.findViewById(R.id.iv_dynamic).setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), CreateDynamicActivity.class));
+            dialog.dismiss();
+        });
+        customerView.findViewById(R.id.iv_article).setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), CreateArticleActivity.class));
+            dialog.dismiss();
+        });
     }
 }

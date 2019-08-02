@@ -13,7 +13,6 @@
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
         app:popupTheme="@style/Theme.MaterialComponents.Light" />
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,16 +28,17 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/tv_edit"
+                android:id="@+id/et_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="30dp"
                 android:background="@null"
+                android:gravity="top"
                 android:hint="@string/say_something"
                 android:lineSpacingExtra="4dp"
                 android:minHeight="80dp"
                 android:paddingLeft="10dp"
-                android:paddingEnd="10dp"
                 android:paddingRight="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
@@ -51,7 +51,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                app:layout_constraintTop_toBottomOf="@id/tv_edit" />
+                app:layout_constraintTop_toBottomOf="@id/et_edit" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -99,8 +99,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_send"
-            android:layout_width="@dimen/bottom_icon"
-            android:layout_height="@dimen/bottom_icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_send"

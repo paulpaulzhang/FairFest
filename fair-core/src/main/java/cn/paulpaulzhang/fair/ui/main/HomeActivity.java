@@ -52,6 +52,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     public void init(@Nullable Bundle savedInstanceState) {
         initBottomNavigation();
         requestPermissions();
+
     }
 
     private void requestPermissions() {

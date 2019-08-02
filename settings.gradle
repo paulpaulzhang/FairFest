@@ -1,1 +1,2 @@
-include ':fair', ':fair-core'
+include ':fair', ':fair-core', ':fair-sc'
+

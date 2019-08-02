@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.net;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -10,6 +11,7 @@ import cn.paulpaulzhang.fair.net.callback.IRequest;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.net.callback.RequestCallbacks;
 import cn.paulpaulzhang.fair.net.download.DownloadHandler;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -33,12 +35,14 @@ public class RestClient {
     private final IError ERROR;
     private final IFailure FAILURE;
     private final File FILE;
-    private final ResponseBody BODY;
     private final String DOWNLOAD_DIR;
     private final String EXTENSION;
     private final String NAME;
+    private final String HEADER;
+    private final ResponseBody BODY;
 
     public RestClient(String url,
+                      String header,
                       Map<String, Object> params,
                       IRequest iRequest,
                       ISuccess iSuccess,
@@ -50,6 +54,7 @@ public class RestClient {
                       String extension,
                       String name) {
         this.URL = url;
+        this.HEADER = header;
         PARAMS.putAll(params);
         this.REQUEST = iRequest;
         this.SUCCESS = iSuccess;
@@ -86,6 +91,9 @@ public class RestClient {
                 break;
             case POST:
                 call = service.post(URL, PARAMS);
+                break;
+            case POST_HEADER:
+                call = service.post(URL, HEADER, PARAMS);
                 break;
             case POST_RAW:
                 call = service.postRaw(URL, BODY);
@@ -124,7 +132,11 @@ public class RestClient {
 
     public final void post() {
         if (BODY == null) {
-            request(HttpMethod.POST);
+            if (HEADER == null) {
+                request(HttpMethod.POST);
+            } else {
+                request(HttpMethod.POST_HEADER);
+            }
         } else {
             if (!PARAMS.isEmpty()) {
                 throw new RuntimeException("params must be null");

@@ -54,6 +54,7 @@ public class FairLoader {
         }
 
         LOADERS.add(dialog);
+        dialog.setCancelable(false);
         dialog.show();
     }
 

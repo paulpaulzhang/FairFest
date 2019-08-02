@@ -2,8 +2,8 @@ package cn.paulpaulzhang.fair.database;
 
 import android.content.Context;
 
-import cn.paulpaulzhang.fair.BuildConfig;
-import cn.paulpaulzhang.fair.database.entity.MyObjectBox;
+import cn.paulpaulzhang.fair.sc.BuildConfig;
+import cn.paulpaulzhang.fair.sc.database.model.MyObjectBox;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import io.objectbox.BoxStore;
 import io.objectbox.android.AndroidObjectBrowser;
