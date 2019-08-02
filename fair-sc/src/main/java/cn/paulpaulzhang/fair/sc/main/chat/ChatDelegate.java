@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -16,21 +17,29 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.content.TextContent;
+import cn.jpush.im.android.api.event.MessageEvent;
+import cn.jpush.im.android.api.event.NotificationClickEvent;
+import cn.jpush.im.android.api.event.OfflineMessageEvent;
 import cn.jpush.im.android.api.model.Conversation;
+import cn.jpush.im.android.api.model.DeviceInfo;
+import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.jpush.im.api.BasicCallback;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
-import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
 import cn.paulpaulzhang.fair.sc.main.chat.model.User;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 
 
 /**
@@ -56,15 +65,19 @@ public class ChatDelegate extends FairDelegate
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-        if (JMessageClient.getMyInfo() == null)
-            JMessageClient.login("123456", "admin", new BasicCallback() {
-                @Override
-                public void gotResult(int i, String s) {
-                    FairLogger.d("登陆成功");
-                }
-            });
-        mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).into(imageView);
+        JMessageClient.registerEventReceiver(this);
+        login();
+        mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.mipmap.ic_launcher_round).into(imageView);
         initAdapter();
+    }
+
+    private void login() {
+        JMessageClient.login("123456", "admin", new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                FairLogger.d("登陆成功");
+            }
+        });
     }
 
     private void initAdapter() {
@@ -72,6 +85,7 @@ public class ChatDelegate extends FairDelegate
         mDialogListAdapter.setItems(DialogFixtures.getDialogs());
         mDialogListAdapter.setOnDialogClickListener(this);
         mDialogListAdapter.setOnDialogLongClickListener(this);
+        mDialogList.setAdapter(mDialogListAdapter);
     }
 
     @Override
@@ -82,5 +96,36 @@ public class ChatDelegate extends FairDelegate
     @Override
     public void onDialogLongClick(Dialog dialog) {
 
+    }
+
+    public void onEvent(MessageEvent event) {
+        Message message = event.getMessage();
+        switch (message.getContentType()) {
+            case text:
+
+                break;
+            case image:
+
+                break;
+        }
+    }
+
+    public void onEvent(NotificationClickEvent event) {
+        Intent intent = new Intent(getContext(), HomeActivity.class);
+        Objects.requireNonNull(getContext()).startActivity(intent);
+    }
+
+    public void onEvent(OfflineMessageEvent event) {
+        List<Message> msgs = event.getOfflineMessageList();
+        Conversation conversation = event.getConversation();
+        for (Message msg : msgs) {
+            //...
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        JMessageClient.unRegisterEventReceiver(this);
     }
 }

@@ -34,6 +34,7 @@ public class RestClientBuilder {
     private String mDownloadDir;
     private String mExtension;
     private String mName;
+    private String mHeader;
 
     RestClientBuilder() {
 
@@ -56,6 +57,11 @@ public class RestClientBuilder {
 
     public final RestClientBuilder url(String url) {
         this.mUrl = url;
+        return this;
+    }
+
+    public final RestClientBuilder header(String header) {
+        this.mHeader = header;
         return this;
     }
 
@@ -106,6 +112,7 @@ public class RestClientBuilder {
 
     public final RestClient build() {
         return new RestClient(mUrl,
+                mHeader,
                 PARAMS,
                 mIRequest,
                 mISuccess,

@@ -3,17 +3,19 @@ package cn.paulpaulzhang.fairfest;
 import android.app.Application;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+
+import org.jetbrains.annotations.NotNull;
 
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.main.chat.MyReceiver;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * 项目名：   FairFest
@@ -27,15 +29,18 @@ public class FairApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(s -> FairLogger.d("RetrofitLog", s));
+        loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
         Fair.init(this)
-                .withApiHost("http://127.0.0.1/")
-                .withInterceptor(new DebugInterceptor("index", R.raw.test))
-                .withInterceptor(new DebugInterceptor("post", R.raw.post))
-                .withInterceptor(new DebugInterceptor("user", R.raw.user))
-                .withInterceptor(new DebugInterceptor("ic_like", R.raw.like))
-                .withInterceptor(new DebugInterceptor("ic_topic", R.raw.topic))
-                .withInterceptor(new DebugInterceptor("recommend", R.raw.recommend_user))
+                .withApiHost("http://www.matchstickmen.club:8080/")
+//                .withInterceptor(new DebugInterceptor("index", R.raw.test))
+//                .withInterceptor(new DebugInterceptor("post", R.raw.post))
+//                .withInterceptor(new DebugInterceptor("ic_like", R.raw.like))
+//                .withInterceptor(new DebugInterceptor("ic_topic", R.raw.topic))
+//                .withInterceptor(new DebugInterceptor("recommend", R.raw.recommend_user))
+                .withInterceptor(loggingInterceptor)
                 .configure();
+
         Logger.addLogAdapter(new AndroidLogAdapter());
         ObjectBox.init(this);
         Fresco.initialize(this);
@@ -44,6 +49,5 @@ public class FairApp extends Application {
         JMessageClient.init(this);
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
-        JMessageClient.registerEventReceiver(MyReceiver.INSTANCE());
     }
 }

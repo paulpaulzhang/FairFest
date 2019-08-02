@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gyf.immersionbar.ImmersionBar;
@@ -20,6 +21,7 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
@@ -29,6 +31,10 @@ import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 import es.dmoral.toasty.Toasty;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SignUpActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.et_phone)
@@ -45,6 +51,8 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
     private Timer mTimer = null;
     private int mCount = 30;
 
+    private String sessionId = null;  //验证码返回的session id 注册需要
+
     @Override
     public int setLayout() {
         return R.layout.activity_sign_up;
@@ -52,11 +60,10 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        ImmersionBar.with(this).init();
+        ImmersionBar.with(this).statusBarDarkFont(true).init();
     }
 
     private boolean checkForm() {
-        //TODO 电话号码正则  验证码位数验证(暂定四位数)
 
         final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
         final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
@@ -70,7 +77,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
 
         }
 
-        if (code.isEmpty() || code.length() != 4) {
+        if (code.isEmpty() || !code.matches("^\\d{6}$")) {
             mCode.setError(getString(R.string.error_code));
             isPass = false;
         } else {
@@ -86,6 +93,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
 
     }
 
+
     @OnClick(R2.id.bt_get_code)
     void getCode() {
         final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
@@ -94,17 +102,22 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             mPhone.setError(getString(R.string.error_phone_number));
         } else {
             mPhone.setError(null);
-
+            FairLoader.showLoading(SignUpActivity.this);
             RestClient.builder()
-                    .url("get_code")
-                    .params("phone", phone)
+                    .url(Constant.SEND_SMS)
+                    .params("phoneNumber", phone)
                     .success(response -> {
                         initTimer();
-                        Toast.makeText(this, "验证码已发送", Toast.LENGTH_SHORT).show();
+                        sessionId = JSON.parseObject(response).getString("sessionId");
+                        FairLogger.d(response);
+                        FairLoader.stopLoading();
+                        Toasty.info(this, response, Toasty.LENGTH_LONG).show();
+                        Toasty.success(this, "验证码已发送", Toast.LENGTH_SHORT).show();
                     })
                     .error((code, msg) -> {
-                        initTimer();
-                        Toast.makeText(this, "发送失败 " + msg, Toast.LENGTH_SHORT).show();
+                        FairLoader.stopLoading();
+                        FairLogger.d(code + msg);
+                        Toasty.error(this, "发送失败 " + code + " " + msg, Toast.LENGTH_SHORT).show();
                     })
                     .build()
                     .post();
@@ -114,20 +127,23 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
     @OnClick(R2.id.bt_quick_sign_up)
     void quickSignUp() {
         if (checkForm()) {
-            //TODO 注册逻辑
             final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
             FairLoader.showLoading(this);
             RestClient.builder()
-                    .url("user")
-                    .params("phone", phone)
-                    .params("code", code)
+                    .url(Constant.REGISTER)
+                    .header("sessionId=" + sessionId)
+                    .params("phoneNumber", phone)
+                    .params("verifyCode", code)
                     .success(response -> SignHandler.onSignUp(response, () -> {
                         FairLoader.stopLoading();
                         Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
                     }))
-                    .error((c, m) -> Toasty.error(this, c + " " + m, Toast.LENGTH_SHORT).show())
+                    .error((c, m) -> {
+                        FairLoader.stopLoading();
+                        Toasty.error(this, c + " " + m, Toast.LENGTH_SHORT).show();
+                    })
                     .build()
                     .post();
         }

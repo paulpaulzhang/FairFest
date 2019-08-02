@@ -24,38 +24,40 @@ import io.objectbox.Box;
  */
 public class SignHandler {
     public static void onSignUp(String response, ISignUpListener signUpListener) {
-        //TODO 需要与后端协商后修改
-        final JSONObject object = JSON.parseObject(response).getJSONObject("user");
-        final long id = object.getLong("id");
-        final long phone = object.getLong("phone");
-        final String username = object.getString("username");
 
-        final LocalUser user = new LocalUser(id, phone, username);
-        Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
-        userBox.put(user);
+        FairLogger.d("Response", response);
+        FairLoader.stopLoading();
+//        final JSONObject object = JSON.parseObject(response).getJSONObject("user");
+//        final long id = object.getLong("id");
+//        final long phone = object.getLong("phone");
+//        final String username = object.getString("username");
 
-        JMessageClient.register(String.valueOf(id), "admin", null, new BasicCallback() {
-            @Override
-            public void gotResult(int i, String s) {
-                if (i == 0) {
-                    FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
-                    AccountManager.setSignState(true);
-                    JMessageClient.login(String.valueOf(id), "admin", new BasicCallback() {
-                        @Override
-                        public void gotResult(int i, String s) {
-                            if (i == 0) {
-                                FairLogger.d("JMessage登陆成功");
-                            }
-                        }
-                    });
-                    signUpListener.onSignUpSuccess();
-                } else {
-                    userBox.removeAll();
-                    FairLoader.stopLoading();
-                    FairLogger.d(s);
-                }
-            }
-        });
+//        final LocalUser user = new LocalUser(id, phone, username);
+//        Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
+//        userBox.put(user);
+
+//        JMessageClient.register(String.valueOf(id), "admin", null, new BasicCallback() {
+//            @Override
+//            public void gotResult(int i, String s) {
+//                if (i == 0) {
+//                    FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
+//                    AccountManager.setSignState(true);
+//                    JMessageClient.login(String.valueOf(id), "admin", new BasicCallback() {
+//                        @Override
+//                        public void gotResult(int i, String s) {
+//                            if (i == 0) {
+//                                FairLogger.d("JMessage", "JMessage登陆成功");
+//                            }
+//                        }
+//                    });
+//                    signUpListener.onSignUpSuccess();
+//                } else {
+//                    userBox.removeAll();
+//                    FairLoader.stopLoading();
+//                    FairLogger.d(s);
+//                }
+//            }
+//        });
 
 
     }

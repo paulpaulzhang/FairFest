@@ -22,29 +22,18 @@ import cn.paulpaulzhang.fair.sc.main.chat.model.User;
 public class DialogFixtures {
     public static List<Dialog> getDialogs() {
         List<Conversation> conversations = JMessageClient.getConversationList();
+        if (conversations == null || conversations.size() == 0) {
+            return new ArrayList<>();
+        }
         ArrayList<Dialog> dialogs = new ArrayList<>();
         ArrayList<User> users;
-        UserInfo userInfo;
-        File avatar;
+
         for (Conversation conversation : conversations) {
             users = new ArrayList<>();
-            userInfo = JMessageClient.getMyInfo();
-            avatar = userInfo.getAvatarFile();
-            User mine = new User(userInfo.getUserID() + "", userInfo.getNickname(), avatar != null ? avatar.getPath() : "", true);
-            users.add(mine);
-            userInfo = (UserInfo) conversation.getTargetInfo();
-            avatar = userInfo.getAvatarFile();
-            User user = new User(userInfo.getUserID() + "", userInfo.getNickname(), avatar != null ? avatar.getPath() : "", true);
-            users.add(user);
-            TextContent content = (TextContent) conversation.getLatestMessage().getContent();
-            Message message = new Message(conversation.getLatestMessage().getId() + "", user, content.getText(), new Date(conversation.getLatestMessage().getCreateTime()));
-            avatar = conversation.getAvatarFile();
-            dialogs.add(new Dialog(conversation.getId() + "",
-                    conversation.getTitle(),
-                    avatar != null ? avatar.getPath() : "",
-                    users,
-                    message,
-                    conversation.getUnReadMsgCnt()));
+            users.add(Transform.getUser(JMessageClient.getMyInfo()));
+            users.add(Transform.getUser((UserInfo) conversation.getTargetInfo()));
+            Message message = Transform.getMessage(conversation);
+            dialogs.add(Transform.getDialog(conversation, users, message));
         }
         return dialogs;
     }

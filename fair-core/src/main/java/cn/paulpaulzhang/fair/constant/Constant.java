@@ -27,4 +27,10 @@ public class Constant {
     public static final String FTP_PASSWORD = "17725354095";
 
     public static final int FTP_PORT = 21;
+
+    public static final String API_HOST = "http://49.234.88.29:8080/";
+
+    public static final String SEND_SMS = "matchstickmen/sendSms.action";
+
+    public static final String REGISTER = "matchstickmen/register.action";
 }

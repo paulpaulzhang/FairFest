@@ -50,7 +50,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        ImmersionBar.with(this).init();
+        ImmersionBar.with(this).statusBarDarkFont(true).init();
     }
 
     private boolean checkForm() {
@@ -68,7 +68,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
 
         }
 
-        if (code.isEmpty() || code.length() != 4 || !code.matches("[0-9]")) {
+        if (code.isEmpty() || !code.matches("^\\d{6}$")) {
             mCode.setError(getString(R.string.error_code));
             isPass = false;
         } else {

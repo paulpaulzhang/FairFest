@@ -67,9 +67,10 @@ dependencies {
 
     //网络请求依赖
     api 'com.squareup.retrofit2:retrofit:2.5.0'
-    api 'com.squareup.okhttp3:okhttp:4.0.0-alpha01'
+    api 'com.squareup.okhttp3:okhttp:4.0.1'
     api 'com.squareup.retrofit2:converter-scalars:2.4.0'
     api 'com.squareup.okio:okio:2.2.2'
+    api "com.squareup.okhttp3:logging-interceptor:4.0.1"
 
     //加载动画
     api 'com.wang.avi:library:2.1.3'

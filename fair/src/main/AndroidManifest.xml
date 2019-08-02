@@ -61,8 +61,8 @@
         <receiver
             android:name="cn.paulpaulzhang.fair.receiver.JPushReceiver"
             android:enabled="true"
-            tools:replace="android:exported"
-            android:exported="false">
+            android:exported="false"
+            tools:replace="android:exported">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
                 <category android:name="cn.paulpaulzhang.fairfest" />
@@ -121,7 +121,7 @@
         <receiver
             android:name="cn.jpush.im.android.helpers.IMReceiver"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -137,10 +137,11 @@
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:exported="false" >
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="cn.paulpaulzhang.fairfest" />
             </intent-filter>
@@ -191,17 +192,19 @@
         <activity
             android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
             android:label="@string/sign_up">
-
-        </activity>
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
-            android:label="@string/sign_in" />
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
+            android:label="@string/sign_in" />
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity"
+            android:launchMode="singleTask">
+
         </activity>
 
         <activity
