@@ -1,45 +1,37 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 import butterknife.BindView;
 import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.content.TextContent;
 import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.event.NotificationClickEvent;
 import cn.jpush.im.android.api.event.OfflineMessageEvent;
 import cn.jpush.im.android.api.model.Conversation;
-import cn.jpush.im.android.api.model.DeviceInfo;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
-import cn.jpush.im.api.BasicCallback;
-import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
+import cn.paulpaulzhang.fair.sc.main.chat.fixtures.Transform;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
-import cn.paulpaulzhang.fair.sc.main.chat.model.User;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
-import cn.paulpaulzhang.fair.util.storage.FairPreference;
 
 
 /**
@@ -48,40 +40,42 @@ import cn.paulpaulzhang.fair.util.storage.FairPreference;
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class ChatDelegate extends FairDelegate
+public class DialogDelegate extends FairDelegate
         implements DialogsListAdapter.OnDialogClickListener<Dialog>,
         DialogsListAdapter.OnDialogLongClickListener<Dialog> {
 
     @BindView(R2.id.dialog_list)
     DialogsList mDialogList;
 
+    @BindView(R2.id.srl_chat)
+    SwipeRefreshLayout mSwipeRefresh;
+
     private ImageLoader mImageLoader;
     private DialogsListAdapter<Dialog> mDialogListAdapter;
+    private BackgroundHandler mHandler;
 
     @Override
     public Object setLayout() {
-        return R.layout.delegate_message;
+        return R.layout.delegate_dialog;
     }
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         JMessageClient.registerEventReceiver(this);
-        login();
+        mHandler = new BackgroundHandler(this);
         mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.mipmap.ic_launcher_round).into(imageView);
         initAdapter();
+        initSwipeRefresh();
     }
 
-    private void login() {
-        JMessageClient.login("123456", "admin", new BasicCallback() {
-            @Override
-            public void gotResult(int i, String s) {
-                FairLogger.d("登陆成功");
-            }
-        });
+    private void initSwipeRefresh() {
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_light);
+        mSwipeRefresh.setOnRefreshListener(() -> mDialogListAdapter.setItems(DialogFixtures.getDialogs(mSwipeRefresh)));
     }
 
     private void initAdapter() {
-        mDialogListAdapter = new DialogsListAdapter<>(mImageLoader);
+        mDialogListAdapter = new DialogsListAdapter<>(R.layout.item_custom_dialog, mImageLoader);
         mDialogListAdapter.setItems(DialogFixtures.getDialogs());
         mDialogListAdapter.setOnDialogClickListener(this);
         mDialogListAdapter.setOnDialogLongClickListener(this);
@@ -100,14 +94,11 @@ public class ChatDelegate extends FairDelegate
 
     public void onEvent(MessageEvent event) {
         Message message = event.getMessage();
-        switch (message.getContentType()) {
-            case text:
+        final UserInfo userInfo = (UserInfo) message.getTargetInfo();
+        String targetId = userInfo.getUserName();
+        Conversation conv = JMessageClient.getSingleConversation(targetId, userInfo.getAppKey());
+        mHandler.sendMessage(mHandler.obtainMessage(Constant.REFRESH_CONVERSATION_LIST, conv));
 
-                break;
-            case image:
-
-                break;
-        }
     }
 
     public void onEvent(NotificationClickEvent event) {
@@ -116,16 +107,39 @@ public class ChatDelegate extends FairDelegate
     }
 
     public void onEvent(OfflineMessageEvent event) {
-        List<Message> msgs = event.getOfflineMessageList();
         Conversation conversation = event.getConversation();
-        for (Message msg : msgs) {
-            //...
-        }
+        mHandler.sendMessage(mHandler.obtainMessage(Constant.REFRESH_CONVERSATION_LIST, conversation));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         JMessageClient.unRegisterEventReceiver(this);
+    }
+
+    private static class BackgroundHandler extends Handler {
+        private final WeakReference<DialogDelegate> chatDelegate;
+
+        BackgroundHandler(DialogDelegate dialogDelegate) {
+            this.chatDelegate = new WeakReference<>(dialogDelegate);
+        }
+
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            DialogDelegate delegate = chatDelegate.get();
+            if (delegate == null) {
+                return;
+            }
+            switch (msg.what) {
+                case Constant.REFRESH_CONVERSATION_LIST:
+                    Conversation conv = (Conversation) msg.obj;
+                    Dialog dialog = Transform.getDialog(conv);
+                    delegate.mDialogListAdapter.deleteById(dialog.getId());
+                    delegate.mDialogListAdapter.addItem(0, dialog);
+                    break;
+                default:
+            }
+        }
     }
 }

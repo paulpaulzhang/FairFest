@@ -19,6 +19,11 @@
         <item name="rippleColor">#FF9e9e9e</item>
     </style>
 
+    <style name="MyMaterialButton.OutLine.LikeFont" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/font_default</item>
+        <item name="rippleColor">#FF9e9e9e</item>
+    </style>
+
     <style name="MyMaterialButton.OutLine.Blue" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="strokeColor">@color/colorAccent</item>
         <item name="rippleColor">#FF9e9e9e</item>

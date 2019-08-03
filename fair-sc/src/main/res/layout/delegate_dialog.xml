@@ -75,9 +75,18 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <com.stfalcon.chatkit.dialogs.DialogsList
-        android:id="@+id/dialog_list"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_chat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <com.stfalcon.chatkit.dialogs.DialogsList
+            android:id="@+id/dialog_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:dialogUnreadBubbleBackgroundColor="@android:color/holo_red_light" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 </LinearLayout>

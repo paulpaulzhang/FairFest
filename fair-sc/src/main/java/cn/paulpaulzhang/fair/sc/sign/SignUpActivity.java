@@ -2,12 +2,12 @@ package cn.paulpaulzhang.fair.sc.sign;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 
 import com.alibaba.fastjson.JSON;
 import com.google.android.material.button.MaterialButton;
@@ -21,6 +21,7 @@ import java.util.Timer;
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
@@ -31,10 +32,6 @@ import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 import es.dmoral.toasty.Toasty;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SignUpActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.et_phone)
@@ -102,17 +99,19 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             mPhone.setError(getString(R.string.error_phone_number));
         } else {
             mPhone.setError(null);
-            FairLoader.showLoading(SignUpActivity.this);
+            FairLoader.showLoading(this);
             RestClient.builder()
-                    .url(Constant.SEND_SMS)
+                    .url(Api.REGISTER_SMS)
                     .params("phoneNumber", phone)
                     .success(response -> {
                         initTimer();
-                        sessionId = JSON.parseObject(response).getString("sessionId");
-                        FairLogger.d(response);
                         FairLoader.stopLoading();
-                        Toasty.info(this, response, Toasty.LENGTH_LONG).show();
-                        Toasty.success(this, "验证码已发送", Toast.LENGTH_SHORT).show();
+                        String result = JSON.parseObject(response).getString("result");
+                        if (!TextUtils.equals(result, "ok")) {
+                            Toasty.info(this, result, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        sessionId = JSON.parseObject(response).getString("sessionId");
                     })
                     .error((code, msg) -> {
                         FairLoader.stopLoading();
@@ -131,14 +130,24 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
             FairLoader.showLoading(this);
             RestClient.builder()
-                    .url(Constant.REGISTER)
-                    .header("sessionId=" + sessionId)
+                    .url(Api.REGISTER)
+                    .header("JSESSIONID=" + sessionId)
                     .params("phoneNumber", phone)
                     .params("verifyCode", code)
-                    .success(response -> SignHandler.onSignUp(response, () -> {
-                        FairLoader.stopLoading();
-                        Toasty.success(this, "注册成功", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+                    .success(response -> SignHandler.onSignUp(response, new ISignUpListener() {
+                        @Override
+                        public void onSignUpSuccess() {
+                            FairLoader.stopLoading();
+                            Toasty.success(SignUpActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+                            finish();
+                        }
+
+                        @Override
+                        public void onSignUpFailure(String msg) {
+                            FairLoader.stopLoading();
+                            Toasty.error(SignUpActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        }
                     }))
                     .error((c, m) -> {
                         FairLoader.stopLoading();
@@ -161,6 +170,8 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
             assert mGetCode != null;
             mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
             mGetCode.setEnabled(false);
+            mGetCode.setStrokeColorResource(android.R.color.darker_gray);
+            mGetCode.setTextColor(getColor(R.color.font_default));
             mGetCode.setTextColor(getColor(android.R.color.darker_gray));
             mCount--;
             if (mCount < 0) {
@@ -168,6 +179,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
                 mTimer.cancel();
                 mTimer = null;
                 mGetCode.setText("发送验证码");
+                mGetCode.setStrokeColorResource(R.color.colorAccent);
                 mGetCode.setTextColor(getColor(R.color.colorAccent));
                 mGetCode.setEnabled(true);
                 mCount = 30;

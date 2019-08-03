@@ -50,8 +50,11 @@ public class Transform {
                 true);
     }
 
-    public static Dialog getDialog(Conversation conversation, ArrayList<User> users, Message message) {
+    public static Dialog getDialog(Conversation conversation) {
         File avatar = conversation.getAvatarFile();
+        ArrayList<User> users = new ArrayList<>();
+        users.add(Transform.getUser((UserInfo) conversation.getTargetInfo()));
+        Message message = getMessage(conversation);
         return new Dialog(conversation.getId() + "",
                 conversation.getTitle(),
                 avatar != null ? avatar.getPath() : "",

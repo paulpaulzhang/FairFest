@@ -22,11 +22,11 @@ import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_HOST;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PASSWORD;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PATH;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PORT;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_USERNAME;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_HOST;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PASSWORD;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PATH;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PORT;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_USERNAME;
 
 /**
  * 包名: cn.paulpaulzhang.fair.util.file

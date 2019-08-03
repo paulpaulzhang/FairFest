@@ -3,6 +3,7 @@ package cn.paulpaulzhang.fair.sc.database.model;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -27,7 +28,7 @@ public class LocalUser {
 
     private int fans; //粉丝数
 
-    private long phone; //电话号
+    private String phone; //电话号
 
     private String email; // 邮箱
 
@@ -50,10 +51,9 @@ public class LocalUser {
     public LocalUser() {
     }
 
-    public LocalUser(long id, long phone, String username) {
+    public LocalUser(long id, String phone) {
         this.id = id;
         this.phone = phone;
-        this.username = username;
     }
 
     public LocalUser(long id,
@@ -63,7 +63,7 @@ public class LocalUser {
                      String gender,
                      int followers,
                      int fans,
-                     long phone,
+                     String phone,
                      String email,
                      String school,
                      long studentId,
@@ -148,11 +148,11 @@ public class LocalUser {
         this.fans = fans;
     }
 
-    public long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 

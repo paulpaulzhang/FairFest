@@ -219,7 +219,7 @@ public final class JsonParseUtil {
         String gender = object.getString("gender");
         int followers = object.getInteger("followers");
         int fans = object.getInteger("fans");
-        long phone = object.getLong("phone");
+        String phone = object.getString("phone");
         String email = object.getString("email");
         String school = object.getString("school");
         long studentId = object.getLong("studentId");

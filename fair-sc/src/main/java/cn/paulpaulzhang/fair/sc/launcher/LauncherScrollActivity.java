@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.gyf.immersionbar.BarHide;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 
@@ -18,6 +20,7 @@ import cn.paulpaulzhang.fair.app.AccountManager;
 import cn.paulpaulzhang.fair.app.IUserChecker;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
 import cn.paulpaulzhang.fair.ui.launcher.LauncherHolderCreator;
@@ -50,7 +53,7 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ImmersionBar.with(this).init();
         initBanner();
     }
 
@@ -62,12 +65,14 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
             AccountManager.checkAccount(new IUserChecker() {
                 @Override
                 public void onSignIn() {
-                    Toast.makeText(LauncherScrollActivity.this, "already sign", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LauncherScrollActivity.this, HomeActivity.class));
+                    finish();
                 }
 
                 @Override
                 public void onNotSignIn() {
                     startActivity(new Intent(LauncherScrollActivity.this, SignUpActivity.class));
+                    finish();
                 }
             });
         }

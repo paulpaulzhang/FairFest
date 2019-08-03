@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
-import cn.paulpaulzhang.fair.sc.main.chat.ChatDelegate;
+import cn.paulpaulzhang.fair.sc.main.chat.DialogDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.InterestDelegate;
 import cn.paulpaulzhang.fair.sc.main.market.MarketDelegate;
 
@@ -31,7 +31,7 @@ public class BottomNavViewPagerAdapter extends FragmentPagerAdapter {
         delegates.clear();
         delegates.add(new InterestDelegate());
         delegates.add(new MarketDelegate());
-        delegates.add(new ChatDelegate());
+        delegates.add(new DialogDelegate());
     }
 
     @NonNull
