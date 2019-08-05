@@ -19,4 +19,8 @@ public class Constant {
     public static final int REQUEST_CODE_CHOOSE = 300;
 
     public static final int REFRESH_CONVERSATION_LIST = 500;
+
+    public static final int NEW_MESSAGE = 501;
+
+    public static final String DEFAULT_AVATAR = "http://www.matchstickmen.club/user-default-avatar.png";
 }

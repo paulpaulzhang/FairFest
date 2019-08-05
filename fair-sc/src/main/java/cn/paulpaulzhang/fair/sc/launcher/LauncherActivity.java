@@ -2,13 +2,10 @@ package cn.paulpaulzhang.fair.sc.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.gyf.immersionbar.BarHide;
 import com.gyf.immersionbar.ImmersionBar;
 
 import java.text.MessageFormat;
@@ -24,8 +21,6 @@ import cn.paulpaulzhang.fair.app.IUserChecker;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
 import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
@@ -35,7 +30,6 @@ import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 import es.dmoral.toasty.Toasty;
-import io.objectbox.Box;
 
 /**
  * 项目名：   FairFest

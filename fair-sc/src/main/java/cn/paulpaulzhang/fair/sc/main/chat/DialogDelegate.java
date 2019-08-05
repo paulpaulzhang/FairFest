@@ -13,6 +13,8 @@ import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
@@ -32,6 +34,7 @@ import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.Transform;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 
 /**
@@ -63,7 +66,7 @@ public class DialogDelegate extends FairDelegate
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         JMessageClient.registerEventReceiver(this);
         mHandler = new BackgroundHandler(this);
-        mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.mipmap.ic_launcher_round).into(imageView);
+        mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.drawable.default_placeholder).into(imageView);
         initAdapter();
         initSwipeRefresh();
     }
@@ -84,6 +87,15 @@ public class DialogDelegate extends FairDelegate
 
     @Override
     public void onDialogClick(Dialog dialog) {
+        dialog.setUnreadCount(0);
+        dialog.getConversation().setUnReadMessageCnt(0);
+        if (dialog.getUsers().size() == 1) {
+            Intent intent = new Intent(getContext(), MessageActivity.class);
+            intent.putExtra("uid", JMessageClient.getMyInfo().getUserName());
+            intent.putExtra("cid", dialog.getId());
+            intent.putExtra("appkey", dialog.getConversation().getTargetAppKey());
+            startActivity(intent);
+        }
 
     }
 
@@ -125,7 +137,7 @@ public class DialogDelegate extends FairDelegate
         }
 
         @Override
-        public void handleMessage(android.os.Message msg) {
+        public void handleMessage(@NotNull android.os.Message msg) {
             super.handleMessage(msg);
             DialogDelegate delegate = chatDelegate.get();
             if (delegate == null) {
@@ -141,5 +153,11 @@ public class DialogDelegate extends FairDelegate
                 default:
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mDialogListAdapter.setItems(DialogFixtures.getDialogs());
     }
 }

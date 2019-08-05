@@ -21,7 +21,7 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.model.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.FollowAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;

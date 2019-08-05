@@ -17,6 +17,8 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.model.TopicPostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicDetailAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
@@ -186,7 +188,7 @@ public class TopicDetailActivity extends FairActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;

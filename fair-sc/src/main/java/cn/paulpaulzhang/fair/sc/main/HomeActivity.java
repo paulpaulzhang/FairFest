@@ -99,7 +99,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
 
         });
 
-        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPagerAdapter = new BottomNavViewPagerAdapter
                 (getSupportFragmentManager(),
                         BottomNavViewPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

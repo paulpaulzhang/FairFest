@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.database.model;
+package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
@@ -10,7 +10,7 @@ import io.objectbox.annotation.Id;
  * 描述:
  */
 @Entity
-public class TopicLikeCache {
+public class FollowLikeCache {
     @Id
     private long id;
 
@@ -18,7 +18,7 @@ public class TopicLikeCache {
 
     private boolean isLike;
 
-    public TopicLikeCache(long pid, boolean isLike) {
+    public FollowLikeCache(long pid, boolean isLike) {
         this.pid = pid;
         this.isLike = isLike;
     }

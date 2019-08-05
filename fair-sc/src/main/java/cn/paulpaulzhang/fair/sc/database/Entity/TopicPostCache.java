@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.database.model;
+package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import androidx.annotation.NonNull;
 
@@ -12,7 +12,7 @@ import io.objectbox.annotation.Id;
  * 描述: 帖子实体类
  */
 @Entity
-public class FollowPostCache {
+public class TopicPostCache {
 
     @Id(assignable = true)
     private long id; //帖子id
@@ -37,17 +37,17 @@ public class FollowPostCache {
 
     private String device; //设备型号
 
-    public FollowPostCache(long id,
-                           long uid,
-                           int type,
-                           String title,
-                           String content,
-                           String imagesUrl,
-                           int likeCount,
-                           int commentCount,
-                           int shareCount,
-                           String time,
-                           String device) {
+    public TopicPostCache(long id,
+                          long uid,
+                          int type,
+                          String title,
+                          String content,
+                          String imagesUrl,
+                          int likeCount,
+                          int commentCount,
+                          int shareCount,
+                          String time,
+                          String device) {
         this.id = id;
         this.uid = uid;
         this.type = type;

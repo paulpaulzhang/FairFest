@@ -21,16 +21,26 @@ public class Message implements IMessage,
     private User user;
     private Image image;
     private Voice voice;
+    private cn.jpush.im.android.api.model.Message message;
 
-    public Message(String id, User user, String text) {
-        this(id, user, text, new Date());
+    public Message(String id, User user, String text, cn.jpush.im.android.api.model.Message message) {
+        this(id, user, text, new Date(), message);
     }
 
-    public Message(String id, User user, String text, Date createdAt) {
+    public Message(String id, User user, String text, Date createdAt, cn.jpush.im.android.api.model.Message message) {
         this.id = id;
         this.text = text;
         this.user = user;
         this.createdAt = createdAt;
+        this.message = message;
+    }
+
+    public cn.jpush.im.android.api.model.Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(cn.jpush.im.android.api.model.Message message) {
+        this.message = message;
     }
 
     @Override
@@ -56,6 +66,10 @@ public class Message implements IMessage,
     @Override
     public String getImageUrl() {
         return image == null ? null : image.url;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Voice getVoice() {

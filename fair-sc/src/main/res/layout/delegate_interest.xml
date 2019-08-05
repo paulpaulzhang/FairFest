@@ -14,7 +14,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/statusbar_height"
+            android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:layout_scrollFlags="scroll|enterAlways"
@@ -67,10 +67,10 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/iv_add"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_width="28dp"
                     android:layout_height="28dp"
                     android:layout_marginRight="12dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_add"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toRightOf="parent"

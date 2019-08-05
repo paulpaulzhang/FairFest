@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.database.model;
+package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import androidx.annotation.NonNull;
 
