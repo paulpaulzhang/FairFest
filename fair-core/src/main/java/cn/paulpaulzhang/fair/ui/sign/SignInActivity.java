@@ -2,12 +2,14 @@ package cn.paulpaulzhang.fair.ui.sign;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.alibaba.fastjson.JSON;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.gyf.immersionbar.ImmersionBar;
@@ -18,14 +20,19 @@ import java.util.Timer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.paulpaulzhang.fair.base.activities.FairActivity;
+
+import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.RestClient;
-import cn.paulpaulzhang.fair.R;
-import cn.paulpaulzhang.fair.R2;
-import cn.paulpaulzhang.fair.ui.main.HomeActivity;
+import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
+import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
+import es.dmoral.toasty.Toasty;
 
 public class SignInActivity extends FairActivity implements ITimerListener {
     @BindView(R2.id.et_phone)
@@ -36,11 +43,11 @@ public class SignInActivity extends FairActivity implements ITimerListener {
     MaterialButton mGetCode;
     @BindView(R2.id.bt_sign_in)
     MaterialButton mSignIn;
-    @BindView(R2.id.tv_forget_psd)
-    TextView mForgetPsd;
 
     private Timer mTimer = null;
     private int mCount = 30;
+
+    private String sessionId = null;  //验证码返回的session id 注册需要
 
     @Override
     public int setLayout() {
@@ -53,7 +60,6 @@ public class SignInActivity extends FairActivity implements ITimerListener {
     }
 
     private boolean checkForm() {
-        //TODO 电话号码正则  验证码位数验证(暂定四位数)
 
         final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
         final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
@@ -90,17 +96,25 @@ public class SignInActivity extends FairActivity implements ITimerListener {
             mPhone.setError(getString(R.string.error_phone_number));
         } else {
             mPhone.setError(null);
-
+            FairLoader.showLoading(this);
             RestClient.builder()
-                    .url("get_code")
-                    .params("phone", phone)
+                    .url(Api.LOGIN_SMS)
+                    .params("phoneNumber", phone)
                     .success(response -> {
                         initTimer();
-                        Toast.makeText(this, "验证码已发送", Toast.LENGTH_SHORT).show();
+                        FairLoader.stopLoading();
+                        String result = JSON.parseObject(response).getString("result");
+                        if (!TextUtils.equals(result, "ok")) {
+                            Toasty.info(this, result, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        sessionId = JSON.parseObject(response).getString("sessionId");
                     })
                     .error((code, msg) -> {
                         initTimer();
-                        Toast.makeText(this, "发送失败 " + msg, Toast.LENGTH_SHORT).show();
+                        FairLoader.stopLoading();
+                        FairLogger.d(code + msg);
+                        Toasty.error(this, "发送失败 " + code + " " + msg, Toast.LENGTH_SHORT).show();
                     })
                     .build()
                     .post();
@@ -110,29 +124,35 @@ public class SignInActivity extends FairActivity implements ITimerListener {
     @OnClick(R2.id.bt_sign_in)
     void signIn() {
         if (checkForm()) {
-            //TODO 登陆逻辑
             final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
             final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
+            FairLoader.showLoading(this);
             RestClient.builder()
-                    .url("user")
-                    .params("phone", phone)
-                    .params("code", code)
-                    .success(response -> {
-                        FairLogger.json("USER", response);
-                        SignHandler.onSignIn(response, () -> {
-                            //TODO 跳转逻辑
+                    .url(Api.LOGIN)
+                    .header("JSESSIONID=" + sessionId)
+                    .params("phoneNumber", phone)
+                    .params("verifyCode", code)
+                    .success(response -> SignHandler.onSignIn(response, new ISignInListener() {
+                        @Override
+                        public void onSignInSuccess() {
+                            FairLoader.stopLoading();
                             startActivity(new Intent(SignInActivity.this, HomeActivity.class));
-                        });
+                            finish();
+                        }
+
+                        @Override
+                        public void onSignUpFailure(String msg) {
+                            FairLoader.stopLoading();
+                            Toasty.error(SignInActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        }
+                    }))
+                    .error((c, m) -> {
+                        FairLoader.stopLoading();
+                        Toasty.error(this, c + " " + m, Toast.LENGTH_SHORT).show();
                     })
-                    .error((c, m) -> Toast.makeText(this, c + " " + m, Toast.LENGTH_SHORT).show())
                     .build()
                     .post();
         }
-    }
-
-    @OnClick(R2.id.tv_forget_psd)
-    void toForgetPsd() {
-
     }
 
     @Override
@@ -141,13 +161,15 @@ public class SignInActivity extends FairActivity implements ITimerListener {
             assert mGetCode != null;
             mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
             mGetCode.setEnabled(false);
-            mGetCode.setTextColor(getColor(android.R.color.darker_gray));
+            mGetCode.setStrokeColorResource(android.R.color.darker_gray);
+            mGetCode.setTextColor(getColor(R.color.font_default));
             mCount--;
             if (mCount < 0) {
                 assert mTimer != null;
                 mTimer.cancel();
                 mTimer = null;
                 mGetCode.setText("发送验证码");
+                mGetCode.setStrokeColorResource(R.color.colorAccent);
                 mGetCode.setTextColor(getColor(R.color.colorAccent));
                 mGetCode.setEnabled(true);
                 mCount = 30;

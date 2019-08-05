@@ -422,6 +422,9 @@
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
+  "newUidPool": [
+    8426627782892153533
+  ],
   "retiredEntityUids": [
     8162000179881785706,
     7326260701169044381,

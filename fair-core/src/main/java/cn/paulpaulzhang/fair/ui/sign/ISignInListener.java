@@ -9,4 +9,6 @@ package cn.paulpaulzhang.fair.ui.sign;
 public interface ISignInListener {
 
     void onSignInSuccess();
+
+    void onSignUpFailure(String msg);
 }

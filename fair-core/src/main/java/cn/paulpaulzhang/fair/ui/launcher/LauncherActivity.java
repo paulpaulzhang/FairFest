@@ -2,11 +2,11 @@ package cn.paulpaulzhang.fair.ui.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.text.MessageFormat;
 import java.util.Timer;
@@ -21,17 +21,15 @@ import cn.paulpaulzhang.fair.app.IUserChecker;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
 import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
 import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
 import cn.paulpaulzhang.fair.ui.launcher.ScrollLauncherTag;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.timer.BaseTimerTask;
 import cn.paulpaulzhang.fair.util.timer.ITimerListener;
 import es.dmoral.toasty.Toasty;
-import io.objectbox.Box;
 
 /**
  * 项目名：   FairFest
@@ -71,13 +69,13 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
             AccountManager.checkAccount(new IUserChecker() {
                 @Override
                 public void onSignIn() {
-                    Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
-                    LocalUser user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-                    JMessageClient.login(String.valueOf(user.getId()), "admin", new BasicCallback() {
+                    JMessageClient.login(String.valueOf(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())), "admin", new BasicCallback() {
                         @Override
                         public void gotResult(int i, String s) {
                             if (i == 0) {
                                 startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
+                                finish();
+                                FairLogger.d("JMessage", "登陆成功");
                             } else {
                                 Toasty.error(LauncherActivity.this, "登陆失败", Toasty.LENGTH_SHORT).show();
                                 startActivity(new Intent(LauncherActivity.this, SignInActivity.class));
@@ -102,7 +100,7 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ImmersionBar.with(this).init();
         initTimer();
     }
 

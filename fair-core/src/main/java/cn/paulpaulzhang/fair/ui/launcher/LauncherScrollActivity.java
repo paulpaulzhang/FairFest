@@ -9,16 +9,22 @@ import androidx.annotation.Nullable;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.listener.OnItemClickListener;
+import com.gyf.immersionbar.BarHide;
+import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import cn.paulpaulzhang.fair.R;
-import cn.paulpaulzhang.fair.R2;
-import cn.paulpaulzhang.fair.base.activities.FairActivity;
-import cn.paulpaulzhang.fair.base.app.AccountManager;
-import cn.paulpaulzhang.fair.base.app.IUserChecker;
-import cn.paulpaulzhang.fair.ui.sign.SignUpActivity;
+import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.app.AccountManager;
+import cn.paulpaulzhang.fair.app.IUserChecker;
+import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.HomeActivity;
+import cn.paulpaulzhang.fair.sc.sign.SignInActivity;
+import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
+import cn.paulpaulzhang.fair.ui.launcher.LauncherHolderCreator;
+import cn.paulpaulzhang.fair.ui.launcher.ScrollLauncherTag;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 
 public class LauncherScrollActivity extends FairActivity implements OnItemClickListener {
@@ -47,7 +53,7 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        ImmersionBar.with(this).init();
         initBanner();
     }
 
@@ -59,12 +65,14 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
             AccountManager.checkAccount(new IUserChecker() {
                 @Override
                 public void onSignIn() {
-                    Toast.makeText(LauncherScrollActivity.this, "already sign", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LauncherScrollActivity.this, HomeActivity.class));
+                    finish();
                 }
 
                 @Override
                 public void onNotSignIn() {
                     startActivity(new Intent(LauncherScrollActivity.this, SignUpActivity.class));
+                    finish();
                 }
             });
         }

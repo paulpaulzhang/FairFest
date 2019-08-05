@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,17 +15,17 @@ import java.util.List;
 
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.model.LocalUser;
+import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_HOST;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PASSWORD;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PATH;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_PORT;
-import static cn.paulpaulzhang.fair.constant.Constant.FTP_USERNAME;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_HOST;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PASSWORD;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PATH;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_PORT;
+import static cn.paulpaulzhang.fair.constant.Api.FTP_USERNAME;
 
 /**
  * 包名: cn.paulpaulzhang.fair.util.file

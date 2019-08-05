@@ -36,6 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:resizeableActivity="true"
+        android:maxAspectRatio="2.4"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
         <service
@@ -183,8 +185,12 @@
             android:name="android.notch_support"
             android:value="true" />
 
-        <activity android:name="cn.paulpaulzhang.fair.ui.launcher.LauncherActivity">
+        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name="cn.paulpaulzhang.fair.ui.launcher.LauncherScrollActivity">
 
@@ -192,11 +198,7 @@
         <activity
             android:name="cn.paulpaulzhang.fair.ui.sign.SignUpActivity"
             android:label="@string/sign_up">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="cn.paulpaulzhang.fair.ui.sign.SignInActivity"

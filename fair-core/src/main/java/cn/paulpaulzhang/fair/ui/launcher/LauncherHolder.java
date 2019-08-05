@@ -5,6 +5,7 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bigkoo.convenientbanner.holder.Holder;
+import com.gyf.immersionbar.ImmersionBar;
 
 import cn.paulpaulzhang.fair.R;
 

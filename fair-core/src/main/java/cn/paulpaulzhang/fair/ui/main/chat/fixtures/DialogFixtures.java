@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.sc.main.chat.fixtures;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +14,7 @@ import cn.jpush.im.android.api.model.UserInfo;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
 import cn.paulpaulzhang.fair.sc.main.chat.model.User;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.chat.fixtures
@@ -21,19 +24,25 @@ import cn.paulpaulzhang.fair.sc.main.chat.model.User;
  */
 public class DialogFixtures {
     public static List<Dialog> getDialogs() {
+        return getDialogs(null);
+    }
+
+    public static List<Dialog> getDialogs(SwipeRefreshLayout swipeRefreshLayout) {
         List<Conversation> conversations = JMessageClient.getConversationList();
         if (conversations == null || conversations.size() == 0) {
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
             return new ArrayList<>();
         }
         ArrayList<Dialog> dialogs = new ArrayList<>();
-        ArrayList<User> users;
 
         for (Conversation conversation : conversations) {
-            users = new ArrayList<>();
-            users.add(Transform.getUser(JMessageClient.getMyInfo()));
-            users.add(Transform.getUser((UserInfo) conversation.getTargetInfo()));
-            Message message = Transform.getMessage(conversation);
-            dialogs.add(Transform.getDialog(conversation, users, message));
+            dialogs.add(Transform.getDialog(conversation));
+            FairLogger.d(conversation.getId(), conversation.getTitle());
+        }
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
         }
         return dialogs;
     }

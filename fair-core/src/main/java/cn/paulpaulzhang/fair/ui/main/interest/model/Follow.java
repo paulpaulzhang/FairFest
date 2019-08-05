@@ -2,7 +2,7 @@ package cn.paulpaulzhang.fair.sc.main.interest.model;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
-import cn.paulpaulzhang.fair.sc.database.model.FollowPostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.interest.follow
