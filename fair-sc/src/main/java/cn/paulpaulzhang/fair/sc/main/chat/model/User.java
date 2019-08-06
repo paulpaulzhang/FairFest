@@ -10,7 +10,7 @@ import cn.jpush.im.android.api.model.UserInfo;
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class User implements IUser {
+public class User implements IUser{
 
     private String id;
     private String name;

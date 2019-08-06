@@ -12,7 +12,7 @@ import cn.jpush.im.android.api.model.Conversation;
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class Dialog implements IDialog<Message> {
+public class Dialog implements IDialog<Message>{
 
     private String id;
     private String dialogPhoto;

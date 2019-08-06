@@ -19,9 +19,9 @@ android {
         }
 
         manifestPlaceholders = [
-                JPUSH_PKGNAME : "cn.paulpaulzhang.fairfest",
+                JPUSH_PKGNAME: "cn.paulpaulzhang.fairfest",
                 JPUSH_APPKEY : "b9cdaa1b53fd063d528bafbb",
-                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+                JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
         ]
 
     }
@@ -145,4 +145,6 @@ dependencies {
     api 'cn.jiguang.sdk:jpush:3.3.4'
     api 'cn.jiguang.sdk:jcore:2.1.2'
     api 'cn.jiguang.sdk:jmessage:2.9.0'
+
+    api 'com.github.siyamed:android-shape-imageview:0.9.3@aar'
 }

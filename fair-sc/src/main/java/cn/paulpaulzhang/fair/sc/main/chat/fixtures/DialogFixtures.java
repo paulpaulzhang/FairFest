@@ -39,7 +39,6 @@ public class DialogFixtures {
 
         for (Conversation conversation : conversations) {
             dialogs.add(Transform.getDialog(conversation));
-            FairLogger.d(conversation.getId(), conversation.getTitle());
         }
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setRefreshing(false);

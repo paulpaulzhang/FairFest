@@ -40,6 +40,7 @@
     <string name="mine">我</string>
     <string name="message">消息</string>
     <string name="send_message">发消息</string>
+    <string name="look_original_picture">查看原图</string>
 
     <style name="title">标题</style>
     <style name="content">内容</style>

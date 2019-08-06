@@ -20,4 +20,11 @@ public abstract class FairActivity extends PermissionCheckerActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    public void initToolbar(Toolbar mToolbar, String title) {
+        if (title != null) {
+            mToolbar.setTitle(title);
+        }
+        initToolbar(mToolbar);
+    }
 }

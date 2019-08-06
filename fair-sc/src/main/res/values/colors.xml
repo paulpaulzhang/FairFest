@@ -9,4 +9,9 @@
     <color name="font_tab">#F5F5F5</color>
     <color name="font_user_card">#F5F5F5</color>
     <color name="divider">#d5d5d5</color>
+    <color name="white60">#a0ffffff</color>
+    <color name="select_color">#3F51B5</color>
+    <color name="incoming_press_color">#a0ffffff</color>
+    <color name="outcoming_press_color">#2196F3</color>
+    <color name="disable_color">#8a8a8a</color>
 </resources>

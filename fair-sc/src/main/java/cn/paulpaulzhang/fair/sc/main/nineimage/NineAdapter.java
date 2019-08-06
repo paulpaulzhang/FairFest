@@ -32,6 +32,7 @@ import java.util.List;
 
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
+import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -103,7 +104,7 @@ public class NineAdapter extends BaseAdapter {
                                     .setMessage("点击确认保存图片到本地")
                                     .setPositiveButton("确认", (dialogInterface, i14) -> {
                                         final Bitmap bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), Bitmap.Config.ARGB_8888, true);
-                                        convertLayoutToBitmap(fragmentActivity.getWindow(), imageView, bitmap, i15 -> {
+                                        ImageUtil.convertLayoutToBitmap(fragmentActivity.getWindow(), imageView, bitmap, i15 -> {
                                             if (i15 == PixelCopy.SUCCESS) {
                                                 File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
                                                 if (file != null) {
@@ -127,16 +128,5 @@ public class NineAdapter extends BaseAdapter {
 
     public final class ViewHolder {
         SimpleDraweeView imageView;
-    }
-
-    private void convertLayoutToBitmap(Window window, View view, Bitmap dest,
-                                       PixelCopy.OnPixelCopyFinishedListener listener) {
-        //获取layout的位置
-        final int[] location = new int[2];
-        view.getLocationInWindow(location);
-        //请求转换
-        PixelCopy.request(window,
-                new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight()),
-                dest, listener, new Handler(Looper.getMainLooper()));
     }
 }

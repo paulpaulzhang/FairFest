@@ -10,5 +10,6 @@
 
     <application>
         <activity android:name=".main.chat.MessageActivity" />
+        <activity android:name=".main.chat.PhotoActivity" />
     </application>
 </manifest>

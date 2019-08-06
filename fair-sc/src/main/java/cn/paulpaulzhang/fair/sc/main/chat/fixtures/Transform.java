@@ -12,6 +12,7 @@ import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
 import cn.paulpaulzhang.fair.sc.main.chat.model.User;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.chat.fixtures
@@ -54,7 +55,7 @@ public class Transform {
                         Transform.getUser(message.getFromUser()),
                         null,
                         new Date(message.getCreateTime()), message);
-                msg.setImage(new Message.Image("http://img2.imgtn.bdimg.com/it/u=4064075977,3738371861&fm=26&gp=0.jpg"));
+                msg.setImage(new Message.Image(imageContent.getLocalThumbnailPath()));
                 return msg;
             default:
         }

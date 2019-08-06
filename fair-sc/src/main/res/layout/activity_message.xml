@@ -18,13 +18,35 @@
         android:id="@+id/message_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        app:incomingBubblePaddingBottom="@dimen/bubble_padding_top_bottom"
+        app:incomingBubblePaddingLeft="@dimen/bubble_padding_left_right"
+        app:incomingBubblePaddingRight="@dimen/bubble_padding_left_right"
+        app:incomingBubblePaddingTop="@dimen/bubble_padding_top_bottom"
+        app:incomingDefaultBubblePressedColor="@color/incoming_press_color"
+        app:incomingDefaultBubbleSelectedColor="@color/select_color"
+        app:outcomingBubblePaddingBottom="@dimen/bubble_padding_top_bottom"
+        app:outcomingBubblePaddingLeft="@dimen/bubble_padding_left_right"
+        app:outcomingBubblePaddingRight="@dimen/bubble_padding_left_right"
+        app:outcomingBubblePaddingTop="@dimen/bubble_padding_top_bottom"
+        app:outcomingDefaultBubbleColor="@color/colorAccent"
+        app:outcomingDefaultBubblePressedColor="@color/outcoming_press_color"
+        app:outcomingDefaultBubbleSelectedColor="@color/select_color"
+        app:textAutoLink="all" />
 
     <com.stfalcon.chatkit.messages.MessageInput
         android:id="@+id/message_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        app:attachmentButtonBackground="@android:color/white"
+        app:attachmentButtonDefaultIconPressedColor="@color/outcoming_press_color"
+        app:attachmentButtonIcon="@drawable/ic_message_photo"
+        app:inputBackground="@color/background"
+        app:inputButtonBackground="@android:color/white"
+        app:inputButtonDefaultIconColor="@color/colorAccent"
+        app:inputButtonDefaultIconDisabledColor="@color/disable_color"
+        app:inputButtonDefaultIconPressedColor="@color/outcoming_press_color"
         app:inputHint="@string/send_message"
         app:showAttachmentButton="true" />
 

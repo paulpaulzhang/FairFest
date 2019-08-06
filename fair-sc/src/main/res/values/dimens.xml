@@ -9,4 +9,7 @@
     <dimen name="img_picker_size">120dp</dimen>
     <dimen name="dialog_avatar_height">46dp</dimen>
     <dimen name="dialog_avatar_width">46dp</dimen>
+    <dimen name="bubble_padding_left_right">10dp</dimen>
+    <dimen name="bubble_padding_top_bottom">5dp</dimen>
+
 </resources>
