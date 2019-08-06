@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import cn.paulpaulzhang.fair.base.app.Fair;
+import cn.paulpaulzhang.fair.app.Fair;
 
 /**
  * 项目名：   FairFest

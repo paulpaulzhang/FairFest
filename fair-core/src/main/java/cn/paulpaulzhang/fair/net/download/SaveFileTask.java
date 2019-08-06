@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 import java.io.File;
 import java.io.InputStream;
 
-import cn.paulpaulzhang.fair.base.app.Fair;
+import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.callback.IRequest;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.util.file.FileUtil;

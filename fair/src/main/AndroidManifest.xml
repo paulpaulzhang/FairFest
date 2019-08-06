@@ -192,16 +192,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="cn.paulpaulzhang.fair.ui.launcher.LauncherScrollActivity">
+        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
 
         </activity>
         <activity
-            android:name="cn.paulpaulzhang.fair.ui.sign.SignUpActivity"
+            android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
             android:label="@string/sign_up">
 
         </activity>
         <activity
-            android:name="cn.paulpaulzhang.fair.ui.sign.SignInActivity"
+            android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
             android:label="@string/sign_in" />
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity"

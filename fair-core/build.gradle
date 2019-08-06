@@ -64,12 +64,6 @@ dependencies {
 
     //ButterKnife依赖
     api 'com.jakewharton:butterknife:10.1.0'
-    //ButterKnife依赖
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
-
-    //objectBox调试模式
-    debugImplementation "io.objectbox:objectbox-android-objectbrowser:2.3.4"
-    releaseImplementation "io.objectbox:objectbox-android:2.3.4"
 
     //网络请求依赖
     api 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -96,7 +90,6 @@ dependencies {
 
     //Glide
     api 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     //圆形图片库
     api 'de.hdodenhof:circleimageview:3.0.0'
@@ -153,4 +146,3 @@ dependencies {
     api 'cn.jiguang.sdk:jcore:2.1.2'
     api 'cn.jiguang.sdk:jmessage:2.9.0'
 }
-apply plugin: 'io.objectbox'

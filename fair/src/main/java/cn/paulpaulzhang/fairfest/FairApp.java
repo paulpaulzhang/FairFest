@@ -14,7 +14,6 @@ import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.net.interceptors.DebugInterceptor;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
-
 import es.dmoral.toasty.Toasty;
 import okhttp3.logging.HttpLoggingInterceptor;
 
