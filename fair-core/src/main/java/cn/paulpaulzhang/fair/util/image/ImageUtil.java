@@ -3,6 +3,7 @@ package cn.paulpaulzhang.fair.util.image;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
@@ -21,7 +22,11 @@ import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
+import java.io.File;
+
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.net.callback.IFailure;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 /**
  * 包名: cn.paulpaulzhang.fair.util.image
@@ -60,6 +65,12 @@ public class ImageUtil {
         final int[] location = new int[2];
         view.getLocationInWindow(location);
         //请求转换
+
+        FairLogger.d("window", window);
+        FairLogger.d("view", view);
+        FairLogger.d("dest", dest);
+        FairLogger.d("listener", listener);
+
         PixelCopy.request(window,
                 new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight()),
                 dest, listener, new Handler(Looper.getMainLooper()));

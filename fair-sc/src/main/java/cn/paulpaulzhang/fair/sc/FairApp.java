@@ -1,5 +1,6 @@
-package cn.paulpaulzhang.fairfest;
+package cn.paulpaulzhang.fair.sc;
 
+import android.app.Activity;
 import android.app.Application;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -26,9 +27,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * 描述：     样例
  */
 public class FairApp extends Application {
+
+    private volatile Activity mCurrentActivity;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        this.registerActivityLifecycleCallbacks(new FairActivityLifeCycleCallBacks());
+
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(s -> FairLogger.d("RetrofitLog", s));
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
         Fair.init(this)
@@ -48,5 +54,13 @@ public class FairApp extends Application {
         JMessageClient.init(this);
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+    }
+
+    public Activity getmCurrentActivity() {
+        return mCurrentActivity;
+    }
+
+    public void setmCurrentActivity(Activity mCurrentActivity) {
+        this.mCurrentActivity = mCurrentActivity;
     }
 }

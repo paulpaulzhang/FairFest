@@ -14,12 +14,15 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.AbstractDelegate;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -85,8 +88,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
             }
 
             if (wasSelected) {
-                //TODO 刷新逻辑
-                return true;
+                //TODO
             }
 
             mViewPager.setCurrentItem(position, false);

@@ -37,9 +37,9 @@ public class CommonUtil {
     public static String getTime(Date date) {
         boolean sameYear = false;
         String todaySDF = "HH:mm";
-        String yesterdaySDF = "昨天";
-        String beforeYesterdaySDF = "前天";
-        String otherSDF = "MM月dd日";
+        String yesterdaySDF = "昨天 HH:mm";
+        String beforeYesterdaySDF = "前天 HH:mm";
+        String otherSDF = "MM月dd日 HH:mm";
         String otherYearSDF = "yyyy年";
         SimpleDateFormat sfd;
         String time;
@@ -62,12 +62,14 @@ public class CommonUtil {
         } else {
             todayCalendar.add(Calendar.DATE, -1);
             if (dateCalendar.after(todayCalendar)) {// 判断是不是昨天
-                time = yesterdaySDF;
+                sfd = new SimpleDateFormat(yesterdaySDF, Locale.CHINA);
+                time = sfd.format(date);
                 return time;
             }
             todayCalendar.add(Calendar.DATE, -2);
             if (dateCalendar.after(todayCalendar)) {// 判断是不是前天
-                time = beforeYesterdaySDF;
+                sfd = new SimpleDateFormat(beforeYesterdaySDF, Locale.CHINA);
+                time = sfd.format(date);
                 return time;
             }
         }

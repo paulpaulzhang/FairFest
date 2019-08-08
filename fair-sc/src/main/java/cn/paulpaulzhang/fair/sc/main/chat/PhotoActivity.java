@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -54,18 +55,24 @@ public class PhotoActivity extends FairActivity {
     public void init(@Nullable Bundle savedInstanceState) {
         ImmersionBar.with(this).init();
         Intent intent = getIntent();
-        String cid = intent.getStringExtra("cid");
+        String username = intent.getStringExtra("username");
         String appkey = intent.getStringExtra("appkey");
         int mid = intent.getIntExtra("mid", -1);
 
-        Conversation conversation = JMessageClient.getSingleConversation(cid, appkey);
+        Conversation conversation = JMessageClient.getSingleConversation(username, appkey);
         if (mid == -1) {
             Toasty.error(this, "获取图片失败", Toasty.LENGTH_SHORT).show();
             finish();
         }
         Message message = conversation.getMessage(mid);
         ImageContent content = (ImageContent) message.getContent();
-        Glide.with(this).load(content.getLocalThumbnailPath()).into(mPhotoView);
+        if (content.getLocalPath() == null) {
+            Glide.with(this).load(content.getLocalThumbnailPath()).into(mPhotoView);
+        } else {
+            mButton.setVisibility(View.GONE);
+            Glide.with(this).load(content.getLocalPath()).into(mPhotoView);
+        }
+
 
         mButton.setOnClickListener(v -> {
             mButton.setVisibility(View.GONE);
@@ -88,7 +95,7 @@ public class PhotoActivity extends FairActivity {
                     .setMessage("点击确认保存图片到本地")
                     .setPositiveButton("确认", (dialogInterface, i14) -> {
                         final Bitmap bitmap = Bitmap.createBitmap(mPhotoView.getWidth(), mPhotoView.getHeight(), Bitmap.Config.ARGB_8888, true);
-                        ImageUtil.convertLayoutToBitmap(new PhotoActivity().getWindow(), mPhotoView, bitmap, i15 -> {
+                        ImageUtil.convertLayoutToBitmap(getWindow(), mPhotoView, bitmap, i15 -> {
                             if (i15 == PixelCopy.SUCCESS) {
                                 File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
                                 if (file != null) {

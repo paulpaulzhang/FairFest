@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
@@ -40,7 +39,7 @@ import io.objectbox.Box;
  * 创建人：paulpaulzhang
  * 描述：发现页
  */
-public class DiscoveryDelegate extends FairDelegate {
+public class DiscoveryDelegate extends AbstractDelegate {
 
 
     @BindView(R2.id.rv_discovery)
@@ -61,14 +60,19 @@ public class DiscoveryDelegate extends FairDelegate {
 
         initSwipeRefresh();
         initRecycler();
-        mSwipeRefresh.setRefreshing(true);
-        loadData(Constant.REFRESH_DATA);
+        refresh();
     }
 
     private void initSwipeRefresh() {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
         mSwipeRefresh.setOnRefreshListener(() -> loadData(Constant.REFRESH_DATA));
+    }
+
+    @Override
+    public void refresh() {
+        mSwipeRefresh.setRefreshing(true);
+        loadData(Constant.REFRESH_DATA);
     }
 
     private void initRecycler() {

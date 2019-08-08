@@ -181,7 +181,7 @@ public class InterestDelegate extends FairDelegate implements
 
     private void initBottomDialog() {
         MaterialDialog dialog = new MaterialDialog(Objects.requireNonNull(getContext()), new BottomSheet(LayoutMode.WRAP_CONTENT));
-        DialogCustomViewExtKt.customView(dialog, R.layout.view_create_bottom_dialog,
+        DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_create_bottom_dialog,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(dialog, this);
         dialog.cornerRadius(8f, null);

@@ -8,6 +8,9 @@ import android.view.View;
 import androidx.annotation.Nullable;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
+import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.bumptech.glide.Glide;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
@@ -35,6 +38,7 @@ import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.Transform;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -92,7 +96,7 @@ public class DialogDelegate extends FairDelegate
         if (dialog.getUsers().size() == 1) {
             Intent intent = new Intent(getContext(), MessageActivity.class);
             intent.putExtra("uid", JMessageClient.getMyInfo().getUserName());
-            intent.putExtra("cid", dialog.getId());
+            intent.putExtra("username", dialog.getId());
             intent.putExtra("appkey", dialog.getConversation().getTargetAppKey());
             startActivity(intent);
         }
@@ -101,7 +105,20 @@ public class DialogDelegate extends FairDelegate
 
     @Override
     public void onDialogLongClick(Dialog dialog) {
+        MaterialDialog materialDialog = new MaterialDialog(Objects.requireNonNull(getContext()), MaterialDialog.getDEFAULT_BEHAVIOR());
+        DialogCustomViewExtKt.customView(materialDialog, R.layout.view_custom_remove_dialog,
+                null, false, true, false, true);
+        LifecycleExtKt.lifecycleOwner(materialDialog, this);
+        materialDialog.cornerRadius(8f, null);
+        materialDialog.show();
 
+        View customerView = DialogCustomViewExtKt.getCustomView(materialDialog);
+
+        customerView.findViewById(R.id.tv_delete).setOnClickListener(v2 -> {
+            JMessageClient.deleteSingleConversation(dialog.getId(), dialog.getConversation().getTargetAppKey());
+            mDialogListAdapter.deleteById(dialog.getId());
+            materialDialog.dismiss();
+        });
     }
 
     public void onEvent(MessageEvent event) {
@@ -143,14 +160,11 @@ public class DialogDelegate extends FairDelegate
             if (delegate == null) {
                 return;
             }
-            switch (msg.what) {
-                case Constant.REFRESH_CONVERSATION_LIST:
-                    Conversation conv = (Conversation) msg.obj;
-                    Dialog dialog = Transform.getDialog(conv);
-                    delegate.mDialogListAdapter.deleteById(dialog.getId());
-                    delegate.mDialogListAdapter.addItem(0, dialog);
-                    break;
-                default:
+            if (msg.what == Constant.REFRESH_CONVERSATION_LIST) {
+                Conversation conv = (Conversation) msg.obj;
+                Dialog dialog = Transform.getDialog(conv);
+                delegate.mDialogListAdapter.deleteById(dialog.getId());
+                delegate.mDialogListAdapter.addItem(0, dialog);
             }
         }
     }

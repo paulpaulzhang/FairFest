@@ -42,7 +42,6 @@
         app:attachmentButtonBackground="@android:color/white"
         app:attachmentButtonDefaultIconPressedColor="@color/outcoming_press_color"
         app:attachmentButtonIcon="@drawable/ic_message_photo"
-        app:inputBackground="@color/background"
         app:inputButtonBackground="@android:color/white"
         app:inputButtonDefaultIconColor="@color/colorAccent"
         app:inputButtonDefaultIconDisabledColor="@color/disable_color"

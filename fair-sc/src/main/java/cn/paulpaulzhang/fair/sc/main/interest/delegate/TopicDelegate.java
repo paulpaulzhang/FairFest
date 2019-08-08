@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
@@ -34,7 +33,7 @@ import io.objectbox.Box;
  * 创建人： paulpaulzhang
  * 描述：话题页
  */
-public class TopicDelegate extends FairDelegate {
+public class TopicDelegate extends AbstractDelegate {
     @BindView(R2.id.rv_topic)
     RecyclerView mRecyclerView;
 
@@ -52,14 +51,19 @@ public class TopicDelegate extends FairDelegate {
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         initSwipeRefresh();
         initRecycler();
-        mSwipeRefresh.setRefreshing(true);
-        loadData(Constant.REFRESH_DATA);
+        refresh();
     }
 
     private void initSwipeRefresh() {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
         mSwipeRefresh.setOnRefreshListener(() -> loadData(Constant.REFRESH_DATA));
+    }
+
+    @Override
+    public void refresh() {
+        mSwipeRefresh.setRefreshing(true);
+        loadData(Constant.REFRESH_DATA);
     }
 
     private void initRecycler() {

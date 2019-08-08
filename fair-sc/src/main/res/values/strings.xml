@@ -41,9 +41,15 @@
     <string name="message">消息</string>
     <string name="send_message">发消息</string>
     <string name="look_original_picture">查看原图</string>
+    <string name="delete_this_message">删除此消息</string>
+    <string name="copy_message_content">复制消息内容</string>
+    <string name="delete_this_chat">删除此会话</string>
 
     <style name="title">标题</style>
+
     <style name="content">内容</style>
+
     <style name="write_dynamic">发动态</style>
+
     <style name="write_article">写文章</style>
 </resources>

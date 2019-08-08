@@ -26,8 +26,5 @@ public class InCommingTextMessageHolder extends MessageHolders.IncomingTextMessa
         super.onBind(message);
 
         Glide.with(itemView).load(message.getUser().getAvatar()).into(userAvatar);
-        userAvatar.setOnClickListener(v -> {
-            Toasty.info(itemView.getContext(), message.getUser().getName(), Toasty.LENGTH_SHORT).show();
-        });
     }
 }
