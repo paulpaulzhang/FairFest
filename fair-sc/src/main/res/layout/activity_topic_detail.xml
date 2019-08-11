@@ -90,7 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.MaterialComponents.Light"
+                app:popupTheme="@style/OverFlowMenuTheme"
                 app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

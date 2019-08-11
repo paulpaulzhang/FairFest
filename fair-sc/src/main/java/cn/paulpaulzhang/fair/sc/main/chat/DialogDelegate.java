@@ -1,17 +1,26 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.TransitionRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.bumptech.glide.Glide;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -19,6 +28,7 @@ import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -57,6 +67,9 @@ public class DialogDelegate extends FairDelegate
     @BindView(R2.id.srl_chat)
     SwipeRefreshLayout mSwipeRefresh;
 
+    @BindView(R2.id.toolbar)
+    Toolbar mToolbar;
+
     private ImageLoader mImageLoader;
     private DialogsListAdapter<Dialog> mDialogListAdapter;
     private BackgroundHandler mHandler;
@@ -68,6 +81,27 @@ public class DialogDelegate extends FairDelegate
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
+        setHasOptionsMenu(true);
+        mToolbar.inflateMenu(R.menu.dialog_menu);
+        mToolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.clear_all) {
+                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                        .setTitle("确认删除")
+                        .setMessage("请确认是否清空会话列表, 该操作会清空所有会话聊天记录并不可恢复")
+                        .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
+                        .setPositiveButton("确认", ((dialogInterface, i) -> {
+                            List<Conversation> conversations = JMessageClient.getConversationList();
+                            for (Conversation conv : conversations) {
+                                UserInfo userInfo = (UserInfo) conv.getTargetInfo();
+                                JMessageClient.deleteSingleConversation(userInfo.getUserName(), userInfo.getAppKey());
+                                FairLogger.d(conv.getId());
+                            }
+                            mDialogListAdapter.clear();
+                        }))
+                        .show();
+            }
+            return true;
+        });
         JMessageClient.registerEventReceiver(this);
         mHandler = new BackgroundHandler(this);
         mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.drawable.default_placeholder).into(imageView);

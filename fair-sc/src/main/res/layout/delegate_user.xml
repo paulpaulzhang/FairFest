@@ -19,12 +19,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/civ_user"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/civ_setting"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:color/holo_orange_dark"
+                android:src="@drawable/ic_setting"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -39,7 +39,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/civ_user"
+                app:layout_constraintLeft_toRightOf="@id/civ_setting"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -65,11 +65,16 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/srl_market"
+        android:id="@+id/srl_user"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

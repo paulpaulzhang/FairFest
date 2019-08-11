@@ -44,12 +44,11 @@
     <string name="delete_this_message">删除此消息</string>
     <string name="copy_message_content">复制消息内容</string>
     <string name="delete_this_chat">删除此会话</string>
-
-    <style name="title">标题</style>
-
-    <style name="content">内容</style>
-
-    <style name="write_dynamic">发动态</style>
-
-    <style name="write_article">写文章</style>
+    <string name="clear_dialog_list">清空消息列表</string>
+    <string name="title">标题</string>
+    <string name="content">内容</string>
+    <string name="write_dynamic">发动态</string>
+    <string name="write_article">写文章</string>
+    <string name="shopping_cart">购物车</string>
+    <string name="post">发表</string>
 </resources>

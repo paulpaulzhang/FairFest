@@ -11,5 +11,7 @@
     <application>
         <activity android:name=".main.chat.MessageActivity" />
         <activity android:name=".main.chat.PhotoActivity" />
+        <activity android:name=".main.post.activity.CreateArticleActivity" />
+        <activity android:name=".main.post.activity.CreateDynamicActivity" />
     </application>
 </manifest>

@@ -8,10 +8,10 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
  * 创建人: zlm31
  * 描述:
  */
-public class TopicI {
+public class Topic {
     private TopicCache topicCache;
 
-    public TopicI(TopicCache topicCache) {
+    public Topic(TopicCache topicCache) {
         this.topicCache = topicCache;
     }
 

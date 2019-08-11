@@ -13,12 +13,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.sunhapper.x.spedit.SpUtil;
+import com.sunhapper.x.spedit.view.SpXEditText;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +41,14 @@ import cn.paulpaulzhang.fair.constant.Constant;
 
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
+import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
+import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.post.model.Image;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ImagePickerAdapter;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
@@ -44,6 +58,7 @@ import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
@@ -54,10 +69,10 @@ import top.zibin.luban.OnCompressListener;
  * 创建人: zlm31
  * 描述:
  */
-public class CreateDynamicActivity extends FairActivity {
+public class CreateDynamicActivity extends FairActivity implements IMentionTopicListener {
 
     @BindView(R2.id.et_edit)
-    AppCompatEditText mEdit;
+    SpXEditText mEdit;
 
     @BindView(R2.id.tb_create)
     MaterialToolbar mToolbar;
@@ -77,6 +92,8 @@ public class CreateDynamicActivity extends FairActivity {
     private ImagePickerAdapter mAdapter;
     private View addView; //footer view
 
+    private List<Long> topicIdList = new ArrayList<>();
+
 
     @Override
     public int setLayout() {
@@ -85,6 +102,16 @@ public class CreateDynamicActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        String initTopic = intent.getStringExtra("topic");
+        long initTopicId = intent.getLongExtra("tid", -1);
+        if (initTopic != null && !TextUtils.equals(initTopic, "")) {
+            SpUtil.insertSpannableString(mEdit.getEditableText(),
+                    new MentionTopic(initTopic, initTopicId, this).getSpannableString());
+        }
+        if (initTopicId != -1) {
+            topicIdList.add(initTopicId);
+        }
         initToolbar(mToolbar);
         initImagePicker();
         CommonUtil.showKeyboard(mEdit);
@@ -122,7 +149,7 @@ public class CreateDynamicActivity extends FairActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
@@ -197,7 +224,31 @@ public class CreateDynamicActivity extends FairActivity {
 
     @OnClick(R2.id.iv_topic)
     void openTopicDialog() {
-
+        Box<TopicCache> topicCacheBox = ObjectBox.get().boxFor(TopicCache.class);
+        List<Topic> topics = new ArrayList<>();
+        for (TopicCache cache : topicCacheBox.getAll()) {
+            topics.add(new Topic(cache));
+        }
+        MaterialDialog dialog = new MaterialDialog(this, new BottomSheet());
+        DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_topic_list_dialog,
+                null, false, true, false, true);
+        View customerView = DialogCustomViewExtKt.getCustomView(dialog);
+        dialog.cornerRadius(8f, null);
+        RecyclerView recyclerView = customerView.findViewById(R.id.rv_topic_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        TopicAdapter mAdapter = new TopicAdapter(R.layout.view_topic_item, topics);
+        recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Topic topic = (Topic) adapter.getItem(position);
+            if (topic != null) {
+                String tname = topic.getTopicCache().getName();
+                SpUtil.insertSpannableString(mEdit.getEditableText(),
+                        new MentionTopic(tname, topic.getTopicCache().getId(), this).getSpannableString());
+                topicIdList.add(topic.getTopicCache().getId());
+            }
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 
     @OnClick(R2.id.iv_mention)
@@ -229,4 +280,13 @@ public class CreateDynamicActivity extends FairActivity {
         });
     }
 
+    @Override
+    public void removeTag(long id) {
+        for (int i = 0; i < topicIdList.size(); i++) {
+            if (topicIdList.get(i) == id) {
+                topicIdList.remove(i);
+                return;
+            }
+        }
+    }
 }

@@ -11,5 +11,6 @@
     <dimen name="dialog_avatar_width">46dp</dimen>
     <dimen name="bubble_padding_left_right">10dp</dimen>
     <dimen name="bubble_padding_top_bottom">5dp</dimen>
+    <dimen name="card_elevation">0dp</dimen>
 
 </resources>

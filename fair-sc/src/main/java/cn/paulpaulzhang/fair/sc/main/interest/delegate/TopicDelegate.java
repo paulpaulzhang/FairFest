@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
@@ -24,7 +25,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
-import cn.paulpaulzhang.fair.sc.main.interest.model.TopicI;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import io.objectbox.Box;
 
 /**
@@ -74,10 +75,11 @@ public class TopicDelegate extends AbstractDelegate {
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            TopicI item = (TopicI) adapter.getItem(position);
+            Topic item = (Topic) adapter.getItem(position);
             if (item != null) {
                 Intent intent = new Intent(getContext(), TopicDetailActivity.class);
                 intent.putExtra("name", item.getTopicCache().getName());
+                intent.putExtra("tid", item.getTopicCache().getId());
                 startActivity(intent);
             }
         });
@@ -90,11 +92,11 @@ public class TopicDelegate extends AbstractDelegate {
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA);
             List<TopicCache> topicCaches = topicBox.getAll();
-            List<TopicI> items = new ArrayList<>();
+            List<Topic> items = new ArrayList<>();
             long count = Math.min(topicBox.count(), Constant.LOAD_MAX_DATABASE);
             for (int i = 0; i < count; i++) {
                 TopicCache topicCache = topicCaches.get(i);
-                items.add(new TopicI(topicCache));
+                items.add(new Topic(topicCache));
             }
             mAdapter.setNewData(items);
             mSwipeRefresh.setRefreshing(false);
@@ -108,12 +110,12 @@ public class TopicDelegate extends AbstractDelegate {
                 }
             }
             List<TopicCache> topicCaches = topicBox.getAll();
-            List<TopicI> items = new ArrayList<>();
+            List<Topic> items = new ArrayList<>();
 
             long count = Math.min(topicBox.count() - position, Constant.LOAD_MAX_DATABASE);
             for (int i = position; i < count; i++) {
                 TopicCache topicCache = topicCaches.get(i);
-                items.add(new TopicI(topicCache));
+                items.add(new Topic(topicCache));
             }
             mAdapter.addData(items);
             mAdapter.loadMoreComplete();
@@ -123,17 +125,13 @@ public class TopicDelegate extends AbstractDelegate {
     private void requestData(long start, int type) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url("ic_topic")
-                    .params("position", 0)
-                    .params("number", Constant.LOAD_MAX_SEVER)
+                    .url(Api.TOPIC_LIST)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url("ic_topic")
-                    .params("position", start)
-                    .params("number", Constant.LOAD_MAX_SEVER)
+                    .url(Api.TOPIC_LIST)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
                     .build()
                     .get();

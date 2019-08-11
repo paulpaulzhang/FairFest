@@ -11,7 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.sc.R;
-import cn.paulpaulzhang.fair.sc.main.interest.model.TopicI;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.util.image.GlideRoundTransform;
 
 /**
@@ -20,14 +20,14 @@ import cn.paulpaulzhang.fair.util.image.GlideRoundTransform;
  * 创建人: zlm31
  * 描述:
  */
-public class TopicAdapter extends BaseQuickAdapter<TopicI, BaseViewHolder> {
+public class TopicAdapter extends BaseQuickAdapter<Topic, BaseViewHolder> {
 
-    public TopicAdapter(int layoutResId, @Nullable List<TopicI> data) {
+    public TopicAdapter(int layoutResId, @Nullable List<Topic> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, TopicI item) {
+    protected void convert(BaseViewHolder helper, Topic item) {
         helper.setText(R.id.tv_name, item.getTopicCache().getName())
                 .setText(R.id.follow, item.getTopicCache().getFollow() + "")
                 .setText(R.id.post, item.getTopicCache().getPost() + "");

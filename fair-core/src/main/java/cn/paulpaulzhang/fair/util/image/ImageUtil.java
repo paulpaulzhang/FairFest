@@ -45,12 +45,20 @@ public class ImageUtil {
      *
      * @param context
      * @param simpleDraweeView
-     * @param url
+     * @param res
      */
-    public static void setBlurImage(Context context, SimpleDraweeView simpleDraweeView, String url, int radius) {
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
-                .setPostprocessor(new BlurPostProcessor(radius, context, 1))
-                .build();
+    public static void setBlurImage(Context context, SimpleDraweeView simpleDraweeView, Object res, int radius) {
+
+        ImageRequest request;
+        if (res instanceof String) {
+            request = ImageRequestBuilder.newBuilderWithSource(Uri.parse((String) res))
+                    .setPostprocessor(new BlurPostProcessor(radius, context, 1))
+                    .build();
+        } else {
+            request = ImageRequestBuilder.newBuilderWithResourceId((Integer) res)
+                    .setPostprocessor(new BlurPostProcessor(radius, context, 1))
+                    .build();
+        }
 
         PipelineDraweeController controller = (PipelineDraweeController) Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)

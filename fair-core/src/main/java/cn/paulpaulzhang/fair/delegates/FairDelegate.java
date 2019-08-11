@@ -1,5 +1,8 @@
 package cn.paulpaulzhang.fair.delegates;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 /**
  * 项目名：   FairFest
  * 包名：     cn.paulpaulzhang.fair.delegates
@@ -9,4 +12,5 @@ package cn.paulpaulzhang.fair.delegates;
  * 描述：     应用Delegate
  */
 public abstract class FairDelegate extends PermissionCheckerDelegate {
+
 }

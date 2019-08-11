@@ -11,7 +11,7 @@
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-        app:popupTheme="@style/Theme.MaterialComponents.Light" />
+        app:popupTheme="@style/OverFlowMenuTheme" />
 
 
     <ScrollView
@@ -34,26 +34,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@null"
-                android:hint="标题"
+                android:hint="@string/title"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatEditText
+            <com.sunhapper.x.spedit.view.SpXEditText
                 android:id="@+id/et_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="30dp"
                 android:background="@null"
                 android:gravity="top"
-                android:hint="内容"
+                android:hint="@string/content"
                 android:lineSpacingExtra="4dp"
                 android:minHeight="80dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:paddingBottom="30dp"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 app:layout_constraintTop_toBottomOf="@id/et_title" />
@@ -66,7 +66,6 @@
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
                 app:layout_constraintTop_toBottomOf="@id/et_edit" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

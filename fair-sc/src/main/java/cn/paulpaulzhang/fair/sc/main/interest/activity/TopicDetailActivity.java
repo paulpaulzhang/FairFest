@@ -1,8 +1,10 @@
 package cn.paulpaulzhang.fair.sc.main.interest.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
@@ -11,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -23,8 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.net.RestClient;
+import cn.paulpaulzhang.fair.net.callback.IError;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -33,7 +40,10 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicDetailAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
@@ -72,6 +82,8 @@ public class TopicDetailActivity extends FairActivity {
     SwipeRefreshLayout mSwipeRefresh;
 
     private TopicDetailAdapter mAdapter;
+    private String name;
+    private long tid;
 
     @Override
     public int setLayout() {
@@ -82,7 +94,8 @@ public class TopicDetailActivity extends FairActivity {
     public void init(@Nullable Bundle savedInstanceState) {
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        name = intent.getStringExtra("name");
+        tid = intent.getLongExtra("tid", 0L);
 
         initToolbar(mToolbar);
         initCollapsing();
@@ -92,20 +105,19 @@ public class TopicDetailActivity extends FairActivity {
         loadData(Constant.REFRESH_DATA);
     }
 
+    @SuppressLint("SetTextI18n")
     private void initCollapsing() {
         mCollapsingToolbarLayout.setTitleEnabled(true);
-        mCollapsingToolbarLayout.setTitle("考研数学");
-        String url = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-oi9W7QkQ4yu3xHUYOngWam_JckiY4ic0SeESz8oGjbXvLDEH";
-        ImageUtil.setBlurImage(this, mBg, url, 25);
-        mAvatar.setImageURI(Uri.parse(url));
-        mDiscuss.setText("1234 讨论");
-        mFollow.setText("234 关注");
+        mCollapsingToolbarLayout.setTitle(name);
+        ImageUtil.setBlurImage(this, mBg, R.drawable.ic_topic_128, 25);
+        mAvatar.setImageResource(R.drawable.ic_topic_128);
+        mDiscuss.setText(0 + " 讨论");
+        mFollow.setText(0 + " 关注");
     }
 
     private void initSwipeRefresh() {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
-        //TODO 刷新数据时需要刷新话题概览的内容
         mSwipeRefresh.setOnRefreshListener(() -> loadData(Constant.REFRESH_DATA));
     }
 
@@ -124,10 +136,56 @@ public class TopicDetailActivity extends FairActivity {
         });
     }
 
+    @OnClick(R2.id.fab_article_topic)
+    void createArticle() {
+        Intent intent = new Intent(this, CreateArticleActivity.class);
+        intent.putExtra("topic", name);
+        intent.putExtra("tid", tid);
+        startActivity(intent);
+    }
+
+    @OnClick(R2.id.fab_dynamic_topic)
+    void createDynamic() {
+        Intent intent = new Intent(this, CreateDynamicActivity.class);
+        intent.putExtra("topic", name);
+        intent.putExtra("tid", tid);
+        startActivity(intent);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void loadHeaderData() {
+        RestClient.builder()
+                .url(Api.SINGLE_TOPIC)
+                .params("tname", name)
+                .success(r -> {
+                    FairLogger.d("Header", r);
+                    JSONObject jsonObject = JSON.parseObject(r);
+                    String imgUrl = jsonObject.getString("imageUrl");
+                    int payCount = jsonObject.getInteger("payCount");
+                    int postCount = jsonObject.getInteger("postCount");
+
+                    if (imgUrl == null || TextUtils.equals(imgUrl, "")) {
+                        ImageUtil.setBlurImage(this, mBg, R.drawable.ic_topic_128, 25);
+                        mAvatar.setImageResource(R.drawable.ic_topic_128);
+                    } else {
+                        ImageUtil.setBlurImage(this, mBg, imgUrl, 25);
+                        mAvatar.setImageURI(Uri.parse(imgUrl));
+                    }
+                    mDiscuss.setText(postCount + " 讨论");
+                    mFollow.setText(payCount + " 关注");
+                })
+                .error((code, msg) -> {
+                    FairLogger.d("Header", code);
+                })
+                .build()
+                .get();
+    }
+
     private void loadData(int type) {
         Box<TopicPostCache> postBox = ObjectBox.get().boxFor(TopicPostCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
+            loadHeaderData();
             requestData(0, Constant.REFRESH_DATA);
             List<TopicPostCache> topicPostCaches = postBox.getAll();
             List<TopicDetail> items = new ArrayList<>();

@@ -4,8 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -35,6 +39,7 @@ import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -51,7 +56,9 @@ public class InterestDelegate extends FairDelegate implements
     @BindView(R2.id.tl_interest)
     SlidingTabLayout mTabLayout;
 
-    private Toolbar mToolbar;
+    @BindView(R2.id.toolbar)
+    Toolbar mToolbar;
+
     private TabViewPagerAdapter mAdapter;
     private FairDelegate currentDelegate;
     private int lastPosition = 0;
@@ -63,16 +70,15 @@ public class InterestDelegate extends FairDelegate implements
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-        initToolbar();
+        setHasOptionsMenu(true);
+        mToolbar.inflateMenu(R.menu.interest_menu);
+        mToolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.add) {
+                initBottomDialog();
+            }
+            return true;
+        });
         initTab();
-    }
-
-    private void initToolbar() {
-        AppCompatActivity mActivity = (AppCompatActivity) getActivity();
-        if (mActivity != null) {
-            mToolbar = mActivity.findViewById(R.id.toolbar);
-            mActivity.setSupportActionBar(mToolbar);
-        }
     }
 
     private void initTab() {
@@ -162,11 +168,6 @@ public class InterestDelegate extends FairDelegate implements
 
     @Override
     public void onPageScrollStateChanged(int state) {
-    }
-
-    @OnClick(R2.id.iv_add)
-    void openCreateDialog() {
-        initBottomDialog();
     }
 
     @OnClick(R2.id.ll_search)

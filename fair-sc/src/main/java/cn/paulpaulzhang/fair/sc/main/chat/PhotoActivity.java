@@ -109,7 +109,7 @@ public class PhotoActivity extends FairActivity {
                     })
                     .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
                     .show();
-            return false;
+            return true;
         });
     }
 }

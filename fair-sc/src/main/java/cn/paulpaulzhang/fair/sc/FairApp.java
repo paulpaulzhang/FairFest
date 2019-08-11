@@ -39,10 +39,6 @@ public class FairApp extends Application {
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
         Fair.init(this)
                 .withApiHost("http://www.matchstickmen.club:8080/")
-//                .withInterceptor(new DebugInterceptor("index", R.raw.test))
-//                .withInterceptor(new DebugInterceptor("post", R.raw.post))
-//                .withInterceptor(new DebugInterceptor("ic_like", R.raw.like))
-//                .withInterceptor(new DebugInterceptor("recommend", R.raw.recommend_user))
                 .withInterceptor(loggingInterceptor)
                 .configure();
 

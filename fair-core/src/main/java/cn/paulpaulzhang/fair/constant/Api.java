@@ -28,4 +28,6 @@ public class Api {
     public static final String LOGIN = "matchstickmen/Login.action";
 
     public static final String TOPIC_LIST = "matchstickmen/topicBackAll.action";
+
+    public static final String SINGLE_TOPIC = "matchstickmen/topicBack.action";
 }

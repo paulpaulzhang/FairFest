@@ -225,6 +225,10 @@
             android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity"
             android:label="@string/post_dynamic"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity"
+            android:label="@string/post_article"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity" />
     </application>
 

@@ -99,6 +99,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:bufferType="spannable"
                     android:id="@+id/tv_content_dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -132,7 +133,7 @@
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/colorPrimary"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.MaterialComponents.Light"
+                app:popupTheme="@style/OverFlowMenuTheme"
                 app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

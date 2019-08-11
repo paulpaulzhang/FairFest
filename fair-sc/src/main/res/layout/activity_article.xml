@@ -134,6 +134,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
+                        android:bufferType="spannable"
                         android:lineSpacingExtra="5dp"
                         android:minHeight="50dp"
                         android:textColor="@android:color/black"
@@ -163,7 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/Theme.MaterialComponents.Light"
+                app:popupTheme="@style/OverFlowMenuTheme"
                 app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 

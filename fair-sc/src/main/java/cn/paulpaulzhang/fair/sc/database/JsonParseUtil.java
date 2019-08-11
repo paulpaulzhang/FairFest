@@ -21,6 +21,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -239,15 +240,15 @@ public final class JsonParseUtil {
     }
 
     public static void parseTopic(String response, int type) {
-        JSONArray array = JSON.parseObject(response).getJSONArray("result");
+        JSONArray array = JSON.parseArray(response);
         List<TopicCache> topicCaches = new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             JSONObject object = array.getJSONObject(i);
-            long id = object.getLong("id");
-            String name = object.getString("name");
-            String img = object.getString("img");
-            int follow = object.getInteger("follow");
-            int post = object.getInteger("post");
+            long id = object.getLong("tid");
+            String name = object.getString("tname");
+            String img = object.getString("imageUrl");
+            int follow = object.getInteger("payCount");
+            int post = object.getInteger("postCount");
             topicCaches.add(new TopicCache(id, name, img, follow, post));
         }
 

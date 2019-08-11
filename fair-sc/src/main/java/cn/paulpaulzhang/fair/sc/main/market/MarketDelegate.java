@@ -1,10 +1,15 @@
 package cn.paulpaulzhang.fair.sc.main.market;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 
@@ -12,6 +17,7 @@ import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import es.dmoral.toasty.Toasty;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -20,8 +26,9 @@ import cn.paulpaulzhang.fair.sc.R2;
  * 描述：
  */
 public class MarketDelegate extends FairDelegate {
-    @BindView(R2.id.imageView)
-    AppCompatImageView imageView;
+    @BindView(R2.id.toolbar)
+    Toolbar mToolbar;
+
 
     @Override
     public Object setLayout() {
@@ -30,6 +37,25 @@ public class MarketDelegate extends FairDelegate {
 
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
-        Glide.with(this).load("http://www.matchstickmen.club/test1.jpg").into(imageView);
+        setHasOptionsMenu(true);
+        mToolbar.inflateMenu(R.menu.market_menu);
+        mToolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.order) {
+                Toasty.info(getContext(), "订单", Toasty.LENGTH_SHORT).show();
+            } else if (item.getItemId() == R.id.shopping_cart) {
+                Toasty.info(getContext(), "购物车", Toasty.LENGTH_SHORT).show();
+            }
+            return true;
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
     }
 }
