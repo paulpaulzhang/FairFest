@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -9,6 +10,7 @@ import io.objectbox.annotation.Id;
  * 创建人: zlm31
  * 描述:
  */
+
 @Entity
 public class RecommendUserCache {
     @Id(assignable = true)
@@ -16,9 +18,11 @@ public class RecommendUserCache {
 
     private String username; //用户名
 
-    private int followers; //关注数
+    private int payCount; //关注数
 
-    private int fans; //粉丝数
+    private int fansCount; //粉丝数
+
+    private int dynamicCount; //动态数
 
     private String avatar; //头像url
 
@@ -26,14 +30,14 @@ public class RecommendUserCache {
 
     public RecommendUserCache(long id,
                               String username,
-                              int followers,
-                              int fans,
+                              int payCount,
+                              int fansCount,
                               String avatar,
                               String time) {
         this.id = id;
         this.username = username;
-        this.followers = followers;
-        this.fans = fans;
+        this.payCount = payCount;
+        this.fansCount = fansCount;
         this.avatar = avatar;
         this.time = time;
     }
@@ -54,20 +58,28 @@ public class RecommendUserCache {
         this.username = username;
     }
 
-    public int getFollowers() {
-        return followers;
+    public int getPayCount() {
+        return payCount;
     }
 
-    public void setFollowers(int followers) {
-        this.followers = followers;
+    public void setPayCount(int payCount) {
+        this.payCount = payCount;
     }
 
-    public int getFans() {
-        return fans;
+    public int getFansCount() {
+        return fansCount;
     }
 
-    public void setFans(int fans) {
-        this.fans = fans;
+    public void setFansCount(int fansCount) {
+        this.fansCount = fansCount;
+    }
+
+    public int getDynamicCount() {
+        return dynamicCount;
+    }
+
+    public void setDynamicCount(int dynamicCount) {
+        this.dynamicCount = dynamicCount;
     }
 
     public String getAvatar() {

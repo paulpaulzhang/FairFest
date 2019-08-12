@@ -51,4 +51,16 @@
     <string name="write_article">写文章</string>
     <string name="shopping_cart">购物车</string>
     <string name="post">发表</string>
+    <string name="course_table">课程表</string>
+    <string name="big_event">大事件</string>
+    <string name="school_help">校园帮</string>
+    <string name="announcement">公告</string>
+    <string name="fansCount">粉丝</string>
+    <string name="my_collection">我的收藏</string>
+    <string name="my_like">我的赞</string>
+    <string name="my_courses_table">我的课表</string>
+    <string name="browse_record">浏览记录</string>
+    <string name="want_buy">想买</string>
+    <string name="divider">divider</string>
+    <string name="_0">0</string>
 </resources>

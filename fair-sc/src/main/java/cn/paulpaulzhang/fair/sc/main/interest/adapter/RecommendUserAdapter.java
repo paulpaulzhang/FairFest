@@ -34,8 +34,8 @@ public class RecommendUserAdapter extends BaseQuickAdapter<RecommendUser, BaseVi
         ImageUtil.setBlurImage(mContext, mDraweeView, url, 10);
         helper.setText(R.id.tv_user, item.getUserCache().getUsername())
                 .setText(R.id.tv_time, "来 校园π 187天了")
-                .setText(R.id.tv_follow, item.getUserCache().getFollowers() + " 关注")
-                .setText(R.id.tv_fans, item.getUserCache().getFans() + "粉丝");
+                .setText(R.id.tv_follow, item.getUserCache().getPayCount() + " 关注")
+                .setText(R.id.tv_fans, item.getUserCache().getFansCount() + "粉丝");
         MaterialButton mButton = helper.getView(R.id.btn_follow);
         mButton.setOnClickListener(v -> RestClient.builder()
                 .url("follow")

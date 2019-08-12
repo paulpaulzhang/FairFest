@@ -2,17 +2,161 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
     app:cardCornerRadius="0dp">
 
-    <com.bigkoo.convenientbanner.ConvenientBanner
-        android:id="@+id/cb_discovery"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:paddingLeft="15dp"
-        android:paddingTop="10dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="10dp"
-        app:canLoop="true" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.bigkoo.convenientbanner.ConvenientBanner
+            android:id="@+id/cb_discovery"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp"
+            app:canLoop="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/ll_big_event"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/discovery_icon_size"
+                    android:layout_height="@dimen/discovery_icon_size"
+                    android:src="@drawable/ic_big_event" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/discovery_margin_top"
+                    android:text="@string/big_event"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/discovery_header_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/discovery_icon_size"
+                    android:layout_height="@dimen/discovery_icon_size"
+                    android:src="@drawable/ic_map" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/discovery_margin_top"
+                    android:text="@string/map"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/discovery_header_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_course_table"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/discovery_icon_size"
+                    android:layout_height="@dimen/discovery_icon_size"
+                    android:src="@drawable/ic_course_table" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/discovery_margin_top"
+                    android:text="@string/course_table"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/discovery_header_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_announcement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/discovery_icon_size"
+                    android:layout_height="@dimen/discovery_icon_size"
+                    android:src="@drawable/ic_announcement" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/discovery_margin_top"
+                    android:text="@string/announcement"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/discovery_header_text_size" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_help"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/discovery_icon_size"
+                    android:layout_height="@dimen/discovery_icon_size"
+                    android:src="@drawable/ic_help" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/discovery_margin_top"
+                    android:text="@string/school_help"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/discovery_header_text_size" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>

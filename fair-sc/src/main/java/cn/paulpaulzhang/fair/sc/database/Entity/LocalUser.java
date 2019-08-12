@@ -3,6 +3,7 @@ package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -23,9 +24,11 @@ public class LocalUser {
 
     private String gender; //性别
 
-    private int followers; //关注数
+    private int paysCount; //关注数
 
-    private int fans; //粉丝数
+    private int fansCount; //粉丝数
+
+    private int dynamicCount; //动态数
 
     private String phone; //电话号
 
@@ -60,8 +63,8 @@ public class LocalUser {
                      String password,
                      String birthday,
                      String gender,
-                     int followers,
-                     int fans,
+                     int paysCount,
+                     int fansCount,
                      String phone,
                      String email,
                      String school,
@@ -77,8 +80,8 @@ public class LocalUser {
         this.password = password;
         this.birthday = birthday;
         this.gender = gender;
-        this.followers = followers;
-        this.fans = fans;
+        this.paysCount = paysCount;
+        this.fansCount = fansCount;
         this.phone = phone;
         this.email = email;
         this.school = school;
@@ -131,20 +134,28 @@ public class LocalUser {
         this.gender = gender;
     }
 
-    public int getFollowers() {
-        return followers;
+    public int getPaysCount() {
+        return paysCount;
     }
 
-    public void setFollowers(int followers) {
-        this.followers = followers;
+    public void setPaysCount(int paysCount) {
+        this.paysCount = paysCount;
     }
 
-    public int getFans() {
-        return fans;
+    public int getFansCount() {
+        return fansCount;
     }
 
-    public void setFans(int fans) {
-        this.fans = fans;
+    public void setFansCount(int fansCount) {
+        this.fansCount = fansCount;
+    }
+
+    public int getDynamicCount() {
+        return dynamicCount;
+    }
+
+    public void setDynamicCount(int dynamicCount) {
+        this.dynamicCount = dynamicCount;
     }
 
     public String getPhone() {

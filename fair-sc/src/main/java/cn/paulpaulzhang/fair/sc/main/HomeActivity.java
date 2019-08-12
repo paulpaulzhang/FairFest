@@ -14,15 +14,12 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.interest.delegate.AbstractDelegate;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
@@ -72,7 +69,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
         AHBottomNavigationItem message = new AHBottomNavigationItem
                 (getString(R.string.message), R.drawable.ic_message);
         AHBottomNavigationItem user = new AHBottomNavigationItem
-                (getString(R.string.mine), R.drawable.ic_mine);
+                (getString(R.string.mine), R.drawable.ic_me);
 
         items.add(interest);
         items.add(market);
@@ -84,6 +81,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
         mBottomNavigation.setBehaviorTranslationEnabled(false);
         mBottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         mBottomNavigation.setAccentColor(getColor(R.color.colorAccent));
+        mBottomNavigation.setInactiveColor(getColor(R.color.font_default));
 
         mBottomNavigation.setOnTabSelectedListener((position, wasSelected) -> {
             if (currentDelegate == null) {

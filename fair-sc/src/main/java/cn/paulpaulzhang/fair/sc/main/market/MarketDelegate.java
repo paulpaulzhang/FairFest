@@ -8,10 +8,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
-
-import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
@@ -42,8 +39,8 @@ public class MarketDelegate extends FairDelegate {
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.order) {
                 Toasty.info(getContext(), "订单", Toasty.LENGTH_SHORT).show();
-            } else if (item.getItemId() == R.id.shopping_cart) {
-                Toasty.info(getContext(), "购物车", Toasty.LENGTH_SHORT).show();
+            } else if (item.getItemId() == R.id.want_buy) {
+                Toasty.info(getContext(), "想买", Toasty.LENGTH_SHORT).show();
             }
             return true;
         });

@@ -12,5 +12,10 @@
     <dimen name="bubble_padding_left_right">10dp</dimen>
     <dimen name="bubble_padding_top_bottom">5dp</dimen>
     <dimen name="card_elevation">0dp</dimen>
+    <dimen name="discovery_icon_size">35dp</dimen>
+    <dimen name="discovery_margin_top">5dp</dimen>
+    <dimen name="discovery_header_text_size">12sp</dimen>
+    <dimen name="user_count_size">16sp</dimen>
+    <dimen name="user_count_name_size">14sp</dimen>
 
 </resources>

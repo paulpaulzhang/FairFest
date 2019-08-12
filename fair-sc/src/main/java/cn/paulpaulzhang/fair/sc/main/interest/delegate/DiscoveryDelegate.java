@@ -13,6 +13,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +81,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
         mAdapter = new DiscoveryAdapter(new ArrayList<>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         View header = View.inflate(getContext(), R.layout.view_header_discovery, null);
-        initBanner(header);
+        initHeader(header);
         mAdapter.addHeaderView(header);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setLoadMoreView(new SimpleLoadMoreView());
@@ -105,7 +107,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
         });
     }
 
-    private void initBanner(View view) {
+    private void initHeader(View view) {
         List<String> data = new ArrayList<>();
         data.add("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
         data.add("http://pic40.nipic.com/20140331/9469669_142840860000_2.jpg");
@@ -117,6 +119,17 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 .setPageIndicatorAlign(ConvenientBanner.PageIndicatorAlign.ALIGN_PARENT_RIGHT)
                 .startTurning(5000)
                 .setOnItemClickListener(position -> Toast.makeText(getContext(), position + "", Toast.LENGTH_SHORT).show());
+
+        view.findViewById(R.id.ll_big_event).setOnClickListener(v -> {
+        });
+        view.findViewById(R.id.ll_announcement).setOnClickListener(v -> {
+        });
+        view.findViewById(R.id.ll_course_table).setOnClickListener(v -> {
+        });
+        view.findViewById(R.id.ll_help).setOnClickListener(v -> {
+        });
+        view.findViewById(R.id.ll_map).setOnClickListener(v -> {
+        });
     }
 
     /**
