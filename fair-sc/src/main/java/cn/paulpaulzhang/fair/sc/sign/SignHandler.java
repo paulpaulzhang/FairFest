@@ -37,6 +37,9 @@ public class SignHandler {
         Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
         userBox.put(user);
 
+        FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
+        AccountManager.setSignState(true);
+
         RegisterOptionalUserInfo optionalUserInfo = new RegisterOptionalUserInfo();
         optionalUserInfo.setNickname(phone);
         JMessageClient.register(String.valueOf(id), "admin", optionalUserInfo, new BasicCallback() {

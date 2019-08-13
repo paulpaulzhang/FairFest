@@ -184,52 +184,6 @@
         <meta-data
             android:name="android.notch_support"
             android:value="true" />
-
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity">
-
-        </activity>
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
-            android:label="@string/sign_up">
-
-        </activity>
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
-            android:label="@string/sign_in" />
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity"
-            android:launchMode="singleTask">
-
-        </activity>
-
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity"
-            android:label="@string/dynamic" />
-
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity"
-            android:label="@string/article" />
-
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity"
-            android:theme="@style/TopicToolBarTheme" />
-
-        <activity
-            android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity"
-            android:label="@string/post_dynamic"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity"
-            android:label="@string/post_article"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity" />
     </application>
 
 </manifest>

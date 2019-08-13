@@ -96,8 +96,8 @@ public class InterestDelegate extends FairDelegate implements
         mTabLayout.setViewPager(mViewPager, titles);
         mTabLayout.setCurrentTab(1);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.getTitleView(1).setTextSize(18);
-        mTabLayout.getTitleView(1).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mTabLayout.getTitleView(0).setTextSize(18);
+        mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
 
     @Override

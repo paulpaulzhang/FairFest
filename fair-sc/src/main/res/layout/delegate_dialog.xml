@@ -35,7 +35,7 @@
                 android:layout_width="280dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="18dp"
-                android:background="@drawable/search_bar_bg"
+                android:background="@drawable/fillet_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"

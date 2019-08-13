@@ -1,3 +1,19 @@
 {
-  "key": "value"
+  'result': 'ok',
+  'post': {
+    'uid': 8888888,
+    'type': 0,
+    'topic': {
+      't1': '1296638568038432',
+      't2': '1296638589009952'
+    },
+    'title': '标题',
+    'content': '权利就是责任',
+    'imagesUrl': {
+      'i1': '/img1',
+      'i2': '/img2',
+      'i3': '/img3'
+    },
+    'device': 'oppo'
+  }
 }

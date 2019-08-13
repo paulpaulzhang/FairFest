@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.user.delegate;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,8 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.objectbox.Box;
@@ -70,14 +73,16 @@ public class UserDelegate extends FairDelegate {
     private void loadUserData() {
         Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
         LocalUser user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        FairLogger.d(getClass().getName(), "user");
         if (user != null) {
+            FairLogger.d(getClass().getName(), "user != null");
             Glide.with(this)
                     .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                     .into(mUserAvatar);
             mUsername.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
-            mDynamicCount.setText(user.getDynamicCount());
-            mPayCount.setText(user.getPaysCount());
-            mFansCount.setText(user.getFansCount());
+            mDynamicCount.setText(String.valueOf(user.getDynamicCount()));
+            mPayCount.setText(String.valueOf(user.getPaysCount()));
+            mFansCount.setText(String.valueOf(user.getFansCount()));
         }
         mSwipeRefresh.setRefreshing(false);
     }
@@ -104,7 +109,9 @@ public class UserDelegate extends FairDelegate {
 
     @OnClick(R2.id.cl_user)
     void userCenter() {
-
+        Intent intent = new Intent(getContext(), UserCenterActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     @OnClick(R2.id.ll_dynamic)

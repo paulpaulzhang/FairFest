@@ -35,7 +35,7 @@
                 android:layout_width="280dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="18dp"
-                android:background="@drawable/search_bar_bg"
+                android:background="@drawable/fillet_bg"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -80,9 +80,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="5dp"
+                android:background="?attr/selectableItemBackground"
                 android:paddingTop="5dp"
-                android:background="?attr/selectableItemBackground">
+                android:paddingBottom="5dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/civ_user"
@@ -94,11 +94,10 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_user"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:text="paulpaulzhang"
-                    android:id="@+id/tv_user"
                     android:textColor="@android:color/black"
                     android:textSize="26sp"
                     app:layout_constraintBottom_toBottomOf="@id/civ_user"
@@ -125,15 +124,15 @@
                 android:paddingBottom="5dp">
 
                 <LinearLayout
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:id="@+id/ll_dynamic"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_dynamic_count"
@@ -155,15 +154,15 @@
                     android:background="@color/divider" />
 
                 <LinearLayout
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:id="@+id/ll_pay"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_pay_count"

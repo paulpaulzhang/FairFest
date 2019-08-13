@@ -23,6 +23,8 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,7 +171,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
