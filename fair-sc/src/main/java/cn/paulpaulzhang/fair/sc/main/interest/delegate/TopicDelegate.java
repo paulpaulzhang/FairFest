@@ -26,6 +26,7 @@ import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import io.objectbox.Box;
 
 /**
@@ -127,12 +128,14 @@ public class TopicDelegate extends AbstractDelegate {
             RestClient.builder()
                     .url(Api.TOPIC_LIST)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
+                    .error((code, msg) -> FairLogger.d(code))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
                     .url(Api.TOPIC_LIST)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
+                    .error((code, msg) -> FairLogger.d(code))
                     .build()
                     .get();
         }

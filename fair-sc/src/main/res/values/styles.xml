@@ -38,6 +38,28 @@
         <item name="rippleColor">#FF9e9e9e</item>
     </style>
 
+    <style name="MyMaterialButton.Edit" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="rippleColor">#FF9e9e9e</item>
+        <item name="elevation">0dp</item>
+        <item name="cornerRadius">200dp</item>
+        <item name="strokeColor">@android:color/white</item>
+        <item name="iconTint">@android:color/white</item>
+        <item name="android:iconTintMode">src_over</item>
+    </style>
+
+    <style name="MyMaterialButton.OutLine.White.Default" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="rippleColor">#FF9e9e9e</item>
+        <item name="elevation">0dp</item>
+        <item name="cornerRadius">200dp</item>
+        <item name="strokeColor">@android:color/white</item>
+    </style>
+
+    <style name="MyMaterialButton.Normal" parent="Widget.MaterialComponents.Button">
+        <item name="rippleColor">#FF9e9e9e</item>
+        <item name="elevation">0dp</item>
+        <item name="cornerRadius">200dp</item>
+    </style>
+
     <style name="ToolbarTitleText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/font_tab</item>
     </style>

@@ -38,7 +38,7 @@ import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.LikeDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.ShareDelegate;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
-import cn.paulpaulzhang.fair.util.common.CommonUtil;
+import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -166,7 +166,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         customerView.findViewById(R.id.iv_topic).setOnClickListener(this);
         customerView.findViewById(R.id.iv_send).setOnClickListener(this);
         AppCompatEditText mEditText = customerView.findViewById(R.id.et_edit);
-        new Handler().postDelayed(() -> CommonUtil.showKeyboard(mEditText), 10);
+        new Handler().postDelayed(() -> KeyBoardUtil.showKeyboard(mEditText), 10);
     }
 
 

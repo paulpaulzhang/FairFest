@@ -2,28 +2,26 @@ package cn.paulpaulzhang.fair.sc.main.user.delegate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
+import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
@@ -71,11 +69,9 @@ public class UserDelegate extends FairDelegate {
     }
 
     private void loadUserData() {
-        Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
-        LocalUser user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-        FairLogger.d(getClass().getName(), "user");
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
+        User user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
         if (user != null) {
-            FairLogger.d(getClass().getName(), "user != null");
             Glide.with(this)
                     .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                     .into(mUserAvatar);
@@ -88,13 +84,25 @@ public class UserDelegate extends FairDelegate {
     }
 
     private void requestUserData() {
-        //TODO  请求服务器端用户信息后调用loadUserData()跟新用户数据
+        RestClient.builder()
+                .url(Api.USER_INFO)
+                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .success(r -> {
+                    JsonParseUtil.parseUser(r);
+                    loadUserData();
+                })
+                .error((code, msg) -> {
+                    FairLogger.d(code);
+                    mSwipeRefresh.setRefreshing(false);
+                })
+                .build()
+                .get();
     }
 
     private void initSwipeRefresh() {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
-        mSwipeRefresh.setOnRefreshListener(this::loadUserData);
+        mSwipeRefresh.setOnRefreshListener(this::requestUserData);
     }
 
     @OnClick(R2.id.civ_setting)

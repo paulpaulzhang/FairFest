@@ -15,13 +15,12 @@ import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -52,7 +51,7 @@ public final class JsonParseUtil {
             int likeCount = object.getInteger("likeCount");
             int commentCount = object.getInteger("commentCount");
             int shareCount = object.getInteger("shareCount");
-            String time = object.getString("time");
+            long time = object.getLong("time");
             String device = object.getString("device");
             DiscoveryPostCache discoveryPostCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -112,7 +111,7 @@ public final class JsonParseUtil {
             int likeCount = object.getInteger("likeCount");
             int commentCount = object.getInteger("commentCount");
             int shareCount = object.getInteger("shareCount");
-            String time = object.getString("time");
+            long time = object.getLong("time");
             String device = object.getString("device");
             FollowPostCache followPostCache = new FollowPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -171,7 +170,7 @@ public final class JsonParseUtil {
             int likeCount = object.getInteger("likeCount");
             int commentCount = object.getInteger("commentCount");
             int shareCount = object.getInteger("shareCount");
-            String time = object.getString("time");
+            long time = object.getLong("time");
             String device = object.getString("device");
             TopicPostCache topicPostCache = new TopicPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -210,16 +209,17 @@ public final class JsonParseUtil {
         likeBox.put(topicLikeCaches);
     }
 
-    public static void parseLocalUser(String response) {
-        JSONObject object = JSON.parseObject(response).getJSONObject("localUser");
+    public static void parseUser(String response) {
+        JSONObject object = JSON.parseObject(response).getJSONObject("user");
 
-        long id = object.getLong("id");
+        long id = object.getLong("uid");
         String username = object.getString("username");
         String password = object.getString("password");
         String birthday = object.getString("birthday");
         String gender = object.getString("gender");
         int followers = object.getInteger("followers");
         int fans = object.getInteger("fans");
+        int dynamicCount = object.getInteger("dynamicCount");
         String phone = object.getString("phone");
         String email = object.getString("email");
         String school = object.getString("school");
@@ -228,13 +228,13 @@ public final class JsonParseUtil {
         String introduction = object.getString("introduction");
         String avatar = object.getString("avatar");
         String background = object.getString("background");
-        String time = object.getString("time");
+        long time = object.getLong("time");
         String features = object.getString("features");
 
-        LocalUser user = new LocalUser(id, username, password, birthday, gender,
-                followers, fans, phone, email, school, studentId,
+        User user = new User(id, username, password, birthday, gender,
+                followers, fans, dynamicCount, phone, email, school, studentId,
                 permission, introduction, avatar, background, time, features);
-        Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
+        Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
         localUserBox.remove(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
         localUserBox.put(user);
     }
@@ -280,7 +280,7 @@ public final class JsonParseUtil {
             int followers = jsonObject.getInteger("followers");
             int fans = jsonObject.getInteger("fans");
             String avatar = jsonObject.getString("avatar");
-            String time = jsonObject.getString("time");
+            long time = jsonObject.getLong("time");
 
             RecommendUserCache user = new RecommendUserCache(id, username, followers, fans, avatar, time);
             userCacheBox.put(user);

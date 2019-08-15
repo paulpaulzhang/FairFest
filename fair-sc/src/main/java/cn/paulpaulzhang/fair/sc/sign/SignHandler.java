@@ -9,8 +9,8 @@ import cn.jpush.im.android.api.options.RegisterOptionalUserInfo;
 import cn.jpush.im.api.BasicCallback;
 import cn.paulpaulzhang.fair.app.AccountManager;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -33,8 +33,8 @@ public class SignHandler {
         final long id = JSON.parseObject(response).getLong("uid");
         final String phone = JSON.parseObject(response).getString("phone");
 
-        final LocalUser user = new LocalUser(id, phone);
-        Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
+        final User user = new User(id, phone);
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
         userBox.put(user);
 
         FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);
@@ -78,8 +78,8 @@ public class SignHandler {
         final long id = JSON.parseObject(response).getLong("uid");
         final String phone = JSON.parseObject(response).getString("phone");
 
-        final LocalUser user = new LocalUser(id, phone);
-        Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
+        final User user = new User(id, phone);
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
         userBox.put(user);
 
         FairPreference.addCustomAppProfile(UserConfigs.CURRENT_USER_ID.name(), id);

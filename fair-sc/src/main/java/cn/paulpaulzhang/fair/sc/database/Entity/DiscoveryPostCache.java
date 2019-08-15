@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -33,7 +34,7 @@ public class DiscoveryPostCache {
 
     private int shareCount; //分享数
 
-    private String time; //发布时间
+    private long time; //发布时间
 
     private String device; //设备型号
 
@@ -46,7 +47,7 @@ public class DiscoveryPostCache {
                               int likeCount,
                               int commentCount,
                               int shareCount,
-                              String time,
+                              long time,
                               String device) {
         this.id = id;
         this.uid = uid;
@@ -133,11 +134,11 @@ public class DiscoveryPostCache {
         this.shareCount = shareCount;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

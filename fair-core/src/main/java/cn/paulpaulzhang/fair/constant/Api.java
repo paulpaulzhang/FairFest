@@ -30,4 +30,8 @@ public class Api {
     public static final String TOPIC_LIST = "matchstickmen/topicBackAll.action";
 
     public static final String SINGLE_TOPIC = "matchstickmen/topicBack.action";
+
+    public static final String USER_INFO = "matchstickmen/getUserMessage.action";
+
+    public static final String SEND_POST = "matchstickmen/sendPost.action";
 }

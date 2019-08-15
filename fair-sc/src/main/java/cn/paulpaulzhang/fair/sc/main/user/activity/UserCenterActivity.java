@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -15,9 +17,11 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.google.android.material.appbar.AppBarLayout;
@@ -28,24 +32,22 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import java.util.ArrayList;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
-import cn.paulpaulzhang.fair.delegates.FairDelegate;
+import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;
-import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernUserDelegate;
+import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.DynamicDelegate;
-import cn.paulpaulzhang.fair.util.common.AnimationUtils;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
-import me.dkzwm.widget.srl.SmoothRefreshLayout;
-import me.dkzwm.widget.srl.extra.header.ClassicHeader;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.user
@@ -108,11 +110,9 @@ public class UserCenterActivity extends FairActivity {
     @BindView(R2.id.tv_constellation)
     AppCompatTextView mConstellation;
 
-    @BindView(R2.id.srl_user)
-    SwipeRefreshLayout mSwipeRefresh;
-
     private int lastPosition = 0;
     private long uid;
+    private User user;
 
 
     @Override
@@ -123,14 +123,12 @@ public class UserCenterActivity extends FairActivity {
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         ImmersionBar.with(this).titleBar(mToolbar).init();
-
         Intent intent = getIntent();
         uid = intent.getLongExtra("uid", -1);
-
+        user = new User();
         initToolbar(mToolbar);
         initHeader();
         initTab();
-        initSwipeRefresh();
 
     }
 
@@ -152,6 +150,7 @@ public class UserCenterActivity extends FairActivity {
             mEdit.setVisibility(View.GONE);
             mFollow.setVisibility(View.VISIBLE);
         }
+
 
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset == 0) {
@@ -177,22 +176,14 @@ public class UserCenterActivity extends FairActivity {
         });
     }
 
-    private void initSwipeRefresh() {
-        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
-                android.R.color.holo_green_light);
-        mSwipeRefresh.setOnRefreshListener(() -> {
-            mSwipeRefresh.setRefreshing(false);
-        });
-    }
-
     private void initTab() {
         String[] titles = new String[]{getString(R.string.dynamic),
                 getString(R.string.concern_topic),
-                getString(R.string.concern_user)};
+                getString(R.string.about)};
         ArrayList<Fragment> delegates = new ArrayList<>();
         delegates.add(new DynamicDelegate());
         delegates.add(new ConcernTopicDelegate());
-        delegates.add(new ConcernUserDelegate());
+        delegates.add(new AboutDelegate());
         mTabLayout.setViewPager(mViewPager, titles, this, delegates);
         mTabLayout.getTitleView(0).setTextSize(18);
         mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -238,6 +229,52 @@ public class UserCenterActivity extends FairActivity {
         });
     }
 
+    private void loadUserData() {
+        Glide.with(this)
+                .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
+                .into(mAvatar);
+        mName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
+        mIntroduction.setText(user.getIntroduction() != null ? user.getIntroduction() : "");
+        mPayCount.setText(String.valueOf(user.getPaysCount()));
+        mFansCount.setText(String.valueOf(user.getFansCount()));
+        String genderIcon = "";
+        if (user.getGender() != null && TextUtils.equals(user.getGender(), "男")) {
+            genderIcon = "♂";
+        } else if (user.getGender() != null && TextUtils.equals(user.getGender(), "女")) {
+            genderIcon = "♀";
+        }
+
+        //TODO
+    }
+
+    private void requestData() {
+        RestClient.builder()
+                .url(Api.USER_INFO)
+                .params("uid", uid)
+                .success(r -> {
+                    JSONObject object = JSON.parseObject(r).getJSONObject("user");
+                    user.setId(uid);
+                    user.setAvatar(object.getString("avatar"));
+                    user.setBackground(object.getString("background"));
+                    user.setBirthday(object.getString("birthday"));
+                    user.setDynamicCount(object.getInteger("dynamicCount"));
+                    user.setFansCount(object.getInteger("fansCount"));
+                    user.setGender(object.getString("gender"));
+                    user.setUsername(object.getString("username"));
+                    user.setPaysCount(object.getInteger("paysCount"));
+                    user.setSchool(object.getString("school"));
+                    user.setPhone(object.getString("phone"));
+                    user.setIntroduction(object.getString("introduction"));
+                    user.setTime(object.getLong("time"));
+                })
+                .error((code, msg) -> {
+                    FairLogger.d(code);
+
+                })
+                .build()
+                .get();
+    }
+
     private String getAlpha(int i) {
         int max = 85;
         float rate = 0.15f;
@@ -255,9 +292,27 @@ public class UserCenterActivity extends FairActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.user_center_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (uid == FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())) {
+            menu.findItem(R.id.message).setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+        } else if (item.getItemId() == R.id.refresh) {
+            Toasty.info(this, "正在刷新", Toasty.LENGTH_SHORT).show();
+        } else if (item.getItemId() == R.id.message) {
+            Toasty.info(this, "发消息", Toasty.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

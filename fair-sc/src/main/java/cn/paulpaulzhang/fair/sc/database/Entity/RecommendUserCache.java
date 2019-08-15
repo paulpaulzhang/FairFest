@@ -26,14 +26,14 @@ public class RecommendUserCache {
 
     private String avatar; //头像url
 
-    private String time; //注册时间
+    private long time; //注册时间
 
     public RecommendUserCache(long id,
                               String username,
                               int payCount,
                               int fansCount,
                               String avatar,
-                              String time) {
+                              long time) {
         this.id = id;
         this.username = username;
         this.payCount = payCount;
@@ -90,11 +90,11 @@ public class RecommendUserCache {
         this.avatar = avatar;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }

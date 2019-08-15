@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -85,8 +85,8 @@ public class UploadUtil {
     public void uploadFile(Activity activity, List<File> files, IUploadFileListener listener) {
         new Thread(() -> {
             List<String> paths = new ArrayList<>();
-            Box<LocalUser> userBox = ObjectBox.get().boxFor(LocalUser.class);
-            LocalUser user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+            Box<User> userBox = ObjectBox.get().boxFor(User.class);
+            User user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
             for (File file : files) {
                 try {
                     FileInputStream in = new FileInputStream(file);

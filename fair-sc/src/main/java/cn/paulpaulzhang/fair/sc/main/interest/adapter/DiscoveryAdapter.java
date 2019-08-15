@@ -1,6 +1,7 @@
 package cn.paulpaulzhang.fair.sc.main.interest.adapter;
 
 import android.content.Intent;
+import android.text.format.DateUtils;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -17,22 +18,24 @@ import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryUserCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.LocalUser;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -64,10 +67,10 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
             DiscoveryPostCache discoveryPostCache = item.getDiscoveryPostCache();
             long id = discoveryPostCache.getId();
             long uid = discoveryPostCache.getUid();
-            Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
-            LocalUser current = localUserBox.get(
+            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
+            User current = localUserBox.get(
                     FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-            String time = discoveryPostCache.getTime();
+            long time = discoveryPostCache.getTime();
             String device = discoveryPostCache.getDevice();
             String content = discoveryPostCache.getContent();
             ArrayList<String> imgs = JsonParseUtil.parseImgs(discoveryPostCache.getImagesUrl());
@@ -137,7 +140,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_dynamic, device)
-                    .setText(R.id.tv_time_dynamic, time);
+                    .setText(R.id.tv_time_dynamic, DateUtil.getTime(new Date(time)));
 
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
@@ -174,11 +177,11 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
             DiscoveryPostCache discoveryPostCache = item.getDiscoveryPostCache();
             long id = discoveryPostCache.getId();
             long uid = discoveryPostCache.getUid();
-            Box<LocalUser> localUserBox = ObjectBox.get().boxFor(LocalUser.class);
-            LocalUser current = localUserBox.get(
+            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
+            User current = localUserBox.get(
                     FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
 
-            String time = discoveryPostCache.getTime();
+            long time = discoveryPostCache.getTime();
             String device = discoveryPostCache.getDevice();
             String content = discoveryPostCache.getContent();
             String title = discoveryPostCache.getTitle();
@@ -248,9 +251,8 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_article, device)
-                    .setText(R.id.tv_time_article, time)
+                    .setText(R.id.tv_time_article, DateUtil.getTime(new Date(time)))
                     .setText(R.id.tv_title_article, title);
-
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
             }

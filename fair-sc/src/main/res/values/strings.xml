@@ -66,7 +66,9 @@
     <string name="post_article">发表文章</string>
     <string name="concern_topic">关注的话题</string>
     <string name="concern_user">关注的用户</string>
-    <string name="edit_use_data">编辑资料</string>
+    <string name="edit">编辑</string>
     <string name="pay">关注</string>
     <string name="fans">粉丝</string>
+    <string name="refresh">刷新</string>
+    <string name="about">关于</string>
 </resources>

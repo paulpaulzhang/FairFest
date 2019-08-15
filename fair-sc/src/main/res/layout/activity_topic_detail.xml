@@ -140,7 +140,7 @@
             android:id="@+id/fab_dynamic_topic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit"
+            android:src="@drawable/ic_dynamic"
             app:fab_colorNormal="@color/colorAccent"
             app:fab_colorPressed="@color/colorAccent"
             app:fab_label="@string/dynamic"

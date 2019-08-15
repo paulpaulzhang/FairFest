@@ -174,9 +174,7 @@ public class TopicDetailActivity extends FairActivity {
                     mDiscuss.setText(postCount + " 讨论");
                     mFollow.setText(payCount + " 关注");
                 })
-                .error((code, msg) -> {
-                    FairLogger.d("Header", code);
-                })
+                .error((code, msg) -> FairLogger.d("Header", code))
                 .build()
                 .get();
     }

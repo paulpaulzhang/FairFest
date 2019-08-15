@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.util.common;
+package cn.paulpaulzhang.fair.util.id;
 
 import java.nio.charset.StandardCharsets;
 import java.security.GeneralSecurityException;

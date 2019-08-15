@@ -5,17 +5,17 @@
         "id": 12306,
         "uid": 10000,
         "type": 0,
-        "topic": [
-          "话题一",
-          "话题二"
-        ],
+        "topic": {
+          "topic1": "话题一",
+          "topic2": "话题二"
+        },
         "title": "",
         "content": "权力就是责任，责任就要担当。党的十八大以来，以习近平同志为核心的党中央高度重视党的建设",
-        "imagesUrl": [
-          "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg",
-          "http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg",
-          "http://pic16.nipic.com/20111006/6239936_092702973000_2.jpg"
-        ],
+        "imagesUrl": {
+          "img1": "http://pic25.nipic.com/20121205/10197997_003647426000_2.jpg",
+          "img2": "http://img.redocn.com/sheji/20141219/zhongguofengdaodeliyizhanbanzhijing_3744115.jpg",
+          "img3": "http://pic16.nipic.com/20111006/6239936_092702973000_2.jpg"
+        },
         "likeCount": 88,
         "commentCount": 13,
         "shareCount": 1,

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.database.entity
@@ -11,6 +12,7 @@ import io.objectbox.annotation.Id;
  * 创建人: zlm31
  * 描述: 帖子实体类
  */
+
 @Entity
 public class FollowPostCache {
 
@@ -33,7 +35,7 @@ public class FollowPostCache {
 
     private int shareCount; //分享数
 
-    private String time; //发布时间
+    private long time; //发布时间
 
     private String device; //设备型号
 
@@ -46,7 +48,7 @@ public class FollowPostCache {
                            int likeCount,
                            int commentCount,
                            int shareCount,
-                           String time,
+                           long time,
                            String device) {
         this.id = id;
         this.uid = uid;
@@ -133,11 +135,11 @@ public class FollowPostCache {
         this.shareCount = shareCount;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

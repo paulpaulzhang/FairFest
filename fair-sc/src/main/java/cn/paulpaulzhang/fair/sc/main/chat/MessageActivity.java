@@ -54,7 +54,7 @@ import cn.paulpaulzhang.fair.sc.main.chat.holder.InCommingTextMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.holder.OutCommingImageMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.holder.OutCommingTextMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
-import cn.paulpaulzhang.fair.util.common.CommonUtil;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import es.dmoral.toasty.Toasty;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -267,7 +267,7 @@ public class MessageActivity extends FairActivity implements
 
     @Override
     public String format(Date date) {
-        return CommonUtil.getTime(date);
+        return DateUtil.getTime(date);
     }
 
     public void onEvent(MessageEvent event) {

@@ -55,8 +55,8 @@ import cn.paulpaulzhang.fair.sc.main.post.model.Image;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ImagePickerAdapter;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
-import cn.paulpaulzhang.fair.util.common.CommonUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
+import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
@@ -119,7 +119,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
         }
         initToolbar(mToolbar);
         initImagePicker();
-        CommonUtil.showKeyboard(mEdit);
+        KeyBoardUtil.showKeyboard(mEdit);
     }
 
     private void initImagePicker() {
