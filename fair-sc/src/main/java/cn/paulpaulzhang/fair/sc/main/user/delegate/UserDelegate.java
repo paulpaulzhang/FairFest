@@ -23,6 +23,7 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.user.activity.SettingActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -65,7 +66,7 @@ public class UserDelegate extends FairDelegate {
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         initSwipeRefresh();
-        loadUserData();
+        requestUserData();
     }
 
     private void loadUserData() {
@@ -107,7 +108,7 @@ public class UserDelegate extends FairDelegate {
 
     @OnClick(R2.id.civ_setting)
     void setting() {
-
+        startActivity(new Intent(getContext(), SettingActivity.class));
     }
 
     @OnClick(R2.id.ll_search)

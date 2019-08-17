@@ -135,7 +135,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_dynamic, device)
-                    .setText(R.id.tv_time_dynamic, DateUtil.getTime(new Date(time)));
+                    .setText(R.id.tv_time_dynamic, DateUtil.getTime(time));
 
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
@@ -246,7 +246,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_article, device)
-                    .setText(R.id.tv_time_article, DateUtil.getTime(new Date(time)))
+                    .setText(R.id.tv_time_article, DateUtil.getTime(time))
                     .setText(R.id.tv_title_article, title);
 
             if (likeCount != 0) {

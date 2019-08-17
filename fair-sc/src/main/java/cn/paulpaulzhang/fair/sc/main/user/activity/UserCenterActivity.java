@@ -1,8 +1,11 @@
 package cn.paulpaulzhang.fair.sc.main.user.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -17,8 +20,12 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
+import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
@@ -29,10 +36,19 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
+import com.yalantis.ucrop.UCrop;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
+import cn.jpush.im.android.api.JMessageClient;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -41,13 +57,25 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.main.chat.MessageActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity;
+import cn.paulpaulzhang.fair.sc.main.post.model.Image;
+import cn.paulpaulzhang.fair.sc.main.user.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.DynamicDelegate;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
+import cn.paulpaulzhang.fair.util.dimen.DimenUtil;
+import cn.paulpaulzhang.fair.util.file.FileUtil;
+import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import pub.devrel.easypermissions.EasyPermissions;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.user
@@ -104,11 +132,19 @@ public class UserCenterActivity extends FairActivity {
     @BindView(R2.id.tv_fans_count)
     AppCompatTextView mFansCount;
 
-    @BindView(R2.id.tv_gender_year)
-    AppCompatTextView mGenderYear;
+    @BindView(R2.id.tv_gender_era)
+    AppCompatTextView mGenderEra;
 
     @BindView(R2.id.tv_constellation)
     AppCompatTextView mConstellation;
+
+    @BindView(R2.id.tv_level)
+    AppCompatTextView mLevel;
+
+    @BindView(R2.id.tv_college)
+    AppCompatTextView mCollege;
+
+    private ViewPagerAdapter mPagerAdapter;
 
     private int lastPosition = 0;
     private long uid;
@@ -129,6 +165,9 @@ public class UserCenterActivity extends FairActivity {
         initToolbar(mToolbar);
         initHeader();
         initTab();
+        if (uid != -1) {
+            requestData();
+        }
 
     }
 
@@ -151,6 +190,29 @@ public class UserCenterActivity extends FairActivity {
             mFollow.setVisibility(View.VISIBLE);
         }
 
+        mBackground.setOnClickListener(v -> {
+            if (uid == FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())) {
+                MaterialDialog materialDialog = new MaterialDialog(this, MaterialDialog.getDEFAULT_BEHAVIOR());
+                DialogCustomViewExtKt.customView(materialDialog, R.layout.view_custom_change_bg_dialog,
+                        null, false, true, false, true);
+                LifecycleExtKt.lifecycleOwner(materialDialog, this);
+                materialDialog.cornerRadius(4f, null);
+                materialDialog.show();
+
+                View customerView = DialogCustomViewExtKt.getCustomView(materialDialog);
+
+                customerView.findViewById(R.id.tv_change_bg).setOnClickListener(v2 -> {
+                    openAlbum();
+                    materialDialog.dismiss();
+                });
+            }
+        });
+
+        mAvatar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PhotoActivity.class);
+            intent.putExtra("path", user.getAvatar() == null ? Constant.DEFAULT_AVATAR : user.getAvatar());
+            startActivity(intent);
+        });
 
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset == 0) {
@@ -177,14 +239,12 @@ public class UserCenterActivity extends FairActivity {
     }
 
     private void initTab() {
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         String[] titles = new String[]{getString(R.string.dynamic),
                 getString(R.string.concern_topic),
                 getString(R.string.about)};
-        ArrayList<Fragment> delegates = new ArrayList<>();
-        delegates.add(new DynamicDelegate());
-        delegates.add(new ConcernTopicDelegate());
-        delegates.add(new AboutDelegate());
-        mTabLayout.setViewPager(mViewPager, titles, this, delegates);
+        mViewPager.setAdapter(mPagerAdapter);
+        mTabLayout.setViewPager(mViewPager, titles);
         mTabLayout.getTitleView(0).setTextSize(18);
         mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         mTabLayout.setOnTabSelectListener(new OnTabSelectListener() {
@@ -204,7 +264,7 @@ public class UserCenterActivity extends FairActivity {
 
             }
         });
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -233,18 +293,48 @@ public class UserCenterActivity extends FairActivity {
         Glide.with(this)
                 .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                 .into(mAvatar);
+        Glide.with(this)
+                .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
+                .into(mTitleAvatar);
+        if (user.getBackground() != null) {
+            Glide.with(this).load(user.getBackground()).into(mBackground);
+        } else {
+            mBackground.setImageResource(R.mipmap.user_background);
+        }
         mName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
-        mIntroduction.setText(user.getIntroduction() != null ? user.getIntroduction() : "");
+        mTitleName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
+        mIntroduction.setText(user.getIntroduction() != null ? user.getIntroduction() : "这个人很懒，什么也没有写");
         mPayCount.setText(String.valueOf(user.getPaysCount()));
         mFansCount.setText(String.valueOf(user.getFansCount()));
         String genderIcon = "";
-        if (user.getGender() != null && TextUtils.equals(user.getGender(), "男")) {
+        if (user.getGender() == null) {
+            genderIcon = "⚥";
+        } else if (TextUtils.equals(user.getGender(), "男")) {
             genderIcon = "♂";
-        } else if (user.getGender() != null && TextUtils.equals(user.getGender(), "女")) {
+        } else if (TextUtils.equals(user.getGender(), "女")) {
             genderIcon = "♀";
         }
+        String era = DateUtil.getEra(user.getBirthday());
+        if (TextUtils.equals(genderIcon, "") && TextUtils.equals(era, "")) {
+            mGenderEra.setVisibility(View.GONE);
+        } else {
+            mGenderEra.setText(String.format("%s %s", genderIcon, era));
+        }
 
-        //TODO
+        String constellation = DateUtil.getConstellation(user.getBirthday());
+        if (TextUtils.equals(constellation, "")) {
+            mConstellation.setVisibility(View.GONE);
+        } else {
+            mConstellation.setText(constellation);
+        }
+
+        if (user.getCollege() == null || TextUtils.equals(user.getCollege(), "")) {
+            mCollege.setVisibility(View.GONE);
+        } else {
+            mCollege.setText(user.getCollege());
+        }
+
+        mLevel.setText("Lv.1");
     }
 
     private void requestData() {
@@ -256,21 +346,39 @@ public class UserCenterActivity extends FairActivity {
                     user.setId(uid);
                     user.setAvatar(object.getString("avatar"));
                     user.setBackground(object.getString("background"));
-                    user.setBirthday(object.getString("birthday"));
+                    user.setBirthday(object.getLongValue("birthday"));
                     user.setDynamicCount(object.getInteger("dynamicCount"));
-                    user.setFansCount(object.getInteger("fansCount"));
+                    user.setFansCount(object.getInteger("fans"));
                     user.setGender(object.getString("gender"));
                     user.setUsername(object.getString("username"));
-                    user.setPaysCount(object.getInteger("paysCount"));
+                    user.setPaysCount(object.getInteger("followers"));
                     user.setSchool(object.getString("school"));
+                    user.setCollege(object.getString("college"));
                     user.setPhone(object.getString("phone"));
                     user.setIntroduction(object.getString("introduction"));
                     user.setTime(object.getLong("time"));
-                })
-                .error((code, msg) -> {
-                    FairLogger.d(code);
+                    loadUserData();
 
+                    AboutDelegate aboutDelegate = (AboutDelegate) mPagerAdapter.getItem(2);
+                    aboutDelegate.loadUserData(user);
                 })
+                .error((code, msg) -> FairLogger.d(code))
+                .build()
+                .get();
+
+        RestClient.builder()
+                .url(Api.IS_PAY_USER)
+                .params("currentId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .params("uid", uid)
+                .success(r -> {
+                    String result = JSON.parseObject(r).getString("result");
+                    if (TextUtils.equals(result, "已关注")) {
+                        mFollow.setText("已关注");
+                    } else {
+                        mFollow.setText("关注");
+                    }
+                })
+                .error(((code, msg) -> FairLogger.d(code)))
                 .build()
                 .get();
     }
@@ -292,6 +400,58 @@ public class UserCenterActivity extends FairActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            cropPhoto(Matisse.obtainResult(data).get(0));
+        } else if (requestCode == UCrop.REQUEST_CROP && resultCode == RESULT_OK && data != null) {
+            final Uri uri = UCrop.getOutput(data);
+            if (uri != null) {
+                Glide.with(UserCenterActivity.this).load(uri).into(mBackground);
+                //TODO UPLOAD BACKGROUND
+            }
+        } else if (requestCode == UCrop.RESULT_ERROR) {
+            Toasty.error(UserCenterActivity.this, "无法裁剪图片", Toasty.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openAlbum() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Matisse.from(this)
+                    .choose(MimeType.of(MimeType.JPEG, MimeType.PNG))
+                    .maxSelectable(1)
+                    .countable(false)
+                    .capture(true)
+                    .captureStrategy(new CaptureStrategy(true, "cn.paulpaulzhang.fairfest.fileprovider"))
+                    .gridExpectedSize(getResources()
+                            .getDimensionPixelSize(R.dimen.grid_expected_size))
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    .thumbnailScale(0.85f)
+                    .theme(R.style.Matisse_Zhihu_Custom)
+                    .imageEngine(new Glide4Engine())
+                    .forResult(Constant.REQUEST_CODE_CHOOSE);
+        } else {
+            EasyPermissions.requestPermissions(this, "打开图库需要存储读取权限", 1001,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void cropPhoto(Uri uri) {
+        Uri destinationUri = Uri.fromFile(new File(getExternalCacheDir(),
+                FileUtil.getFileNameByTime("FairSchool", FileUtil.getExtension(uri.getPath()))));
+        UCrop.Options options = new UCrop.Options();
+        options.setToolbarColor(getColor(R.color.colorPrimary)); // 设置标题栏颜色
+        options.setStatusBarColor(getColor(R.color.colorPrimaryDark)); //设置状态栏颜色
+        options.setToolbarWidgetColor(getColor(android.R.color.white));
+        UCrop.of(uri, destinationUri)
+                .withAspectRatio(DimenUtil.getScreenWidthByDp(), 360)
+                .withMaxResultSize(1080, 1080)
+                .withOptions(options)
+                .start(this);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.user_center_menu, menu);
         return true;
@@ -310,9 +470,19 @@ public class UserCenterActivity extends FairActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
         } else if (item.getItemId() == R.id.refresh) {
-            Toasty.info(this, "正在刷新", Toasty.LENGTH_SHORT).show();
+            if (uid != -1) {
+                requestData();
+                Toasty.info(this, "正在刷新", Toasty.LENGTH_SHORT).show();
+            }
+
         } else if (item.getItemId() == R.id.message) {
-            Toasty.info(this, "发消息", Toasty.LENGTH_SHORT).show();
+            if (uid != -1) {
+                Intent intent = new Intent(UserCenterActivity.this, MessageActivity.class);
+                intent.putExtra("uid", String.valueOf(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())));
+                intent.putExtra("username", String.valueOf(user.getId()));
+                startActivity(intent);
+            }
+
         }
         return super.onOptionsItemSelected(item);
     }

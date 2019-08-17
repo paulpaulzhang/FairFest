@@ -54,7 +54,6 @@ public class UploadUtil {
         FTPClient ftp = new FTPClient();
         try {
             ftp.connect(FTP_HOST, FTP_PORT);// 连接FTP服务器
-            FairLogger.d("ftp", ftp.isConnected());
             // 如果采用默认端口，可以使用ftp.connect(url)的方式直接连接FTP服务器
             ftp.login(FTP_USERNAME, FTP_PASSWORD);//登录
 
@@ -91,7 +90,7 @@ public class UploadUtil {
                 try {
                     FileInputStream in = new FileInputStream(file);
                     String extension = FileUtil.getExtension(file.getPath());
-                    String nameByTime = FileUtil.getFileNameByTime(user.getUsername(), extension);
+                    String nameByTime = FileUtil.getFileNameByTime( "FairSchool_"+ user.getUsername(), extension);
                     String path = uploadFile(nameByTime, in);
                     FairLogger.d("url", path);
                     if (path == null || path.isEmpty()) {

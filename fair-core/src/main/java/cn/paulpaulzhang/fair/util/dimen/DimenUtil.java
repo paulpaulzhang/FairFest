@@ -26,4 +26,10 @@ public class DimenUtil {
         final DisplayMetrics dm = resources.getDisplayMetrics();
         return dm.heightPixels;
     }
+
+    public static int getScreenWidthByDp() {
+        final Resources resources = Fair.getApplicationContext().getResources();
+        final DisplayMetrics dm = resources.getDisplayMetrics();
+        return dm.densityDpi;
+    }
 }

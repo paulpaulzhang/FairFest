@@ -25,13 +25,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
-import cn.paulpaulzhang.fair.net.callback.IError;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -44,6 +45,7 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
@@ -152,6 +154,53 @@ public class TopicDetailActivity extends FairActivity {
         startActivity(intent);
     }
 
+    @OnClick(R2.id.btn_follow)
+    void follow() {
+        boolean isFollow = !mButtonFollow.getText().toString().equals("关注");
+        if (!isFollow) {
+            RestClient.builder()
+                    .url(Api.PAY_TOPIC)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("tid", tid)
+                    .success(r -> {
+                        String result = JSON.parseObject(r).getString("result");
+                        if (TextUtils.equals(result, "ok")) {
+                            mButtonFollow.setText("已关注");
+                            String[] subString = mFollow.getText().toString().split(" ");
+                            mFollow.setText(String.format(Locale.CHINA, "%d %s", Integer.parseInt(subString[0]) + 1, subString[1]));
+                        } else {
+                            Toasty.error(TopicDetailActivity.this, "关注失败", Toasty.LENGTH_SHORT).show();
+                        }
+                    })
+                    .error(((code, msg) -> {
+                        Toasty.error(TopicDetailActivity.this, "关注失败 " + code, Toasty.LENGTH_SHORT).show();
+                    }))
+                    .build()
+                    .post();
+        } else {
+            RestClient.builder()
+                    .url(Api.CANCEL_PAY_TOPIC)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("tid", tid)
+                    .success(r -> {
+                        String result = JSON.parseObject(r).getString("result");
+                        if (TextUtils.equals(result, "ok")) {
+                            mButtonFollow.setText("关注");
+                            String[] subString = mFollow.getText().toString().split(" ");
+                            mFollow.setText(String.format(Locale.CHINA, "%d %s", Integer.parseInt(subString[0]) - 1, subString[1]));
+                        } else {
+                            Toasty.error(TopicDetailActivity.this, "操作失败 ", Toasty.LENGTH_SHORT).show();
+                        }
+
+                    })
+                    .error(((code, msg) -> {
+                        Toasty.error(TopicDetailActivity.this, "操作失败 " + code, Toasty.LENGTH_SHORT).show();
+                    }))
+                    .build()
+                    .post();
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private void loadHeaderData() {
         RestClient.builder()
@@ -175,6 +224,21 @@ public class TopicDetailActivity extends FairActivity {
                     mFollow.setText(payCount + " 关注");
                 })
                 .error((code, msg) -> FairLogger.d("Header", code))
+                .build()
+                .get();
+        RestClient.builder()
+                .url(Api.IS_PAY_TOPIC)
+                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .params("tid", tid)
+                .success(r -> {
+                    String result = JSON.parseObject(r).getString("result");
+                    if (TextUtils.equals(result, "已关注")) {
+                        mButtonFollow.setText("已关注");
+                    } else {
+                        mButtonFollow.setText("关注");
+                    }
+                })
+                .error(((code, msg) -> FairLogger.d(code)))
                 .build()
                 .get();
     }

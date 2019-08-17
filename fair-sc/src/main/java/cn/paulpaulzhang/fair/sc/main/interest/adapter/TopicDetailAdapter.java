@@ -244,7 +244,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_article, device)
-                    .setText(R.id.tv_time_article, DateUtil.getTime(new Date(time)))
+                    .setText(R.id.tv_time_article, DateUtil.getTime(time))
                     .setText(R.id.tv_title_article, title);
 
             if (likeCount != 0) {

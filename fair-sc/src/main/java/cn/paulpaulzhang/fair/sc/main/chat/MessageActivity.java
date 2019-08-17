@@ -99,8 +99,8 @@ public class MessageActivity extends FairActivity implements
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        String uid = intent.getStringExtra("uid");
-        username = intent.getStringExtra("username");
+        String uid = intent.getStringExtra("uid");  //发送方 id
+        username = intent.getStringExtra("username"); //接收方 id
         appkey = intent.getStringExtra("appkey");
 
         JMessageClient.registerEventReceiver(this);
@@ -261,7 +261,7 @@ public class MessageActivity extends FairActivity implements
         }
 
         LifecycleExtKt.lifecycleOwner(dialog, this);
-        dialog.cornerRadius(8f, null);
+        dialog.cornerRadius(4f, null);
         dialog.show();
     }
 

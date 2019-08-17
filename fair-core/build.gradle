@@ -139,6 +139,8 @@ dependencies {
 
     api 'com.zhihu.android:matisse:0.5.2-beta5'
 
+    api 'com.github.yalantis:ucrop:2.2.3'
+
     api 'com.github.chrisbanes:PhotoView:2.3.0'
 
     api 'com.github.stfalcon:chatkit:0.3.3'

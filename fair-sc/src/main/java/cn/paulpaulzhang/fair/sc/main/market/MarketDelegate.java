@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.market;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,11 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
+import butterknife.OnClick;
+import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -25,6 +37,9 @@ import es.dmoral.toasty.Toasty;
 public class MarketDelegate extends FairDelegate {
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R2.id.civ_user)
+    CircleImageView mUser;
 
 
     @Override
@@ -44,6 +59,20 @@ public class MarketDelegate extends FairDelegate {
             }
             return true;
         });
+        loadUser();
+    }
+
+    private void loadUser() {
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
+        String avatar = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())).getAvatar();
+        Glide.with(this).load(avatar == null ? Constant.DEFAULT_AVATAR : avatar).into(mUser);
+    }
+
+    @OnClick(R2.id.civ_user)
+    void user() {
+        Intent intent = new Intent(getContext(), UserCenterActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     @Override
@@ -54,5 +83,11 @@ public class MarketDelegate extends FairDelegate {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUser();
     }
 }

@@ -95,4 +95,11 @@ public class FairPreference {
     public static Long getCustomAppProfileL(String key) {
         return getAppPreference().getLong(key, 0L);
     }
+
+    public static void removeCustomAppProfile(String key) {
+        getAppPreference()
+                .edit()
+                .remove(key)
+                .apply();
+    }
 }

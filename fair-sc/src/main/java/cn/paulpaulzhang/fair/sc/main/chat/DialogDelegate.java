@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.event.NotificationClickEvent;
@@ -40,15 +41,22 @@ import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.Transform;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 
 
 /**
@@ -69,6 +77,9 @@ public class DialogDelegate extends FairDelegate
 
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
+
+    @BindView(R2.id.civ_user)
+    CircleImageView mUser;
 
     private ImageLoader mImageLoader;
     private DialogsListAdapter<Dialog> mDialogListAdapter;
@@ -143,7 +154,7 @@ public class DialogDelegate extends FairDelegate
         DialogCustomViewExtKt.customView(materialDialog, R.layout.view_custom_remove_dialog,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(materialDialog, this);
-        materialDialog.cornerRadius(8f, null);
+        materialDialog.cornerRadius(4f, null);
         materialDialog.show();
 
         View customerView = DialogCustomViewExtKt.getCustomView(materialDialog);
@@ -153,6 +164,19 @@ public class DialogDelegate extends FairDelegate
             mDialogListAdapter.deleteById(dialog.getId());
             materialDialog.dismiss();
         });
+    }
+
+    private void loadUser() {
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
+        String avatar = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())).getAvatar();
+        Glide.with(this).load(avatar == null ? Constant.DEFAULT_AVATAR : avatar).into(mUser);
+    }
+
+    @OnClick(R2.id.civ_user)
+    void user() {
+        Intent intent = new Intent(getContext(), UserCenterActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     public void onEvent(MessageEvent event) {
@@ -207,5 +231,6 @@ public class DialogDelegate extends FairDelegate
     public void onResume() {
         super.onResume();
         mDialogListAdapter.setItems(DialogFixtures.getDialogs());
+        loadUser();
     }
 }

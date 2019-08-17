@@ -21,7 +21,7 @@ public class User {
 
     private String password; //密码
 
-    private String birthday; //生日
+    private long birthday; //生日
 
     private String gender; //性别
 
@@ -36,6 +36,8 @@ public class User {
     private String email; // 邮箱
 
     private String school; //学校
+
+    private String college; //学院
 
     private long studentId; // 学号
 
@@ -61,12 +63,13 @@ public class User {
 
     public User(long id,
                 String username,
-                String birthday,
+                long birthday,
                 String gender,
                 int paysCount,
                 int fansCount,
                 int dynamicCount,
                 String school,
+                String college,
                 String introduction,
                 String avatar,
                 String background,
@@ -79,6 +82,7 @@ public class User {
         this.fansCount = fansCount;
         this.dynamicCount = dynamicCount;
         this.school = school;
+        this.college = college;
         this.introduction = introduction;
         this.avatar = avatar;
         this.background = background;
@@ -88,7 +92,7 @@ public class User {
     public User(long id,
                 String username,
                 String password,
-                String birthday,
+                long birthday,
                 String gender,
                 int paysCount,
                 int fansCount,
@@ -96,6 +100,7 @@ public class User {
                 String phone,
                 String email,
                 String school,
+                String college,
                 long studentId,
                 int permission,
                 String introduction,
@@ -114,6 +119,7 @@ public class User {
         this.phone = phone;
         this.email = email;
         this.school = school;
+        this.college = college;
         this.studentId = studentId;
         this.permission = permission;
         this.introduction = introduction;
@@ -147,11 +153,11 @@ public class User {
         this.password = password;
     }
 
-    public String getBirthday() {
+    public long getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(long birthday) {
         this.birthday = birthday;
     }
 
@@ -209,6 +215,14 @@ public class User {
 
     public void setSchool(String school) {
         this.school = school;
+    }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
     }
 
     public long getStudentId() {

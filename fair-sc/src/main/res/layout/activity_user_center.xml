@@ -20,9 +20,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_bg"
                 android:layout_width="match_parent"
-                android:layout_height="350dp"
+                android:layout_height="340dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/avatar"
                 app:layout_collapseMode="parallax" />
 
             <com.google.android.material.appbar.MaterialToolbar
@@ -43,14 +42,12 @@
                         android:id="@+id/civ_avatar_title"
                         android:layout_width="34dp"
                         android:layout_height="34dp"
-                        android:layout_marginEnd="10dp"
-                        android:src="@mipmap/avatar" />
+                        android:layout_marginEnd="10dp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_name_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/want_buy"
                         android:textColor="@android:color/white"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -68,21 +65,20 @@
                     android:layout_height="80dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:src="@mipmap/avatar"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_edit"
+                    style="@style/MyMaterialButton.Edit"
                     android:layout_width="100dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
                     android:background="@color/font_default"
                     android:gravity="center"
-                    android:textSize="14sp"
                     android:text="@string/edit"
-                    style="@style/MyMaterialButton.Edit"
                     android:textColor="@android:color/white"
+                    android:textSize="14sp"
                     android:visibility="gone"
                     app:icon="@drawable/ic_edit"
                     app:layout_constraintBottom_toBottomOf="@id/civ_avatar"
@@ -91,7 +87,8 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_follow"
-                    android:layout_width="85dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="95dp"
                     android:layout_height="45dp"
                     android:layout_marginEnd="30dp"
                     android:gravity="center"
@@ -102,14 +99,15 @@
                     app:elevation="0dp"
                     app:layout_constraintBottom_toBottomOf="@id/civ_avatar"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/civ_avatar" />
+                    app:layout_constraintTop_toTopOf="@id/civ_avatar"
+                    app:rippleColor="@android:color/white"
+                    app:strokeColor="@android:color/white" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="@string/want_buy"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -124,7 +122,6 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="20dp"
                     android:maxLines="1"
-                    android:text="@string/appbar_scrolling_view_behavior"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -136,7 +133,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="bottom"
-                    android:text="19"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -162,7 +158,6 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="5dp"
                     android:gravity="bottom"
-                    android:text="4"
                     android:textColor="@android:color/white"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -182,22 +177,22 @@
                     app:layout_constraintStart_toEndOf="@id/tv_fans_count" />
 
                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="@id/tv_pay_count"
-                    app:layout_constraintTop_toBottomOf="@id/tv_pay_count"
-                    android:layout_width="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_height="wrap_content">
+                    app:layout_constraintTop_toBottomOf="@id/tv_pay_count">
+
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_gender_year"
+                        android:id="@+id/tv_gender_era"
                         android:layout_width="wrap_content"
                         android:layout_height="20dp"
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/fillet_bg_blue"
                         android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="95后"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
 
@@ -208,9 +203,32 @@
                         android:layout_marginEnd="10dp"
                         android:background="@drawable/fillet_bg"
                         android:gravity="center"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        android:text="双鱼座"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_college"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/fillet_bg"
+                        android:gravity="center"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_level"
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/fillet_bg"
+                        android:gravity="center"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:textColor="@android:color/white"
                         android:textSize="12sp" />
                 </LinearLayout>

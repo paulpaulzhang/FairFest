@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="colorPrimary">#03A9F4</color>
     <color name="colorPrimaryDark">#03A9F4</color>
     <color name="colorAccent">#03A9F4</color>
@@ -14,4 +14,7 @@
     <color name="incoming_press_color">#a0ffffff</color>
     <color name="outcoming_press_color">#2196F3</color>
     <color name="disable_color">#8a8a8a</color>
+
+    <color name="ucrop_color_widget_rotate_mid_line" tools:override="true">#03A9F4</color>
+    <color name="ucrop_color_widget_background" tools:override="true">#03A9F4</color>
 </resources>

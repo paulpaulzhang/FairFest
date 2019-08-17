@@ -71,4 +71,13 @@
     <string name="fans">粉丝</string>
     <string name="refresh">刷新</string>
     <string name="about">关于</string>
+    <string name="change_bg">更换背景图</string>
+    <string name="personal_info">个人信息</string>
+    <string name="profile">简介</string>
+    <string name="level">等级</string>
+    <string name="age">年龄</string>
+    <string name="gender">性别</string>
+    <string name="school">学校</string>
+    <string name="college">学院</string>
+    <string name="log_out">退出登录</string>
 </resources>

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
+import com.alibaba.fastjson.JSON;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.sunhapper.x.spedit.SpUtil;
 import com.sunhapper.x.spedit.view.SpXEditText;
@@ -30,15 +31,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 
+import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
@@ -57,6 +64,8 @@ import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import cn.paulpaulzhang.fair.util.system.SystemUtil;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -263,13 +272,49 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             files.add(mAdapter.getData().get(i).getFile());
         }
+        if (Objects.requireNonNull(mEdit.getText()).toString().isEmpty() && files.size() == 0) {
+            Toasty.info(this, "内容不能为空哦！", Toasty.LENGTH_SHORT).show();
+            return;
+        }
         UploadUtil util = UploadUtil.INSTANCE();
         util.uploadFile(this, files, new IUploadFileListener() {
             @Override
             public void onSuccess(List<String> paths) {
-                paths.forEach(FairLogger::d);
-                FairLoader.stopLoading();
-                FairLogger.d("success");
+                Map<String, Long> topicMap = new HashMap<>();
+                for (int i = 0; i < topicIdList.size(); i++) {
+                    topicMap.put("t" + i, topicIdList.get(i));
+                }
+                Map<String, String> imgMap = new TreeMap<>();
+                for (int i = 0; i < paths.size(); i++) {
+                    imgMap.put("i" + 0, paths.get(i));
+                }
+                FairLogger.d(paths);
+                RestClient.builder()
+                        .url(Api.SEND_POST)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("type", 0)
+                        .params("title", "")
+                        .params("content", Objects.requireNonNull(mEdit.getText()).toString())
+                        .params("device", SystemUtil.getSystemModel())
+                        .params("topic", JSON.toJSONString(topicMap))
+                        .params("imagesUrl", JSON.toJSONString(imgMap))
+                        .success(r -> {
+                            String result = JSON.parseObject(r).getString("result");
+                            FairLoader.stopLoading();
+                            if (TextUtils.equals(result, "ok")) {
+                                Toasty.success(CreateDynamicActivity.this, "发表成功", Toasty.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toasty.error(CreateDynamicActivity.this, "发表失败，请重试", Toasty.LENGTH_SHORT).show();
+                            }
+                        })
+                        .error((code, msg) -> {
+                            FairLoader.stopLoading();
+                            Toasty.error(CreateDynamicActivity.this, "发表失败，请重试 " + code, Toasty.LENGTH_SHORT).show();
+                            FairLogger.d(code);
+                        })
+                        .build()
+                        .post();
             }
 
             @Override

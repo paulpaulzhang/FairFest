@@ -42,16 +42,16 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < postArr.size(); i++) {
             JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLong("id");
-            long uid = object.getLong("uid");
-            int type = object.getInteger("type");
+            long id = object.getLongValue("id");
+            long uid = object.getLongValue("uid");
+            int type = object.getIntValue("type");
             String title = object.getString("title");
             String content = object.getString("content");
             String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
-            int likeCount = object.getInteger("likeCount");
-            int commentCount = object.getInteger("commentCount");
-            int shareCount = object.getInteger("shareCount");
-            long time = object.getLong("time");
+            int likeCount = object.getIntValue("likeCount");
+            int commentCount = object.getIntValue("commentCount");
+            int shareCount = object.getIntValue("shareCount");
+            long time = object.getLongValue("time");
             String device = object.getString("device");
             DiscoveryPostCache discoveryPostCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -72,8 +72,8 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < likeArr.size(); i++) {
             JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLong("pid");
-            boolean isLike = object.getBoolean("isLike");
+            long pid = object.getLongValue("pid");
+            boolean isLike = object.getBooleanValue("isLike");
             DiscoveryLikeCache discoveryLikeCache = new DiscoveryLikeCache(pid, isLike);
             discoveryLikeCaches.add(discoveryLikeCache);
         }
@@ -102,16 +102,16 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < postArr.size(); i++) {
             JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLong("id");
-            long uid = object.getLong("uid");
-            int type = object.getInteger("type");
+            long id = object.getLongValue("id");
+            long uid = object.getLongValue("uid");
+            int type = object.getIntValue("type");
             String title = object.getString("title");
             String content = object.getString("content");
             String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
-            int likeCount = object.getInteger("likeCount");
-            int commentCount = object.getInteger("commentCount");
-            int shareCount = object.getInteger("shareCount");
-            long time = object.getLong("time");
+            int likeCount = object.getIntValue("likeCount");
+            int commentCount = object.getIntValue("commentCount");
+            int shareCount = object.getIntValue("shareCount");
+            long time = object.getLongValue("time");
             String device = object.getString("device");
             FollowPostCache followPostCache = new FollowPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -120,7 +120,7 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < userArr.size(); i++) {
             JSONObject object = userArr.getJSONObject(i);
-            long id = object.getLong("id");
+            long id = object.getLongValue("id");
             String username = object.getString("username");
             String avatar = object.getString("avatar");
 
@@ -130,7 +130,7 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < likeArr.size(); i++) {
             JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLong("pid");
+            long pid = object.getLongValue("pid");
             boolean isLike = object.getBoolean("isLike");
             FollowLikeCache followLikeCache = new FollowLikeCache(pid, isLike);
             followLikeCaches.add(followLikeCache);
@@ -161,16 +161,16 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < postArr.size(); i++) {
             JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLong("id");
-            long uid = object.getLong("uid");
-            int type = object.getInteger("type");
+            long id = object.getLongValue("id");
+            long uid = object.getLongValue("uid");
+            int type = object.getIntValue("type");
             String title = object.getString("title");
             String content = object.getString("content");
             String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
-            int likeCount = object.getInteger("likeCount");
-            int commentCount = object.getInteger("commentCount");
-            int shareCount = object.getInteger("shareCount");
-            long time = object.getLong("time");
+            int likeCount = object.getIntValue("likeCount");
+            int commentCount = object.getIntValue("commentCount");
+            int shareCount = object.getIntValue("shareCount");
+            long time = object.getLongValue("time");
             String device = object.getString("device");
             TopicPostCache topicPostCache = new TopicPostCache(id, uid, type, title, content, imagesUrl,
                     likeCount, commentCount, shareCount, time, device);
@@ -179,7 +179,7 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < userArr.size(); i++) {
             JSONObject object = userArr.getJSONObject(i);
-            long id = object.getLong("id");
+            long id = object.getLongValue("id");
             String username = object.getString("username");
             String avatar = object.getString("avatar");
 
@@ -189,8 +189,8 @@ public final class JsonParseUtil {
 
         for (int i = 0; i < likeArr.size(); i++) {
             JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLong("pid");
-            boolean isLike = object.getBoolean("isLike");
+            long pid = object.getLongValue("pid");
+            boolean isLike = object.getBooleanValue("isLike");
             TopicLikeCache topicLikeCache = new TopicLikeCache(pid, isLike);
             topicLikeCaches.add(topicLikeCache);
         }
@@ -212,27 +212,28 @@ public final class JsonParseUtil {
     public static void parseUser(String response) {
         JSONObject object = JSON.parseObject(response).getJSONObject("user");
 
-        long id = object.getLong("uid");
+        long id = object.getLongValue("uid");
         String username = object.getString("username");
         String password = object.getString("password");
-        String birthday = object.getString("birthday");
+        long birthday = object.getLongValue("birthday");
         String gender = object.getString("gender");
-        int followers = object.getInteger("followers");
-        int fans = object.getInteger("fans");
-        int dynamicCount = object.getInteger("dynamicCount");
+        int followers = object.getIntValue("followers");
+        int fans = object.getIntValue("fans");
+        int dynamicCount = object.getIntValue("dynamicCount");
         String phone = object.getString("phone");
         String email = object.getString("email");
         String school = object.getString("school");
-        long studentId = object.getLong("studentId");
-        int permission = object.getInteger("permission");
+        String college = object.getString("college");
+        long studentId = object.getLongValue("studentId");
+        int permission = object.getIntValue("permission");
         String introduction = object.getString("introduction");
         String avatar = object.getString("avatar");
         String background = object.getString("background");
-        long time = object.getLong("time");
+        long time = object.getLongValue("time");
         String features = object.getString("features");
 
         User user = new User(id, username, password, birthday, gender,
-                followers, fans, dynamicCount, phone, email, school, studentId,
+                followers, fans, dynamicCount, phone, email, school,college, studentId,
                 permission, introduction, avatar, background, time, features);
         Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
         localUserBox.remove(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
@@ -247,8 +248,8 @@ public final class JsonParseUtil {
             long id = object.getLong("tid");
             String name = object.getString("tname");
             String img = object.getString("imageUrl");
-            int follow = object.getInteger("payCount");
-            int post = object.getInteger("postCount");
+            int follow = object.getIntValue("payCount");
+            int post = object.getIntValue("postCount");
             topicCaches.add(new TopicCache(id, name, img, follow, post));
         }
 
@@ -275,12 +276,12 @@ public final class JsonParseUtil {
         JSONArray array = object.getJSONArray("users");
         for (int i = 0; i < array.size(); i++) {
             JSONObject jsonObject = array.getJSONObject(i);
-            long id = jsonObject.getLong("id");
+            long id = jsonObject.getLongValue("id");
             String username = jsonObject.getString("username");
-            int followers = jsonObject.getInteger("followers");
-            int fans = jsonObject.getInteger("fans");
+            int followers = jsonObject.getIntValue("followers");
+            int fans = jsonObject.getIntValue("fans");
             String avatar = jsonObject.getString("avatar");
-            long time = jsonObject.getLong("time");
+            long time = jsonObject.getLongValue("time");
 
             RecommendUserCache user = new RecommendUserCache(id, username, followers, fans, avatar, time);
             userCacheBox.put(user);

@@ -17,18 +17,18 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity"/>
+        <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherScrollActivity" />
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.sign.SignUpActivity"
-            android:label="@string/register"/>
+            android:label="@string/register" />
         <activity
             android:name="cn.paulpaulzhang.fair.sc.sign.SignInActivity"
             android:label="@string/sign_in" />
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.HomeActivity"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity"
@@ -47,12 +47,17 @@
             android:label="@string/post_dynamic"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity"
+        <activity
+            android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity"
             android:label="@string/post_article"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity" />
         <activity android:name=".main.chat.MessageActivity" />
         <activity android:name=".main.chat.PhotoActivity" />
-        <activity android:name=".main.user.activity.UserCenterActivity"/>
+        <activity android:name=".main.user.activity.UserCenterActivity" />
+        <activity android:name=".main.user.activity.PhotoActivity" />
+        <activity
+            android:name=".main.user.activity.SettingActivity"
+            android:label="@string/setting" />
     </application>
 </manifest>

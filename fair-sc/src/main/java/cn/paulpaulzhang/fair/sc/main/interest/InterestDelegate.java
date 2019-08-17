@@ -22,6 +22,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
+import com.bumptech.glide.Glide;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
@@ -31,15 +32,22 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.constant.Constant;
 
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.DiscoveryDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.objectbox.Box;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -56,12 +64,15 @@ public class InterestDelegate extends FairDelegate implements
     @BindView(R2.id.tl_interest)
     SlidingTabLayout mTabLayout;
 
+    @BindView(R2.id.civ_user)
+    CircleImageView mUser;
+
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
 
     private TabViewPagerAdapter mAdapter;
     private FairDelegate currentDelegate;
-    private int lastPosition = 0;
+    private int lastPosition = 1;
 
     @Override
     public Object setLayout() {
@@ -79,6 +90,7 @@ public class InterestDelegate extends FairDelegate implements
             return true;
         });
         initTab();
+        loadUser();
     }
 
     private void initTab() {
@@ -96,8 +108,21 @@ public class InterestDelegate extends FairDelegate implements
         mTabLayout.setViewPager(mViewPager, titles);
         mTabLayout.setCurrentTab(1);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.getTitleView(0).setTextSize(18);
-        mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mTabLayout.getTitleView(1).setTextSize(18);
+        mTabLayout.getTitleView(1).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+    }
+
+    private void loadUser() {
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
+        String avatar = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())).getAvatar();
+        Glide.with(this).load(avatar == null ? Constant.DEFAULT_AVATAR : avatar).into(mUser);
+    }
+
+    @OnClick(R2.id.civ_user)
+    void user() {
+        Intent intent = new Intent(getContext(), UserCenterActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     @Override
@@ -198,5 +223,11 @@ public class InterestDelegate extends FairDelegate implements
             startActivity(new Intent(getContext(), CreateArticleActivity.class));
             dialog.dismiss();
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUser();
     }
 }

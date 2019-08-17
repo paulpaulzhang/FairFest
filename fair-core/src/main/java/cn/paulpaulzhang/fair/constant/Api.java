@@ -34,4 +34,21 @@ public class Api {
     public static final String USER_INFO = "matchstickmen/getUserMessage.action";
 
     public static final String SEND_POST = "matchstickmen/sendPost.action";
+
+    public static final String PAY_USER = "matchstickmen/payUser.action";
+
+    public static final String PAY_TOPIC = "matchstickmen/payTopic.action";
+
+    public static final String CANCEL_PAY_USER = "matchstickmen/cancelPayUser.action";
+
+    public static final String CANCEL_PAY_TOPIC = "matchstickmen/cancelPayTopic.action";
+
+    public static final String IS_PAY_TOPIC = "matchstickmen/isPayTopic.action";
+
+    public static final String IS_PAY_USER = "matchstickmen/isPayUser.action";
+
+    public static final String THUMBSUP_POST = "matchstickmen/thumbsupPost.action";
+
+    public static final String GET_POST_INFO = "matchstickmen/getPostMessage.action";
+
 }
