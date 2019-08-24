@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
@@ -28,13 +30,18 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -62,9 +69,6 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             TopicPostCache topicPostCache = item.getTopicPostCache();
             long id = topicPostCache.getId();
             long uid = topicPostCache.getUid();
-            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
-            User current = localUserBox.get(
-                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
             long time = topicPostCache.getTime();
             String device = topicPostCache.getDevice();
             String content = topicPostCache.getContent();
@@ -73,13 +77,6 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             int commentCount = topicPostCache.getCommentCount();
             int shareCount = topicPostCache.getShareCount();
 
-            //判断当前用户是否对当前文章点赞点赞
-            Box<TopicLikeCache> likeBox = ObjectBox.get().boxFor(TopicLikeCache.class);
-            TopicLikeCache topicLikeCache = likeBox.query().equal(TopicLikeCache_.pid, id).build().findFirst();
-            boolean isLike = false;
-            if (topicLikeCache != null) {
-                isLike = topicLikeCache.isLike();
-            }
 
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
@@ -91,13 +88,17 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             Box<TopicUserCache> userBox = ObjectBox.get().boxFor(TopicUserCache.class);
             TopicUserCache topicUserCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_dynamic, topicUserCache.getUsername());
-            Glide.with(mContext).load(topicUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.setText(R.id.tv_username_dynamic, topicUserCache.getUsername() == null ?
+                    String.valueOf(topicUserCache.getId()).substring(8) : topicUserCache.getUsername());
+            Glide.with(mContext).load(topicUserCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : topicUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
-            mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
+            mAvatar.setOnClickListener(v -> {
+                Intent intent = new Intent(mContext, UserCenterActivity.class);
+                intent.putExtra("uid", topicUserCache.getId());
+                mContext.startActivity(intent);
+            });
 
-            boolean finalIsLike = isLike;
-            if (finalIsLike) {
+            if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
@@ -106,29 +107,37 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             }
             mLike.setOnClickListener(v -> {
 
-                if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                if (item.isLike()) {
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_dislike")
-                            .params("id", id)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.CANCEL_THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                item.setLike(false);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
-                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
+                            "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_like")
-                            .params("id", id)
-                            .params("count", count)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                item.setLike(true);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 }
             });
 
@@ -150,7 +159,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mDynamicContent = helper.getView(R.id.etv_content_dynamic);
-            mDynamicContent.setContent(content);
+            mDynamicContent.setContent(TextUtil.text2Post(content));
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
@@ -158,21 +167,25 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
                 } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
-                    Toast.makeText(mContext, "你点击了自定义规则 内容是：" + c + " " + selfContent, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, TopicDetailActivity.class);
+                    intent.putExtra("name", TextUtil.getTopicName(c));
+                    mContext.startActivity(intent);
                 }
             });
             mDynamicContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, DynamicActivity.class));
+                    Intent intent = new Intent(mContext, DynamicActivity.class);
+                    intent.putExtra("pid", item.getTopicPostCache().getId());
+                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
+                    mContext.startActivity(intent);
                 }
             }, false);
+
         } else if (item.getItemType() == TopicDetail.ARTICLE) {
             TopicPostCache topicPostCache = item.getTopicPostCache();
             long id = topicPostCache.getId();
             long uid = topicPostCache.getUid();
-            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
-            User current = localUserBox.get(
-                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
 
             long time = topicPostCache.getTime();
             String device = topicPostCache.getDevice();
@@ -182,14 +195,6 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             int likeCount = topicPostCache.getLikeCount();
             int commentCount = topicPostCache.getCommentCount();
             int shareCount = topicPostCache.getShareCount();
-
-            //判断当前用户是否对当前文章点赞点赞
-            Box<TopicLikeCache> likeBox = ObjectBox.get().boxFor(TopicLikeCache.class);
-            TopicLikeCache topicLikeCache = likeBox.query().equal(TopicLikeCache_.pid, id).build().findFirst();
-            boolean isLike = false;
-            if (topicLikeCache != null) {
-                isLike = topicLikeCache.isLike();
-            }
 
             GridView mArticleImg = helper.getView(R.id.gv_images_article);
             LinearLayout mLike = helper.getView(R.id.ll_like_article);
@@ -201,13 +206,17 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             Box<TopicUserCache> userBox = ObjectBox.get().boxFor(TopicUserCache.class);
             TopicUserCache topicUserCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_article, topicUserCache.getUsername());
+            helper.setText(R.id.tv_username_article, topicUserCache.getUsername() == null ?
+                    String.valueOf(topicUserCache.getId()).substring(8) : topicUserCache.getUsername());
             Glide.with(mContext).load(topicUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
-            mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
+            mAvatar.setOnClickListener(v -> {
+                Intent intent = new Intent(mContext, UserCenterActivity.class);
+                intent.putExtra("uid", topicUserCache.getId());
+                mContext.startActivity(intent);
+            });
 
-            boolean finalIsLike = isLike;
-            if (finalIsLike) {
+            if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
@@ -215,29 +224,37 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
-                if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
+                if (item.isLike()) {
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_dislike")
-                            .params("id", id)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.CANCEL_THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                item.setLike(false);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
-                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
+                            "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_like")
-                            .params("id", id)
-                            .params("count", count)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                item.setLike(true);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 }
             });
 
@@ -260,7 +277,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mArticleContent = helper.getView(R.id.etv_content_article);
-            mArticleContent.setContent(content);
+            mArticleContent.setContent(TextUtil.text2Post(content));
             mArticleContent.setOnClickListener(v -> Toast.makeText(mContext, "查看更多", Toast.LENGTH_SHORT).show());
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
@@ -269,14 +286,21 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
                 } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
-                    Toast.makeText(mContext, "你点击了自定义规则 内容是：" + c + " " + selfContent, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, TopicDetailActivity.class);
+                    intent.putExtra("name", TextUtil.getTopicName(c));
+                    mContext.startActivity(intent);
                 }
             });
             mArticleContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
-                    mContext.startActivity(new Intent(mContext, ArticleActivity.class));
+                    Intent intent = new Intent(mContext, ArticleActivity.class);
+                    intent.putExtra("pid", item.getTopicPostCache().getId());
+                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
+                    mContext.startActivity(intent);
                 }
             }, false);
+
         }
     }
 }

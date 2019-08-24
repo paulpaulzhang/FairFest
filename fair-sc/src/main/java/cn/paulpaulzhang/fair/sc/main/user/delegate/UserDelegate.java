@@ -76,7 +76,8 @@ public class UserDelegate extends FairDelegate {
             Glide.with(this)
                     .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                     .into(mUserAvatar);
-            mUsername.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
+            mUsername.setText(user.getUsername() == null ?
+                    String.valueOf(user.getId()).substring(8) : user.getUsername());
             mDynamicCount.setText(String.valueOf(user.getDynamicCount()));
             mPayCount.setText(String.valueOf(user.getPaysCount()));
             mFansCount.setText(String.valueOf(user.getFansCount()));

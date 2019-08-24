@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -43,6 +44,11 @@ public class SettingActivity extends FairActivity {
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         initToolbar(mToolbar);
+
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true)
+                .init();
     }
 
     @OnClick(R2.id.btn_logout)

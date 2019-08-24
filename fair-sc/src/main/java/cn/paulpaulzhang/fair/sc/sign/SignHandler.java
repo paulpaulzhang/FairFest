@@ -41,7 +41,7 @@ public class SignHandler {
         AccountManager.setSignState(true);
 
         RegisterOptionalUserInfo optionalUserInfo = new RegisterOptionalUserInfo();
-        optionalUserInfo.setNickname(phone);
+        optionalUserInfo.setNickname(String.valueOf(id).substring(8));
         JMessageClient.register(String.valueOf(id), "admin", optionalUserInfo, new BasicCallback() {
             @Override
             public void gotResult(int i, String s) {

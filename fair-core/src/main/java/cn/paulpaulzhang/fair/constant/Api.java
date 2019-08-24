@@ -49,6 +49,10 @@ public class Api {
 
     public static final String THUMBSUP_POST = "matchstickmen/thumbsupPost.action";
 
+    public static final String CANCEL_THUMBSUP_POST = "matchstickmen/cancelThumbsupPost.action";
+
     public static final String GET_POST_INFO = "matchstickmen/getPostMessage.action";
+
+    public static final String GET_POST_BY_TOPIC_ID = "matchstickmen/getPostAllByTid.action";
 
 }

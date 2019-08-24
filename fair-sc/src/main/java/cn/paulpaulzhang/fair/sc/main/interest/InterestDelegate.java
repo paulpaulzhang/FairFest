@@ -72,7 +72,7 @@ public class InterestDelegate extends FairDelegate implements
 
     private TabViewPagerAdapter mAdapter;
     private FairDelegate currentDelegate;
-    private int lastPosition = 1;
+    private int lastPosition = 0;
 
     @Override
     public Object setLayout() {
@@ -95,21 +95,21 @@ public class InterestDelegate extends FairDelegate implements
 
     private void initTab() {
         String[] titles = new String[]{
-                getString(R.string.follow),
                 getString(R.string.discovery),
+                getString(R.string.follow),
                 getString(R.string.topic)};
 
         mAdapter = new TabViewPagerAdapter
                 (getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setViewPager(mViewPager, titles);
-        mTabLayout.setCurrentTab(1);
+        mTabLayout.setCurrentTab(0);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.getTitleView(1).setTextSize(18);
-        mTabLayout.getTitleView(1).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mTabLayout.getTitleView(0).setTextSize(18);
+        mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
 
     private void loadUser() {
@@ -136,44 +136,8 @@ public class InterestDelegate extends FairDelegate implements
         lastPosition = position;
     }
 
-    //双击刷新
-    private long time = 0;
-
     @Override
     public void onTabReselect(int position) {
-        if (position == lastPosition && (System.currentTimeMillis() - time < 2000)) {
-            if (position == 0) {
-                FollowDelegate fragment = (FollowDelegate) getChildFragmentManager().getFragments().get(position);
-                @SuppressLint("InflateParams") View view = fragment.getView();
-                SwipeRefreshLayout swipeRefreshLayout;
-                if (view != null) {
-                    swipeRefreshLayout = view.findViewById(R.id.srl_follow);
-                    swipeRefreshLayout.setRefreshing(true);
-                    fragment.loadData(Constant.REFRESH_DATA);
-                }
-            } else if (position == 1) {
-                DiscoveryDelegate fragment = (DiscoveryDelegate) getChildFragmentManager().getFragments().get(position);
-                @SuppressLint("InflateParams") View view = fragment.getView();
-                SwipeRefreshLayout swipeRefreshLayout;
-                if (view != null) {
-                    swipeRefreshLayout = view.findViewById(R.id.srl_discovery);
-                    swipeRefreshLayout.setRefreshing(true);
-                    fragment.loadData(Constant.REFRESH_DATA);
-                }
-            } else if (position == 2) {
-                TopicDelegate fragment = (TopicDelegate) getChildFragmentManager().getFragments().get(position);
-                @SuppressLint("InflateParams") View view = fragment.getView();
-                SwipeRefreshLayout swipeRefreshLayout;
-                if (view != null) {
-                    swipeRefreshLayout = view.findViewById(R.id.srl_topic);
-                    swipeRefreshLayout.setRefreshing(true);
-                    fragment.loadData(Constant.REFRESH_DATA);
-                }
-            }
-        } else {
-            time = System.currentTimeMillis();
-        }
-        lastPosition = position;
     }
 
     @Override

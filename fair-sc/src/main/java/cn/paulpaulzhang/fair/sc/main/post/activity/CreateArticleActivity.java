@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -25,6 +26,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sunhapper.x.spedit.SpUtil;
 import com.sunhapper.x.spedit.view.SpXEditText;
 import com.sunhapper.x.spedit.view.SpXTextView;
@@ -131,6 +133,13 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
         initToolbar(mToolbar);
         initImagePicker();
         KeyBoardUtil.showKeyboard(mEdit);
+
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true)
+                .keyboardEnable(true, WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)  //软键盘自动弹出
+                .init();
     }
 
     private void initImagePicker() {
@@ -275,7 +284,6 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
 
     @OnClick(R2.id.iv_send)
     void doSend() {
-        FairLoader.showLoading(this);
         List<File> files = new ArrayList<>();
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             files.add(mAdapter.getData().get(i).getFile());
@@ -288,6 +296,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
             Toasty.info(this, "内容不能为空哦！", Toasty.LENGTH_SHORT).show();
             return;
         }
+        FairLoader.showLoading(this);
         UploadUtil util = UploadUtil.INSTANCE();
         util.uploadFile(this, files, new IUploadFileListener() {
             @Override

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.bumptech.glide.Glide;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageHolders;
 import com.stfalcon.chatkit.messages.MessageInput;
@@ -56,6 +58,7 @@ import cn.paulpaulzhang.fair.sc.main.chat.holder.OutCommingTextMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -108,7 +111,13 @@ public class MessageActivity extends FairActivity implements
 
         mHandler = new BackgroundHandler(this);
 
-        conversation = JMessageClient.getSingleConversation(username, appkey);
+        FairLogger.d(appkey);
+        if (appkey.isEmpty()) {
+            conversation = Conversation.createSingleConversation(username);
+        } else {
+            conversation = Conversation.createSingleConversation(username, appkey);
+        }
+
         conversation.setUnReadMessageCnt(0);
 
         initToolbar(mToolbar, conversation.getTitle());
@@ -118,6 +127,13 @@ public class MessageActivity extends FairActivity implements
         mMessageInput.setAttachmentsListener(this);
         mMessageInput.setInputListener(this);
         mMessageInput.setTypingListener(this);
+
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true)
+                .keyboardEnable(true, WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)  //软键盘自动弹出
+                .init();
     }
 
     private void initAdapter(String uid) {

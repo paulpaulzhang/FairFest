@@ -5,7 +5,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -21,6 +24,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -154,19 +158,18 @@ public final class JsonParseUtil {
         List<TopicPostCache> topicPostCaches = new ArrayList<>();
         List<TopicUserCache> topicUserCaches = new ArrayList<>();
         List<TopicLikeCache> topicLikeCaches = new ArrayList<>();
-        JSONObject result = JSON.parseObject(response).getJSONObject("result");
-        JSONArray postArr = result.getJSONArray("post");
-        JSONArray userArr = result.getJSONArray("user");
-        JSONArray likeArr = result.getJSONArray("like");
+        Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
+        Map<String, Object> userMap = JSON.parseObject(response).getJSONObject("user").getInnerMap();
+        Map<String, Object> isLikeMap = JSON.parseObject(response).getJSONObject("isLike").getInnerMap();
 
-        for (int i = 0; i < postArr.size(); i++) {
-            JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLongValue("id");
+        for (String key : postMap.keySet()) {
+            JSONObject object = (JSONObject) postMap.get(key);
+            long id = object.getLongValue("pid");
             long uid = object.getLongValue("uid");
             int type = object.getIntValue("type");
             String title = object.getString("title");
             String content = object.getString("content");
-            String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
+            String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
             int likeCount = object.getIntValue("likeCount");
             int commentCount = object.getIntValue("commentCount");
             int shareCount = object.getIntValue("shareCount");
@@ -177,20 +180,19 @@ public final class JsonParseUtil {
             topicPostCaches.add(topicPostCache);
         }
 
-        for (int i = 0; i < userArr.size(); i++) {
-            JSONObject object = userArr.getJSONObject(i);
-            long id = object.getLongValue("id");
+        for (String key : userMap.keySet()) {
+            JSONObject object = (JSONObject) userMap.get(key);
+            long uid = object.getLongValue("uid");
             String username = object.getString("username");
             String avatar = object.getString("avatar");
 
-            TopicUserCache topicUserCache = new TopicUserCache(id, username, avatar);
+            TopicUserCache topicUserCache = new TopicUserCache(uid, username, avatar);
             topicUserCaches.add(topicUserCache);
         }
 
-        for (int i = 0; i < likeArr.size(); i++) {
-            JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLongValue("pid");
-            boolean isLike = object.getBooleanValue("isLike");
+        for (String key : isLikeMap.keySet()) {
+            boolean isLike = (boolean) isLikeMap.get(key);
+            long pid = Long.parseLong(key);
             TopicLikeCache topicLikeCache = new TopicLikeCache(pid, isLike);
             topicLikeCaches.add(topicLikeCache);
         }
@@ -203,7 +205,6 @@ public final class JsonParseUtil {
             userBox.removeAll();
             likeBox.removeAll();
         }
-
         postBox.put(topicPostCaches);
         userBox.put(topicUserCaches);
         likeBox.put(topicLikeCaches);
@@ -233,7 +234,7 @@ public final class JsonParseUtil {
         String features = object.getString("features");
 
         User user = new User(id, username, password, birthday, gender,
-                followers, fans, dynamicCount, phone, email, school,college, studentId,
+                followers, fans, dynamicCount, phone, email, school, college, studentId,
                 permission, introduction, avatar, background, time, features);
         Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
         localUserBox.remove(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
@@ -261,10 +262,10 @@ public final class JsonParseUtil {
     }
 
     public static ArrayList<String> parseImgs(String imgUrl) {
-        JSONArray array = JSON.parseArray(imgUrl);
+        Map<String, Object> map = JSON.parseObject(imgUrl).getJSONObject("images").getInnerMap();
         ArrayList<String> imgs = new ArrayList<>();
-        for (int i = 0; i < array.size(); i++) {
-            imgs.add(array.getString(i));
+        for (String key : map.keySet()) {
+            imgs.add((String) map.get(key));
         }
         return imgs;
     }

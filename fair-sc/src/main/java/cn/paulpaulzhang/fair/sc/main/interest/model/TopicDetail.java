@@ -19,9 +19,12 @@ public class TopicDetail implements MultiItemEntity {
 
     private TopicPostCache topicPostCache;
 
-    public TopicDetail(int itemType, TopicPostCache topicPostCache) {
+    private boolean isLike;
+
+    public TopicDetail(int itemType, TopicPostCache topicPostCache, boolean isLike) {
         this.itemType = itemType;
         this.topicPostCache = topicPostCache;
+        this.isLike = isLike;
     }
 
     @Override
@@ -31,5 +34,13 @@ public class TopicDetail implements MultiItemEntity {
 
     public TopicPostCache getTopicPostCache() {
         return topicPostCache;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isLike() {
+        return isLike;
     }
 }

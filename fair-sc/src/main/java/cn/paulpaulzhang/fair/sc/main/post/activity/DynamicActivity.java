@@ -3,9 +3,11 @@ package cn.paulpaulzhang.fair.sc.main.post.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -19,26 +21,46 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.bumptech.glide.Glide;
+import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
+import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.gyf.immersionbar.ImmersionBar;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.activities.FairActivity;
+import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.LikeDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.ShareDelegate;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -69,7 +91,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
     MaterialButton mFollowButton;
 
     @BindView(R2.id.tv_content_dynamic)
-    AppCompatTextView mContent;
+    ExpandableTextView mContent;
 
     @BindView(R2.id.gv_images_dynamic)
     MyGridView mGridView;
@@ -92,6 +114,10 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
     @BindView(R2.id.iv_share)
     AppCompatImageView mShare;
 
+    private long pid;
+    private long uid;
+    private boolean isLike;
+
 
     @Override
     public int setLayout() {
@@ -101,23 +127,63 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        long id = intent.getLongExtra("id", -1);
+        pid = intent.getLongExtra("pid", -1);
+        uid = intent.getLongExtra("uid", -1);
+        isLike = intent.getBooleanExtra("isLike", false);
 
-        Toasty.info(this, id + "", Toasty.LENGTH_SHORT).show();
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .keyboardEnable(true)
+                .statusBarDarkFont(true)
+                .init();
 
         initToolbar(mToolbar);
         initTab();
+        initHeader();
+        initBottomMenu();
+    }
 
-        mUsername.setText("PaulPaulZhang");
-        mTime.setText("2019-1-1");
-        mDevice.setText("MI CC 9");
-        mContent.setText("你猜猜");
+    private void initHeader() {
+        requestData();
 
-        List<String> list = new ArrayList<>();
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563891473309&di=d4702b7ea26cd7b17ba45920f5d27f46&imgtype=0&src=http%3A%2F%2Ftx.haiqq.com%2Fuploads%2Fallimg%2F170506%2F0054524r5-2.jpg");
-        list.add("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-oi9W7QkQ4yu3xHUYOngWam_JckiY4ic0SeESz8oGjbXvLDEH");
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563891473309&di=d4702b7ea26cd7b17ba45920f5d27f46&imgtype=0&src=http%3A%2F%2Ftx.haiqq.com%2Fuploads%2Fallimg%2F170506%2F0054524r5-2.jpg");
-        mGridView.setAdapter(new NineAdapter(list, this));
+        if (uid == FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())) {
+            mFollowButton.setVisibility(View.INVISIBLE);
+        } else {
+            RestClient.builder()
+                    .url(Api.IS_PAY_USER)
+                    .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("focusedId", uid)
+                    .success(r -> {
+                        String result = JSON.parseObject(r).getString("result");
+                        if (TextUtils.equals(result, "已关注")) {
+                            mFollowButton.setText("已关注");
+                        } else {
+                            mFollowButton.setText("关注");
+                        }
+                    })
+                    .error(((code, msg) -> FairLogger.d(code)))
+                    .build()
+                    .get();
+        }
+
+        mContent.setLinkClickListener((t, c, selfContent) -> {
+            if (t.equals(LinkType.LINK_TYPE)) {
+                Toast.makeText(this, "你点击了链接 内容是：" + c, Toast.LENGTH_SHORT).show();
+            } else if (t.equals(LinkType.MENTION_TYPE)) {
+                Toast.makeText(this, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
+            } else if (t.equals(LinkType.SELF)) {
+                Intent intent = new Intent(this, TopicDetailActivity.class);
+                intent.putExtra("name", TextUtil.getTopicName(c));
+                startActivity(intent);
+            }
+        });
+
+        mAvatar.setOnClickListener(v -> {
+            Intent intent = new Intent(this, UserCenterActivity.class);
+            intent.putExtra("uid", uid);
+            startActivity(intent);
+        });
+
     }
 
     private void initTab() {
@@ -132,14 +198,140 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         mViewPager.setOffscreenPageLimit(1);
     }
 
+    private void initBottomMenu() {
+        if (isLike) {
+            mLike.setImageResource(R.drawable.ic_liked);
+        } else {
+            mLike.setImageResource(R.drawable.ic_like);
+        }
+    }
+
+    private void requestData() {
+        RestClient.builder()
+                .url(Api.GET_POST_INFO)
+                .params("pid", pid)
+                .success(response -> {
+                    JSONObject object = JSON.parseObject(response);
+                    String result = object.getString("result");
+                    if (TextUtils.equals(result, "ok")) {
+                        String content = object.getJSONObject("post").getString("content");
+                        String images = object.getJSONObject("post").getJSONObject("imagesUrl").toJSONString();
+                        String device = object.getJSONObject("post").getString("device");
+                        long time = object.getJSONObject("post").getLongValue("time");
+                        int likeCount = object.getJSONObject("post").getIntValue("likeCount");
+                        int commentCount = object.getJSONObject("post").getIntValue("commentCount");
+                        int shareCount = object.getJSONObject("post").getIntValue("shareCount");
+
+                        List<String> imgUrls = JsonParseUtil.parseImgs(images);
+                        mContent.setContent(TextUtil.text2Post(content));
+                        mGridView.setAdapter(new NineAdapter(imgUrls, this));
+                        mTime.setText(DateUtil.getTime(time));
+                        mDevice.setText(device);
+
+                        mTabLayout.getTitleView(0).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.like), likeCount));
+                        mTabLayout.getTitleView(1).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.comment), commentCount));
+                        mTabLayout.getTitleView(2).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.share), shareCount));
+                    } else {
+                        Toasty.error(this, "请求错误，请重试", Toasty.LENGTH_SHORT).show();
+                    }
+                })
+                .error((code, msg) -> Toasty.error(this, "请求错误，请重试 " + code, Toasty.LENGTH_SHORT).show())
+                .build()
+                .get();
+
+        RestClient.builder()
+                .url(Api.USER_INFO)
+                .params("uid", uid)
+                .success(response -> {
+                    JSONObject object = JSON.parseObject(response);
+                    String result = object.getString("result");
+                    if (TextUtils.equals(result, "ok")) {
+                        String avatar = object.getString("avatar");
+                        String username = object.getString("username");
+
+                        Glide.with(this)
+                                .load(avatar == null ? Constant.DEFAULT_AVATAR : avatar)
+                                .into(mAvatar);
+
+                        mUsername.setText(username == null ? String.valueOf(uid).substring(8) : username);
+                    } else {
+                        Toasty.error(this, "请求错误，请重试", Toasty.LENGTH_SHORT).show();
+                    }
+                })
+                .error((code, msg) -> Toasty.error(this, "请求错误，请重试 " + code, Toasty.LENGTH_SHORT).show())
+                .build()
+                .get();
+    }
+
     @OnClick(R2.id.ll_edit)
     void openBottomDialog() {
         initBottomDialog();
     }
 
+    @OnClick(R2.id.btn_follow)
+    void follow() {
+        if (TextUtils.equals(mFollowButton.getText().toString(), "关注")) {
+            RestClient.builder()
+                    .url(Api.PAY_USER)
+                    .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("focusedId", uid)
+                    .success(r -> {
+                        String result = JSON.parseObject(r).getString("result");
+                        if (TextUtils.equals(result, "ok")) {
+                            mFollowButton.setText("已关注");
+                        } else {
+                            Toasty.error(this, "关注失败 ", Toasty.LENGTH_SHORT).show();
+                        }
+                    })
+                    .error((code, msg) -> Toasty.error(this, "关注失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        } else {
+            RestClient.builder()
+                    .url(Api.CANCEL_PAY_USER)
+                    .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("focusedId", uid)
+                    .success(r -> {
+                        String result = JSON.parseObject(r).getString("result");
+                        if (TextUtils.equals(result, "ok")) {
+                            mFollowButton.setText("关注");
+                        } else {
+                            Toasty.error(this, "取消失败 ", Toasty.LENGTH_SHORT).show();
+                        }
+                    })
+                    .error((code, msg) -> Toasty.error(this, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        }
+    }
+
     @OnClick(R2.id.iv_like)
     void doLike() {
-
+        if (!isLike) {
+            RestClient.builder()
+                    .url(Api.THUMBSUP_POST)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pid", pid)
+                    .success(r -> {
+                        mLike.setImageResource(R.drawable.ic_liked);
+                        isLike = true;
+                    })
+                    .error((code, msg) -> Toasty.error(this, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        } else {
+            RestClient.builder()
+                    .url(Api.CANCEL_THUMBSUP_POST)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pid", pid)
+                    .success(r -> {
+                        mLike.setImageResource(R.drawable.ic_like);
+                        isLike = false;
+                    })
+                    .error((code, msg) -> Toasty.error(this, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        }
     }
 
     @OnClick(R2.id.iv_collect)

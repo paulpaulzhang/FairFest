@@ -1,7 +1,12 @@
 package cn.paulpaulzhang.fair.activities;
 
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
+
+import com.gyf.immersionbar.ImmersionBar;
 
 /**
  * 项目名：   FairFest
@@ -12,6 +17,11 @@ import androidx.appcompat.widget.Toolbar;
  * 描述：     应用activity
  */
 public abstract class FairActivity extends PermissionCheckerActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     public void initToolbar(Toolbar mToolbar) {
         setSupportActionBar(mToolbar);

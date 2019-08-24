@@ -17,6 +17,7 @@ import java.util.List;
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.net.RestClient;
+import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -80,7 +81,6 @@ public class TopicDelegate extends AbstractDelegate {
             if (item != null) {
                 Intent intent = new Intent(getContext(), TopicDetailActivity.class);
                 intent.putExtra("name", item.getTopicCache().getName());
-                intent.putExtra("tid", item.getTopicCache().getId());
                 startActivity(intent);
             }
         });
@@ -91,51 +91,59 @@ public class TopicDelegate extends AbstractDelegate {
         int position = mAdapter.getData().size();
 
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA);
-            List<TopicCache> topicCaches = topicBox.getAll();
-            List<Topic> items = new ArrayList<>();
-            long count = Math.min(topicBox.count(), Constant.LOAD_MAX_DATABASE);
-            for (int i = 0; i < count; i++) {
-                TopicCache topicCache = topicCaches.get(i);
-                items.add(new Topic(topicCache));
-            }
-            mAdapter.setNewData(items);
-            mSwipeRefresh.setRefreshing(false);
+            requestData(0, Constant.REFRESH_DATA, response -> {
+                JsonParseUtil.parseTopic(response, Constant.REFRESH_DATA);
+                List<TopicCache> topicCaches = topicBox.getAll();
+                List<Topic> items = new ArrayList<>();
+                long count = Math.min(topicBox.count(), Constant.LOAD_MAX_DATABASE);
+                for (int i = 0; i < count; i++) {
+                    TopicCache topicCache = topicCaches.get(i);
+                    items.add(new Topic(topicCache));
+                }
+                mAdapter.setNewData(items);
+                mSwipeRefresh.setRefreshing(false);
+            });
+
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = topicBox.count();
             if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(size, Constant.LOAD_MORE_DATA);
-                if (size == topicBox.count()) {
-                    mAdapter.loadMoreEnd(true);
-                    return;
-                }
-            }
-            List<TopicCache> topicCaches = topicBox.getAll();
-            List<Topic> items = new ArrayList<>();
+                requestData(size, Constant.LOAD_MORE_DATA, response -> {
+                    JsonParseUtil.parseTopic(response, Constant.LOAD_MORE_DATA);
 
-            long count = Math.min(topicBox.count() - position, Constant.LOAD_MAX_DATABASE);
-            for (int i = position; i < count; i++) {
-                TopicCache topicCache = topicCaches.get(i);
-                items.add(new Topic(topicCache));
+                    if (size == topicBox.count()) {
+                        mAdapter.loadMoreEnd(true);
+                        return;
+                    }
+
+                    List<TopicCache> topicCaches = topicBox.getAll();
+                    List<Topic> items = new ArrayList<>();
+
+                    long count = Math.min(topicBox.count() - position, Constant.LOAD_MAX_DATABASE);
+                    for (int i = position; i < count; i++) {
+                        TopicCache topicCache = topicCaches.get(i);
+                        items.add(new Topic(topicCache));
+                    }
+                    mAdapter.addData(items);
+                    mAdapter.loadMoreComplete();
+                });
             }
-            mAdapter.addData(items);
-            mAdapter.loadMoreComplete();
+
         }
     }
 
-    private void requestData(long start, int type) {
+    private void requestData(long start, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url(Api.TOPIC_LIST)
-                    .success(r -> JsonParseUtil.parseTopic(r, type))
-                    .error((code, msg) -> FairLogger.d(code))
+                    .success(success)
+                    .error((code, msg) -> mSwipeRefresh.setRefreshing(false))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
                     .url(Api.TOPIC_LIST)
                     .success(r -> JsonParseUtil.parseTopic(r, type))
-                    .error((code, msg) -> FairLogger.d(code))
+                    .error((code, msg) -> mSwipeRefresh.setRefreshing(false))
                     .build()
                     .get();
         }

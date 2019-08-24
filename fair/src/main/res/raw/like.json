@@ -1,3 +1,58 @@
 {
-  "like": false
+  "user": {
+    "user2": {
+      "username": "heshan",
+      "uid": 99999999,
+      "background": null
+    },
+    "user1": {
+      "username": "heshan",
+      "uid": 88888888,
+      "background": null
+    }
+  },
+  "isLike": {
+    "post2": true,
+    "post1": false
+  },
+  "post": {
+    "post2": {
+      "pid": 1222222222222222,
+      "uid": 99999999,
+      "type": 1,
+      "title": null,
+      "content": "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "imagesUrl": {
+        "images": {
+          "i1": "/img1",
+          "i2": "/img2",
+          "i3": "/img3"
+        }
+      },
+      "likeCount": 0,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566101935783,
+      "device": "oppo"
+    },
+    "post1": {
+      "pid": 1299011883499552,
+      "uid": 88888888,
+      "type": 0,
+      "title": "标题",
+      "content": "权利就是责任",
+      "imagesUrl": {
+        "images": {
+          "i1": "/img1",
+          "i2": "/img2",
+          "i3": "/img3"
+        }
+      },
+      "likeCount": 0,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566101935783,
+      "device": "oppo"
+    }
+  }
 }

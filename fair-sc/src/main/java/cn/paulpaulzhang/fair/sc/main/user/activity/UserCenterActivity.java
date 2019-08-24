@@ -37,6 +37,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
 import com.yalantis.ucrop.UCrop;
+import com.yalantis.ucrop.UCropActivity;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
@@ -214,6 +215,47 @@ public class UserCenterActivity extends FairActivity {
             startActivity(intent);
         });
 
+        mFollow.setOnClickListener(v -> {
+            if (TextUtils.equals(mFollow.getText().toString(), "关注")) {
+                RestClient.builder()
+                        .url(Api.PAY_USER)
+                        .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("focusedId", uid)
+                        .success(r -> {
+                            String result = JSON.parseObject(r).getString("result");
+                            int count = Integer.parseInt(mFansCount.getText().toString());
+                            if (TextUtils.equals(result, "ok")) {
+                                mFollow.setText("已关注");
+                                mFansCount.setText(String.valueOf(count + 1));
+                            } else {
+                                Toasty.error(this, "关注失败 ", Toasty.LENGTH_SHORT).show();
+                            }
+                        })
+                        .error((code, msg) -> Toasty.error(this, "关注失败 " + code, Toasty.LENGTH_SHORT).show())
+                        .build()
+                        .post();
+            } else {
+                RestClient.builder()
+                        .url(Api.CANCEL_PAY_USER)
+                        .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("focusedId", uid)
+                        .success(r -> {
+                            String result = JSON.parseObject(r).getString("result");
+                            int count = Integer.parseInt(mFansCount.getText().toString());
+                            if (TextUtils.equals(result, "ok")) {
+                                mFollow.setText("关注");
+                                mFansCount.setText(String.valueOf(count - 1));
+                            } else {
+                                Toasty.error(this, "取消失败 ", Toasty.LENGTH_SHORT).show();
+                            }
+                        })
+                        .error((code, msg) -> Toasty.error(this, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                        .build()
+                        .post();
+            }
+
+        });
+
         mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
             if (verticalOffset == 0) {
                 //展开
@@ -301,7 +343,8 @@ public class UserCenterActivity extends FairActivity {
         } else {
             mBackground.setImageResource(R.mipmap.user_background);
         }
-        mName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
+        mName.setText(user.getUsername() == null ?
+                String.valueOf(user.getId()).substring(8) : user.getUsername());
         mTitleName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
         mIntroduction.setText(user.getIntroduction() != null ? user.getIntroduction() : "这个人很懒，什么也没有写");
         mPayCount.setText(String.valueOf(user.getPaysCount()));
@@ -368,8 +411,8 @@ public class UserCenterActivity extends FairActivity {
 
         RestClient.builder()
                 .url(Api.IS_PAY_USER)
-                .params("currentId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
-                .params("uid", uid)
+                .params("focuserId", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .params("focusedId", uid)
                 .success(r -> {
                     String result = JSON.parseObject(r).getString("result");
                     if (TextUtils.equals(result, "已关注")) {
@@ -441,9 +484,9 @@ public class UserCenterActivity extends FairActivity {
         Uri destinationUri = Uri.fromFile(new File(getExternalCacheDir(),
                 FileUtil.getFileNameByTime("FairSchool", FileUtil.getExtension(uri.getPath()))));
         UCrop.Options options = new UCrop.Options();
-        options.setToolbarColor(getColor(R.color.colorPrimary)); // 设置标题栏颜色
-        options.setStatusBarColor(getColor(R.color.colorPrimaryDark)); //设置状态栏颜色
-        options.setToolbarWidgetColor(getColor(android.R.color.white));
+        options.setToolbarColor(getColor(R.color.colorAccent)); // 设置标题栏颜色
+        options.setStatusBarColor(getColor(R.color.colorAccent)); //设置状态栏颜色
+        options.setToolbarWidgetColor(getColor(android.R.color.black));
         UCrop.of(uri, destinationUri)
                 .withAspectRatio(DimenUtil.getScreenWidthByDp(), 360)
                 .withMaxResultSize(1080, 1080)
@@ -480,6 +523,7 @@ public class UserCenterActivity extends FairActivity {
                 Intent intent = new Intent(UserCenterActivity.this, MessageActivity.class);
                 intent.putExtra("uid", String.valueOf(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())));
                 intent.putExtra("username", String.valueOf(user.getId()));
+                intent.putExtra("appkey", "");
                 startActivity(intent);
             }
 

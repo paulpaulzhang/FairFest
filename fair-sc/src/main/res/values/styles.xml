@@ -7,6 +7,12 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MyToolbarTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
     <style name="OverFlowMenuTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- 设置Menu菜单的背景色 -->
         <item name="android:itemBackground">@android:color/white</item>
@@ -14,6 +20,13 @@
         <item name="android:textColorPrimary">@android:color/black</item>
         <!-- 设置Menu窗口不覆盖Toolbar视图 -->
         <item name="overlapAnchor">false</item>
+    </style>
+
+    <style name="TextInputLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:colorAccent">@color/colorAccent</item>
+        <item name="boxStrokeColor">@color/colorAccent</item>
+        <item name="helperTextTextColor">@color/colorAccent</item>
+        <item name="hintTextColor">@color/colorAccent</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -44,7 +57,6 @@
         <item name="cornerRadius">200dp</item>
         <item name="strokeColor">@android:color/white</item>
         <item name="iconTint">@android:color/white</item>
-        <item name="android:iconTintMode">src_over</item>
     </style>
 
     <style name="MyMaterialButton.OutLine.White.Default" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -61,7 +73,7 @@
     </style>
 
     <style name="ToolbarTitleText" parent="TextAppearance.AppCompat.Medium">
-        <item name="android:textColor">@color/font_tab</item>
+        <item name="android:textColor">@color/font_default</item>
     </style>
 
     <style name="transparentTextMedium" parent="TextAppearance.AppCompat.Medium">
@@ -87,8 +99,8 @@
     </style>
 
     <style name="Matisse.Zhihu.Custom" parent="Matisse.Zhihu">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="toolbar">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="bottomToolbar.apply.textColor">@color/colorAccent</item>
         <item name="preview.bottomToolbar.apply.textColor">@color/colorAccent</item>

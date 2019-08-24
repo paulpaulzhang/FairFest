@@ -6,16 +6,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.PixelCopy;
 import android.view.View;
 import android.view.Window;
 
+import androidx.annotation.IdRes;
+import androidx.annotation.RequiresApi;
+
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.controller.AbstractDraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
+import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.zhihu.matisse.Matisse;
@@ -67,17 +73,13 @@ public class ImageUtil {
         simpleDraweeView.setController(controller);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public static void convertLayoutToBitmap(Window window, View view, Bitmap dest,
                                              PixelCopy.OnPixelCopyFinishedListener listener) {
         //获取layout的位置
         final int[] location = new int[2];
         view.getLocationInWindow(location);
         //请求转换
-
-        FairLogger.d("window", window);
-        FairLogger.d("view", view);
-        FairLogger.d("dest", dest);
-        FairLogger.d("listener", listener);
 
         PixelCopy.request(window,
                 new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight()),

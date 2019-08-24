@@ -98,16 +98,21 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:bufferType="spannable"
+                <com.ctetin.expandabletextviewlibrary.ExpandableTextView
                     android:id="@+id/tv_content_dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
+                    android:bufferType="spannable"
                     android:lineSpacingExtra="5dp"
                     android:minHeight="50dp"
                     android:textColor="@android:color/black"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    app:ep_link_color="@color/colorAccent"
+                    app:ep_need_link="true"
+                    app:ep_need_mention="true"
+                    app:ep_need_self="true"
+                    app:ep_self_color="@color/colorAccent" />
 
                 <cn.paulpaulzhang.fair.ui.view.MyGridView
                     android:id="@+id/gv_images_dynamic"
@@ -132,9 +137,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@color/colorPrimary"
+                android:theme="@style/MyToolbarTheme"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/OverFlowMenuTheme"
-                app:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar" />
+                app:popupTheme="@style/OverFlowMenuTheme" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.flyco.tablayout.SlidingTabLayout

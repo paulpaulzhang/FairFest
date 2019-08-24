@@ -1,34 +1,113 @@
 {
-  "post": [
-    post1, post2, post3, post4...
-  ],
-
-  "like": [
-    {
-      "post1id": 123456,
-      "like": true
+  "post": {
+    "post1": {
+      "pid": 1299392556433440,
+      "uid": 1299290431422496,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙# 哈哈",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 0,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566283454500,
+      "device": "MI CC 9"
     },
-    {
-      "post2id": 123456,
-      "like": true
+    "post2": {
+      "pid": 1299374596423712,
+      "uid": 1298556797321248,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙# ",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566274890973,
+      "device": "MI CC 9"
     },
-    {
-      "post3id": 123456,
-      "like": true
+    "post3": {
+      "pid": 1299292507602976,
+      "uid": 1299290431422496,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙# zlm~",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566235747729,
+      "device": "MI CC 9"
     },
-    ......
-  ],
-  "user": [
-    user1, user2, user3, user4...
-  ],
-
-  或者
-  "like": [
-    true,
-    false,
-    true,
-    false,
-    true
-  ],
-  顺序与post里面的帖子顺序一致就行
+    "post4": {
+      "pid": 1299292463562784,
+      "uid": 1299290431422496,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙#zlm",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566235726256,
+      "device": "MI CC 9"
+    },
+    "post5": {
+      "pid": 1299292440494112,
+      "uid": 1298556797321248,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙# ",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1566235715450,
+      "device": "MI CC 9"
+    }
+  },
+  "user": {
+    "user1": {
+      "username": null,
+      "uid": 1299290431422496,
+      "avatar": null
+    },
+    "user2": {
+      "username": "paulpaulzhang",
+      "uid": 1298556797321248,
+      "avatar": null
+    },
+    "user3": {
+      "username": null,
+      "uid": 1299290431422496,
+      "avatar": null
+    },
+    "user4": {
+      "username": null,
+      "uid": 1299290431422496,
+      "avatar": null
+    },
+    "user5": {
+      "username": "paulpaulzhang",
+      "uid": 1298556797321248,
+      "avatar": null
+    }
+  },
+  "isLike": {
+    "1299392556433440": false,
+    "1299374596423712": false,
+    "1299292507602976": false,
+    "1299292463562784": false,
+    "1299292440494112": false
+  }
 }

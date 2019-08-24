@@ -20,12 +20,15 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
+import com.gyf.immersionbar.ImmersionBar;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -33,16 +36,23 @@ import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
+import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicDetailAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
+import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -97,21 +107,30 @@ public class TopicDetailActivity extends FairActivity {
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
-        tid = intent.getLongExtra("tid", 0L);
 
         initToolbar(mToolbar);
         initCollapsing();
         initSwipeRefresh();
         initRecyclerView();
+        Box<TopicPostCache> postCacheBox = ObjectBox.get().boxFor(TopicPostCache.class);
+        Box<TopicUserCache> userCacheBox = ObjectBox.get().boxFor(TopicUserCache.class);
+        Box<TopicLikeCache> likeCacheBox = ObjectBox.get().boxFor(TopicLikeCache.class);
+        postCacheBox.removeAll();
+        userCacheBox.removeAll();
+        likeCacheBox.removeAll();
         mSwipeRefresh.setRefreshing(true);
-        loadData(Constant.REFRESH_DATA);
+        loadHeaderData();
+
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true)
+                .init();
     }
 
     @SuppressLint("SetTextI18n")
     private void initCollapsing() {
         mCollapsingToolbarLayout.setTitleEnabled(true);
         mCollapsingToolbarLayout.setTitle(name);
-        ImageUtil.setBlurImage(this, mBg, R.drawable.ic_topic_128, 25);
         mAvatar.setImageResource(R.drawable.ic_topic_128);
         mDiscuss.setText(0 + " 讨论");
         mFollow.setText(0 + " 关注");
@@ -128,12 +147,26 @@ public class TopicDetailActivity extends FairActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setLoadMoreView(new SimpleLoadMoreView());
+        mAdapter.disableLoadMoreIfNotFullPage(mRecyclerView);
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             TopicDetail item = (TopicDetail) adapter.getItem(position);
             if (item != null) {
-                Toasty.info(this, item.getTopicPostCache().getId() + "", Toasty.LENGTH_SHORT, true).show();
+                if (item.getItemType() == TopicDetail.DYNAMIC) {
+                    Intent intent = new Intent(this, DynamicActivity.class);
+                    intent.putExtra("pid", item.getTopicPostCache().getId());
+                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(this, ArticleActivity.class);
+                    intent.putExtra("pid", item.getTopicPostCache().getId());
+                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
+                    startActivity(intent);
+                }
+
             }
         });
     }
@@ -172,9 +205,7 @@ public class TopicDetailActivity extends FairActivity {
                             Toasty.error(TopicDetailActivity.this, "关注失败", Toasty.LENGTH_SHORT).show();
                         }
                     })
-                    .error(((code, msg) -> {
-                        Toasty.error(TopicDetailActivity.this, "关注失败 " + code, Toasty.LENGTH_SHORT).show();
-                    }))
+                    .error(((code, msg) -> Toasty.error(TopicDetailActivity.this, "关注失败 " + code, Toasty.LENGTH_SHORT).show()))
                     .build()
                     .post();
         } else {
@@ -207,14 +238,13 @@ public class TopicDetailActivity extends FairActivity {
                 .url(Api.SINGLE_TOPIC)
                 .params("tname", name)
                 .success(r -> {
-                    FairLogger.d("Header", r);
                     JSONObject jsonObject = JSON.parseObject(r);
                     String imgUrl = jsonObject.getString("imageUrl");
-                    int payCount = jsonObject.getInteger("payCount");
-                    int postCount = jsonObject.getInteger("postCount");
-
+                    int payCount = jsonObject.getIntValue("payCount");
+                    int postCount = jsonObject.getIntValue("postCount");
+                    tid = jsonObject.getLongValue("tid");
                     if (imgUrl == null || TextUtils.equals(imgUrl, "")) {
-                        ImageUtil.setBlurImage(this, mBg, R.drawable.ic_topic_128, 25);
+                        ImageUtil.setBlurImage(this, mBg, Constant.DEFAULT_AVATAR, 25);
                         mAvatar.setImageResource(R.drawable.ic_topic_128);
                     } else {
                         ImageUtil.setBlurImage(this, mBg, imgUrl, 25);
@@ -222,6 +252,7 @@ public class TopicDetailActivity extends FairActivity {
                     }
                     mDiscuss.setText(postCount + " 讨论");
                     mFollow.setText(payCount + " 关注");
+                    loadData(Constant.REFRESH_DATA);
                 })
                 .error((code, msg) -> FairLogger.d("Header", code))
                 .build()
@@ -243,65 +274,87 @@ public class TopicDetailActivity extends FairActivity {
                 .get();
     }
 
+    private int page = 0;
+
     private void loadData(int type) {
         Box<TopicPostCache> postBox = ObjectBox.get().boxFor(TopicPostCache.class);
+        Box<TopicLikeCache> likeBox = ObjectBox.get().boxFor(TopicLikeCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            loadHeaderData();
-            requestData(0, Constant.REFRESH_DATA);
-            List<TopicPostCache> topicPostCaches = postBox.getAll();
-            List<TopicDetail> items = new ArrayList<>();
-            long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-            for (int i = 0; i < count; i++) {
-                TopicPostCache topicPostCache = topicPostCaches.get(i);
-                items.add(new TopicDetail(topicPostCache.getType(), topicPostCache));
-            }
-            mAdapter.setNewData(items);
-            mSwipeRefresh.setRefreshing(false);
+            requestData(0, Constant.REFRESH_DATA, response -> {
+                page = 0;
+                JsonParseUtil.parseTopicPost(response, Constant.REFRESH_DATA);
+                List<TopicPostCache> topicPostCaches = postBox.query().orderDesc(TopicPostCache_.time).build().find();
+                List<TopicDetail> items = new ArrayList<>();
+                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
+                for (int i = 0; i < count; i++) {
+                    TopicPostCache topicPostCache = topicPostCaches.get(i);
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(TopicLikeCache_.pid, topicPostCache.getId()).build().findFirst()).isLike();
+                    items.add(new TopicDetail(topicPostCache.getType(), topicPostCache, isLike));
+                }
+                mAdapter.setNewData(items);
+                mSwipeRefresh.setRefreshing(false);
+            });
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
             if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(size, Constant.LOAD_MORE_DATA);
-                if (size == postBox.count()) {
-                    mAdapter.loadMoreEnd(true);
-                    return;
-                }
+                requestData(page, Constant.LOAD_MORE_DATA, response -> {
+                    page += 1;
+                    JsonParseUtil.parseTopicPost(response, Constant.LOAD_MORE_DATA);
+                    List<TopicPostCache> topicPostCaches = postBox.getAll();
+                    List<TopicDetail> items = new ArrayList<>();
+                    if (size == postBox.count()) {
+                        mAdapter.loadMoreEnd(true);
+                        return;
+                    }
+                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
+                    for (int i = position; i < count; i++) {
+                        TopicPostCache topicPostCache = topicPostCaches.get(i);
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(TopicLikeCache_.pid, topicPostCache.getId()).build().findFirst()).isLike();
+                        items.add(new TopicDetail(topicPostCache.getType(), topicPostCache, isLike));
+                    }
+                    mAdapter.addData(items);
+                    mAdapter.loadMoreComplete();
+                });
             }
-            List<TopicPostCache> topicPostCaches = postBox.getAll();
-            List<TopicDetail> items = new ArrayList<>();
 
-            long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-            for (int i = position; i < count; i++) {
-                TopicPostCache topicPostCache = topicPostCaches.get(i);
-                items.add(new TopicDetail(topicPostCache.getType(), topicPostCache));
-            }
-            mAdapter.addData(items);
-            mAdapter.loadMoreComplete();
         }
     }
 
     /**
      * 从服务器下载数据到数据库
      *
-     * @param start 开始位置
-     * @param type  加载类型（刷新数据，加载更多）
+     * @param page 页数
+     * @param type 加载类型（刷新数据，加载更多）
      */
-    private void requestData(long start, int type) {
+    private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("position", 0)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseTopicPost(r, type))
+                    .url(Api.GET_POST_BY_TOPIC_ID)
+                    .params("pageNo", 0)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .params("tid", tid)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .success(success)
+                    .error(((code, msg) -> {
+                        Toasty.error(this, "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    }))
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("position", start)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseTopicPost(r, type))
+                    .url(Api.GET_POST_BY_TOPIC_ID)
+                    .params("pageNo", page)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .params("tid", tid)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .success(success)
+                    .error(((code, msg) -> {
+                        Toasty.error(this, "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    }))
                     .build()
                     .get();
         }

@@ -81,8 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textSize="18sp" />
 
         <cn.paulpaulzhang.fair.ui.view.MyGridView
             android:id="@+id/gv_images_article"
@@ -97,7 +96,7 @@
 
         <com.ctetin.expandabletextviewlibrary.ExpandableTextView
             android:id="@+id/etv_content_article"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:bufferType="spannable"

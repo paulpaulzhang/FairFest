@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -21,6 +22,7 @@ import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.alibaba.fastjson.JSON;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.gyf.immersionbar.ImmersionBar;
 import com.sunhapper.x.spedit.SpUtil;
 import com.sunhapper.x.spedit.view.SpXEditText;
 import com.zhihu.matisse.Matisse;
@@ -124,6 +126,13 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
         initToolbar(mToolbar);
         initImagePicker();
         KeyBoardUtil.showKeyboard(mEdit);
+
+        ImmersionBar.with(this)
+                .fitsSystemWindows(true)
+                .statusBarDarkFont(true)
+                .keyboardEnable(true, WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
+                        | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)  //软键盘自动弹出
+                .init();
     }
 
     private void initImagePicker() {
@@ -267,7 +276,6 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
 
     @OnClick(R2.id.iv_send)
     void doSend() {
-        FairLoader.showLoading(this);
         List<File> files = new ArrayList<>();
         for (int i = 0; i < mAdapter.getData().size(); i++) {
             files.add(mAdapter.getData().get(i).getFile());
@@ -276,6 +284,7 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
             Toasty.info(this, "内容不能为空哦！", Toasty.LENGTH_SHORT).show();
             return;
         }
+        FairLoader.showLoading(this);
         UploadUtil util = UploadUtil.INSTANCE();
         util.uploadFile(this, files, new IUploadFileListener() {
             @Override
