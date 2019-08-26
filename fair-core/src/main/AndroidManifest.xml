@@ -9,7 +9,7 @@
         <receiver
             android:name=".receiver.JPushReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true"/>
     </application>
 
 </manifest>
