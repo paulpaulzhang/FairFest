@@ -1,16 +1,17 @@
-package cn.paulpaulzhang.fair.sc.main.interest.model;
+package cn.paulpaulzhang.fair.sc.main.user.model;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
 
 /**
- * 包名: cn.paulpaulzhang.fair.sc.main.interest.follow
- * 创建时间: 7/21/2019
- * 创建人: zlm31
- * 描述:
+ * 包名：cn.paulpaulzhang.fair.sc.main.user.model
+ * 创建时间：8/26/19
+ * 创建人： paulpaulzhang
+ * 描述：
  */
-public class TopicDetail implements MultiItemEntity {
+public class Dynamic implements MultiItemEntity {
+
     public static final int DYNAMIC = 0;
 
     public static final int ARTICLE = 1;
@@ -21,7 +22,7 @@ public class TopicDetail implements MultiItemEntity {
 
     private boolean isLike;
 
-    public TopicDetail(int itemType, PostCache postCache, boolean isLike) {
+    public Dynamic(int itemType, PostCache postCache, boolean isLike) {
         this.itemType = itemType;
         this.postCache = postCache;
         this.isLike = isLike;
@@ -36,11 +37,11 @@ public class TopicDetail implements MultiItemEntity {
         return postCache;
     }
 
-    public void setLike(boolean like) {
-        isLike = like;
-    }
-
     public boolean isLike() {
         return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
     }
 }

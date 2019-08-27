@@ -159,4 +159,6 @@ dependencies {
     api 'me.dkzwm.widget.srl:ext-horizontal:1.6.6.7.androidx'
     api 'me.dkzwm.widget.srl:ext-classics:1.6.6.7.androidx'
     api 'me.dkzwm.widget.srl:ext-two-level:1.6.6.7.androidx'
+
+    api 'com.tencent.bugly:crashreport:3.0.1'
 }

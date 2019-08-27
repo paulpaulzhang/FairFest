@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main.interest.adapter;
+package cn.paulpaulzhang.fair.sc.main.user.adapter;
 
 import android.content.Intent;
 import android.widget.GridView;
@@ -20,19 +20,20 @@ import java.util.List;
 
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
-import cn.paulpaulzhang.fair.constant.UserConfigs;
-import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.sc.main.user.model.Dynamic;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
@@ -41,26 +42,27 @@ import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
- * 包名: cn.paulpaulzhang.fair.sc.main.interest.follow
- * 创建时间: 7/21/2019
- * 创建人: zlm31
- * 描述:
+ * 包名：cn.paulpaulzhang.fair.sc.main.user.adapter
+ * 创建时间：8/26/19
+ * 创建人： paulpaulzhang
+ * 描述：
  */
-public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, BaseViewHolder> {
+public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewHolder> {
+
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
      *
      * @param data A new list is created out of this one to avoid mutable list
      */
-    public TopicDetailAdapter(List<TopicDetail> data) {
+    public DynamicAdapter(List<Dynamic> data) {
         super(data);
         addItemType(TopicDetail.DYNAMIC, R.layout.item_dynamic);
         addItemType(TopicDetail.ARTICLE, R.layout.item_article);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, TopicDetail item) {
+    protected void convert(BaseViewHolder helper, Dynamic item) {
         if (item.getItemType() == TopicDetail.DYNAMIC) {
             PostCache postCache = item.getPostCache();
             long id = postCache.getId();

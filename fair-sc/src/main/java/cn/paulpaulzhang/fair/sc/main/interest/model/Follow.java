@@ -19,6 +19,8 @@ public class Follow implements MultiItemEntity {
 
     private FollowPostCache followPostCache;
 
+    private boolean isLike;
+
     public Follow(int itemType, FollowPostCache followPostCache) {
         this.itemType = itemType;
         this.followPostCache = followPostCache;
@@ -31,5 +33,13 @@ public class Follow implements MultiItemEntity {
 
     public FollowPostCache getFollowPostCache() {
         return followPostCache;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
+    }
+
+    public boolean isLike() {
+        return isLike;
     }
 }

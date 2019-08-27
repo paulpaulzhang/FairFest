@@ -6,6 +6,7 @@ import android.app.Application;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +33,8 @@ public class FairApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(s -> FairLogger.d("RetrofitLog", s));
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(s -> {
+        });
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
         Fair.init(this)
                 .withApiHost("http://www.matchstickmen.club:8080/")
@@ -47,5 +49,7 @@ public class FairApp extends Application {
         JMessageClient.init(this);
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+
+        CrashReport.initCrashReport(getApplicationContext(), "d8656ddeab", false);
     }
 }

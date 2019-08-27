@@ -59,5 +59,6 @@
         <activity
             android:name=".main.user.activity.SettingActivity"
             android:label="@string/setting" />
+        <activity android:name=".main.interest.activity.BigEventActivity" />
     </application>
 </manifest>

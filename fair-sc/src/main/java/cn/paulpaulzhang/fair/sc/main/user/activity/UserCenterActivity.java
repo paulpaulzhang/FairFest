@@ -401,9 +401,7 @@ public class UserCenterActivity extends FairActivity {
                     user.setIntroduction(object.getString("introduction"));
                     user.setTime(object.getLong("time"));
                     loadUserData();
-
-                    AboutDelegate aboutDelegate = (AboutDelegate) mPagerAdapter.getItem(2);
-                    aboutDelegate.loadUserData(user);
+                    loadChildData();
                 })
                 .error((code, msg) -> FairLogger.d(code))
                 .build()
@@ -424,6 +422,15 @@ public class UserCenterActivity extends FairActivity {
                 .error(((code, msg) -> FairLogger.d(code)))
                 .build()
                 .get();
+    }
+
+    //加载子fragment的数据
+    private void loadChildData() {
+        DynamicDelegate dynamicDelegate = (DynamicDelegate) mPagerAdapter.getItem(0);
+        dynamicDelegate.loadData(Constant.REFRESH_DATA);
+
+        AboutDelegate aboutDelegate = (AboutDelegate) mPagerAdapter.getItem(2);
+        aboutDelegate.loadUserData(user);
     }
 
     private String getAlpha(int i) {
@@ -523,11 +530,14 @@ public class UserCenterActivity extends FairActivity {
                 Intent intent = new Intent(UserCenterActivity.this, MessageActivity.class);
                 intent.putExtra("uid", String.valueOf(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())));
                 intent.putExtra("username", String.valueOf(user.getId()));
-                intent.putExtra("appkey", "");
                 startActivity(intent);
             }
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public long getUid() {
+        return uid;
     }
 }

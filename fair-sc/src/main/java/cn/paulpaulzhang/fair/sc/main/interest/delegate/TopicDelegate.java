@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,6 @@ import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
 import io.objectbox.Box;
 
 /**
@@ -70,12 +67,10 @@ public class TopicDelegate extends AbstractDelegate {
     }
 
     private void initRecycler() {
-        mAdapter = new TopicAdapter(R.layout.view_topic_item, new ArrayList<>());
+        mAdapter = new TopicAdapter(R.layout.item_topic, new ArrayList<>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setLoadMoreView(new SimpleLoadMoreView());
         mAdapter.setPreLoadNumber(3);
-        mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Topic item = (Topic) adapter.getItem(position);
             if (item != null) {
@@ -88,10 +83,9 @@ public class TopicDelegate extends AbstractDelegate {
 
     public void loadData(int type) {
         Box<TopicCache> topicBox = ObjectBox.get().boxFor(TopicCache.class);
-        int position = mAdapter.getData().size();
 
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA, response -> {
+            requestData(response -> {
                 JsonParseUtil.parseTopic(response, Constant.REFRESH_DATA);
                 List<TopicCache> topicCaches = topicBox.getAll();
                 List<Topic> items = new ArrayList<>();
@@ -103,50 +97,17 @@ public class TopicDelegate extends AbstractDelegate {
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);
             });
-
-        } else if (type == Constant.LOAD_MORE_DATA) {
-            long size = topicBox.count();
-            if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(size, Constant.LOAD_MORE_DATA, response -> {
-                    JsonParseUtil.parseTopic(response, Constant.LOAD_MORE_DATA);
-
-                    if (size == topicBox.count()) {
-                        mAdapter.loadMoreEnd(true);
-                        return;
-                    }
-
-                    List<TopicCache> topicCaches = topicBox.getAll();
-                    List<Topic> items = new ArrayList<>();
-
-                    long count = Math.min(topicBox.count() - position, Constant.LOAD_MAX_DATABASE);
-                    for (int i = position; i < count; i++) {
-                        TopicCache topicCache = topicCaches.get(i);
-                        items.add(new Topic(topicCache));
-                    }
-                    mAdapter.addData(items);
-                    mAdapter.loadMoreComplete();
-                });
-            }
-
         }
     }
 
-    private void requestData(long start, int type, ISuccess success) {
-        if (type == Constant.REFRESH_DATA) {
-            RestClient.builder()
-                    .url(Api.TOPIC_LIST)
-                    .success(success)
-                    .error((code, msg) -> mSwipeRefresh.setRefreshing(false))
-                    .build()
-                    .get();
-        } else if (type == Constant.LOAD_MORE_DATA) {
-            RestClient.builder()
-                    .url(Api.TOPIC_LIST)
-                    .success(r -> JsonParseUtil.parseTopic(r, type))
-                    .error((code, msg) -> mSwipeRefresh.setRefreshing(false))
-                    .build()
-                    .get();
-        }
+    private void requestData(ISuccess success) {
+        RestClient.builder()
+                .url(Api.TOPIC_LIST)
+                .success(success)
+                .error((code, msg) -> mSwipeRefresh.setRefreshing(false))
+                .build()
+                .get();
+
     }
 
 }

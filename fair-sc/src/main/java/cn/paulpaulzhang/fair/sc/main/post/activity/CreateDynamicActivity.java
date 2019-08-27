@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -136,7 +135,7 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
     }
 
     private void initImagePicker() {
-        mAdapter = new ImagePickerAdapter(R.layout.view_image_picker_item, new ArrayList<>());
+        mAdapter = new ImagePickerAdapter(R.layout.item_image_picker, new ArrayList<>());
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         mImagePicker.setLayoutManager(manager);
         mImagePicker.setAdapter(mAdapter);
@@ -254,7 +253,7 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
         dialog.cornerRadius(8f, null);
         RecyclerView recyclerView = customerView.findViewById(R.id.rv_topic_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TopicAdapter mAdapter = new TopicAdapter(R.layout.view_topic_item, topics);
+        TopicAdapter mAdapter = new TopicAdapter(R.layout.item_topic, topics);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Topic topic = (Topic) adapter.getItem(position);

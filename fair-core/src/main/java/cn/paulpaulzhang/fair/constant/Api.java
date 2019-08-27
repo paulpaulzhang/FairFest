@@ -53,6 +53,10 @@ public class Api {
 
     public static final String GET_POST_INFO = "matchstickmen/getPostMessage.action";
 
-    public static final String GET_POST_BY_TOPIC_ID = "matchstickmen/getPostAllByTid.action";
+    public static final String GET_POST_BY_TID = "matchstickmen/getPostAllByTid.action";
+
+    public static final String GET_POST_BY_UID = "matchstickmen/getPostByUid.action";
+
+    public static final String GET_POST_BY_UID_PAY_ALL_UID = "matchstickmen/getPostByUidPayAllUid.action";
 
 }

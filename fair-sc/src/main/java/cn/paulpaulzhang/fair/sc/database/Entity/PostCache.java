@@ -14,7 +14,7 @@ import io.objectbox.annotation.Uid;
  */
 
 @Entity
-public class TopicPostCache {
+public class PostCache {
 
     @Id(assignable = true)
     private long id; //帖子id
@@ -39,17 +39,20 @@ public class TopicPostCache {
 
     private String device; //设备型号
 
-    public TopicPostCache(long id,
-                          long uid,
-                          int type,
-                          String title,
-                          String content,
-                          String imagesUrl,
-                          int likeCount,
-                          int commentCount,
-                          int shareCount,
-                          long time,
-                          String device) {
+    public PostCache() {
+    }
+
+    public PostCache(long id,
+                     long uid,
+                     int type,
+                     String title,
+                     String content,
+                     String imagesUrl,
+                     int likeCount,
+                     int commentCount,
+                     int shareCount,
+                     long time,
+                     String device) {
         this.id = id;
         this.uid = uid;
         this.type = type;

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -53,7 +54,7 @@ public class SettingActivity extends FairActivity {
 
     @OnClick(R2.id.btn_logout)
     void logout() {
-        new MaterialAlertDialogBuilder(this)
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                 .setTitle("退出登录")
                 .setMessage("点击确认将退出当前登录")
                 .setPositiveButton("确认", (dialogInterface, i) -> {
@@ -68,6 +69,8 @@ public class SettingActivity extends FairActivity {
                 })
                 .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
                 .show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(android.R.color.holo_red_light));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.font_default));
     }
 
     @Override

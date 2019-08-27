@@ -64,7 +64,7 @@ public class ShareDelegate extends FairDelegate {
             items.add(new Share(url, "Paul"));
         }
 
-        mAdapter = new ShareAdapter(R.layout.view_share_item, items);
+        mAdapter = new ShareAdapter(R.layout.item_share, items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {

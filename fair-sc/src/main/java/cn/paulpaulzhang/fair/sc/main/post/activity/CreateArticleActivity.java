@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,13 +22,10 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
 import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sunhapper.x.spedit.SpUtil;
 import com.sunhapper.x.spedit.view.SpXEditText;
-import com.sunhapper.x.spedit.view.SpXTextView;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
@@ -52,7 +48,6 @@ import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
-import cn.paulpaulzhang.fair.net.callback.IError;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
@@ -143,7 +138,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
     }
 
     private void initImagePicker() {
-        mAdapter = new ImagePickerAdapter(R.layout.view_image_picker_item, new ArrayList<>());
+        mAdapter = new ImagePickerAdapter(R.layout.item_image_picker, new ArrayList<>());
         GridLayoutManager manager = new GridLayoutManager(this, 3);
         mImagePicker.setLayoutManager(manager);
         mImagePicker.setAdapter(mAdapter);
@@ -262,7 +257,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
         dialog.cornerRadius(8f, null);
         RecyclerView recyclerView = customerView.findViewById(R.id.rv_topic_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        TopicAdapter mAdapter = new TopicAdapter(R.layout.view_topic_item, topics);
+        TopicAdapter mAdapter = new TopicAdapter(R.layout.item_topic, topics);
         recyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Topic topic = (Topic) adapter.getItem(position);

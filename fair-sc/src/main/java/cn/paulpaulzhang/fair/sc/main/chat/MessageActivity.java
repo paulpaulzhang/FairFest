@@ -46,6 +46,7 @@ import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.event.OfflineMessageEvent;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.R;
@@ -92,7 +93,6 @@ public class MessageActivity extends FairActivity implements
     private Conversation conversation;
     private BackgroundHandler mHandler;
     private String username;
-    private String appkey;
 
     @Override
     public int setLayout() {
@@ -104,19 +104,15 @@ public class MessageActivity extends FairActivity implements
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");  //发送方 id
         username = intent.getStringExtra("username"); //接收方 id
-        appkey = intent.getStringExtra("appkey");
 
         JMessageClient.registerEventReceiver(this);
         JMessageClient.enterSingleConversation(username);
 
         mHandler = new BackgroundHandler(this);
 
-        FairLogger.d(appkey);
-        if (appkey.isEmpty()) {
-            conversation = Conversation.createSingleConversation(username);
-        } else {
-            conversation = Conversation.createSingleConversation(username, appkey);
-        }
+
+        conversation = Conversation.createSingleConversation(username);
+
 
         conversation.setUnReadMessageCnt(0);
 
@@ -162,7 +158,7 @@ public class MessageActivity extends FairActivity implements
         if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
             List<String> paths = Matisse.obtainPathResult(data);
             try {
-                Message message = Transform.getMessage(JMessageClient.createSingleImageMessage(username, appkey, new File(paths.get(0))));
+                Message message = Transform.getMessage(JMessageClient.createSingleImageMessage(username, new File(paths.get(0))));
 
                 assert message != null;
                 mMessageListAdapter.addToStart(message, true);
@@ -199,10 +195,20 @@ public class MessageActivity extends FairActivity implements
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        Message message = Transform.getMessage(JMessageClient.createSingleTextMessage(username, appkey, input.toString()));
-
-        assert message != null;
-        mMessageListAdapter.addToStart(message, true);
+        FairLogger.d("SUBMIT");
+        cn.jpush.im.android.api.model.Message jmessage = JMessageClient.createSingleTextMessage(username, input.toString());
+        JMessageClient.sendMessage(jmessage);
+        jmessage.setOnSendCompleteCallback(new BasicCallback() {
+            @Override
+            public void gotResult(int i, String s) {
+                if (i == 0) {
+                    Message message = Transform.getMessage(jmessage);
+                    if (message != null) {
+                        mMessageListAdapter.addToStart(message, true);
+                    }
+                }
+            }
+        });
 
         return true;
     }

@@ -13,8 +13,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +26,8 @@ import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.BigEventActivity;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.DiscoveryAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
@@ -120,13 +120,15 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 .startTurning(5000)
                 .setOnItemClickListener(position -> Toast.makeText(getContext(), position + "", Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.ll_big_event).setOnClickListener(v -> {
-        });
+        view.findViewById(R.id.ll_big_event).setOnClickListener(v -> startActivity(new Intent(getContext(), BigEventActivity.class)));
         view.findViewById(R.id.ll_announcement).setOnClickListener(v -> {
         });
         view.findViewById(R.id.ll_course_table).setOnClickListener(v -> {
         });
         view.findViewById(R.id.ll_help).setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), TopicDetailActivity.class);
+            intent.putExtra("name", "校园帮");
+            startActivity(intent);
         });
         view.findViewById(R.id.ll_map).setOnClickListener(v -> {
         });

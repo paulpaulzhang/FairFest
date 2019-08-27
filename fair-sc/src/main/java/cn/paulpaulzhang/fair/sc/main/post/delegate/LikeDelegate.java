@@ -63,7 +63,7 @@ public class LikeDelegate extends FairDelegate {
             items.add(new LikeI(url, "Paul"));
         }
 
-        mAdapter = new LikeAdapter(R.layout.view_like_item, items);
+        mAdapter = new LikeAdapter(R.layout.item_like, items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {

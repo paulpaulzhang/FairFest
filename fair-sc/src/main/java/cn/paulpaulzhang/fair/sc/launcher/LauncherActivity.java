@@ -48,9 +48,10 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
 
     @OnClick(R2.id.tv_launcher_timer)
     void onClickTimerView() {
-        assert mTimer != null;
-        mTimer.cancel();
-        mTimer = null;
+        if (mTimer != null) {
+            mTimer.cancel();
+            mTimer = null;
+        }
         checkIsShowScroll();
     }
 

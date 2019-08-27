@@ -15,7 +15,6 @@ import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.net.RestClient;
@@ -52,8 +51,8 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
      */
     public FollowAdapter(List<Follow> data) {
         super(data);
-        addItemType(Follow.DYNAMIC, R.layout.view_dynamic_item);
-        addItemType(Follow.ARTICLE, R.layout.view_article_item);
+        addItemType(Follow.DYNAMIC, R.layout.item_dynamic);
+        addItemType(Follow.ARTICLE, R.layout.item_article);
     }
 
     @Override

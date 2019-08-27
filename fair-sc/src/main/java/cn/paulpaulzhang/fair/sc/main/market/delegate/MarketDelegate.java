@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main.market;
+package cn.paulpaulzhang.fair.sc.main.market.delegate;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,26 +6,32 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.facebook.drawee.view.SimpleDraweeView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
-import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.ProductCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.interest.delegate.AbstractDelegate;
+import cn.paulpaulzhang.fair.sc.main.market.adapter.ProductAdapter;
+import cn.paulpaulzhang.fair.sc.main.market.model.Product;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
-import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -37,12 +43,20 @@ import io.objectbox.Box;
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class MarketDelegate extends FairDelegate {
+public class MarketDelegate extends AbstractDelegate {
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
 
     @BindView(R2.id.civ_user)
     CircleImageView mUser;
+
+    @BindView(R2.id.rv_market)
+    RecyclerView mRecyclerView;
+
+    @BindView(R2.id.srl_market)
+    SwipeRefreshLayout mSwipeRefresh;
+
+    private ProductAdapter mAdapter;
 
 
     @Override
@@ -63,12 +77,40 @@ public class MarketDelegate extends FairDelegate {
             return true;
         });
         loadUser();
+
+        initRecyclerView();
+        initSwipeRefresh();
     }
 
     private void loadUser() {
         Box<User> userBox = ObjectBox.get().boxFor(User.class);
         String avatar = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())).getAvatar();
         Glide.with(this).load(avatar == null ? Constant.DEFAULT_AVATAR : avatar).into(mUser);
+    }
+
+    private void initRecyclerView() {
+        List<Product> products = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            products.add(new Product(new ProductCache()));
+        }
+        mAdapter = new ProductAdapter(R.layout.item_market, products);
+        RecyclerView.LayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(manager);
+
+    }
+
+    private void initSwipeRefresh() {
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_light);
+        mSwipeRefresh.setOnRefreshListener(() -> {
+            mSwipeRefresh.setRefreshing(false);
+        });
+    }
+
+    @Override
+    public void refresh() {
+        mSwipeRefresh.setRefreshing(true);
     }
 
     @OnClick(R2.id.civ_user)

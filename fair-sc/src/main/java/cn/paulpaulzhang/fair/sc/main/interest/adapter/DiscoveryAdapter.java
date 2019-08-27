@@ -1,7 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.adapter;
 
 import android.content.Intent;
-import android.text.format.DateUtils;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -18,7 +17,6 @@ import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.net.RestClient;
@@ -56,9 +54,9 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
      */
     public DiscoveryAdapter(List<Discovery> data) {
         super(data);
-        addItemType(Discovery.DYNAMIC, R.layout.view_dynamic_item);
-        addItemType(Discovery.ARTICLE, R.layout.view_article_item);
-        addItemType(Discovery.USER, R.layout.view_user_item);
+        addItemType(Discovery.DYNAMIC, R.layout.item_dynamic);
+        addItemType(Discovery.ARTICLE, R.layout.item_article);
+        addItemType(Discovery.USER, R.layout.item_user);
     }
 
     @Override
@@ -288,7 +286,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
         } else if (item.getItemType() == Discovery.USER) {
             RecyclerView mRecyclerView = helper.getView(R.id.rv_user);
             RecommendUserAdapter mAdapter = new RecommendUserAdapter
-                    (R.layout.view_user_item_inner, item.getUserItems());
+                    (R.layout.item_user_inner, item.getUserItems());
             mRecyclerView.setAdapter(mAdapter);
             LinearLayoutManager manager = new LinearLayoutManager(mContext);
             manager.setOrientation(RecyclerView.HORIZONTAL);

@@ -10,7 +10,7 @@ import io.objectbox.annotation.Id;
  * 描述:
  */
 @Entity
-public class TopicLikeCache {
+public class LikeCache {
     @Id
     private long id;
 
@@ -18,7 +18,10 @@ public class TopicLikeCache {
 
     private boolean isLike;
 
-    public TopicLikeCache(long pid, boolean isLike) {
+    public LikeCache() {
+    }
+
+    public LikeCache(long pid, boolean isLike) {
         this.pid = pid;
         this.isLike = isLike;
     }

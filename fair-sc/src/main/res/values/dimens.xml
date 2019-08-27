@@ -17,5 +17,6 @@
     <dimen name="discovery_header_text_size">12sp</dimen>
     <dimen name="user_count_size">16sp</dimen>
     <dimen name="user_count_name_size">14sp</dimen>
+    <dimen name="card_corner_radius">8dp</dimen>
 
 </resources>

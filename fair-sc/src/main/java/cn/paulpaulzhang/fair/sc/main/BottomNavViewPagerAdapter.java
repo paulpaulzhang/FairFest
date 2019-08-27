@@ -13,7 +13,7 @@ import java.util.List;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.main.chat.DialogDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.InterestDelegate;
-import cn.paulpaulzhang.fair.sc.main.market.MarketDelegate;
+import cn.paulpaulzhang.fair.sc.main.market.delegate.MarketDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.UserDelegate;
 
 /**

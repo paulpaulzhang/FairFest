@@ -10,7 +10,7 @@ import io.objectbox.annotation.Id;
  * 描述:
  */
 @Entity
-public class TopicUserCache {
+public class UserCache {
     @Id(assignable = true)
     private long id; //用户id
 
@@ -18,7 +18,7 @@ public class TopicUserCache {
 
     private String avatar; // 头像url
 
-    public TopicUserCache(long id, String username, String avatar) {
+    public UserCache(long id, String username, String avatar) {
         this.id = id;
         this.username = username;
         this.avatar = avatar;

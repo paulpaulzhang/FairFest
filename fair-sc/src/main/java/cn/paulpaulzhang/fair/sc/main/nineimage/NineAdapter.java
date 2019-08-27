@@ -3,16 +3,12 @@ package cn.paulpaulzhang.fair.sc.main.nineimage;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Toast;
 
@@ -23,11 +19,8 @@ import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.gyf.immersionbar.ImmersionBar;
 import com.maning.imagebrowserlibrary.MNImageBrowser;
-import com.maning.imagebrowserlibrary.MNImageBrowserActivity;
 import com.maning.imagebrowserlibrary.model.ImageBrowserConfig;
-import com.maning.imagebrowserlibrary.utils.StatusBarUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -75,7 +68,7 @@ public class NineAdapter extends BaseAdapter {
         final ViewHolder mViewHolder;
         mViewHolder = new ViewHolder();
         if (view == null) {
-            view = LayoutInflater.from(mContext).inflate(R.layout.view_nine_image_item, null);
+            view = LayoutInflater.from(mContext).inflate(R.layout.item_nine_image, null);
             mViewHolder.imageView = view.findViewById(R.id.iv_nine);
             view.setTag("NineView");
         }

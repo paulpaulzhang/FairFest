@@ -65,7 +65,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
         final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
 
         boolean isPass = true;
-        if (phone.isEmpty() || phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
+        if (phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
             mPhone.setError(getString(R.string.error_phone_number));
             isPass = false;
         } else {
@@ -92,7 +92,7 @@ public class SignInActivity extends FairActivity implements ITimerListener {
     void getCode() {
         final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
 
-        if (phone.isEmpty() || phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
+        if (phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
             mPhone.setError(getString(R.string.error_phone_number));
         } else {
             mPhone.setError(null);
@@ -158,21 +158,22 @@ public class SignInActivity extends FairActivity implements ITimerListener {
     @Override
     public void onTimer() {
         runOnUiThread(() -> {
-            assert mGetCode != null;
-            mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
-            mGetCode.setEnabled(false);
-            mGetCode.setStrokeColorResource(android.R.color.darker_gray);
-            mGetCode.setTextColor(getColor(R.color.font_default));
-            mCount--;
-            if (mCount < 0) {
-                assert mTimer != null;
-                mTimer.cancel();
-                mTimer = null;
-                mGetCode.setText("发送验证码");
-                mGetCode.setStrokeColorResource(R.color.colorAccent);
-                mGetCode.setTextColor(getColor(R.color.colorAccent));
-                mGetCode.setEnabled(true);
-                mCount = 30;
+            if (mGetCode != null) {
+                mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
+                mGetCode.setEnabled(false);
+                mGetCode.setStrokeColorResource(android.R.color.darker_gray);
+                mGetCode.setTextColor(getColor(R.color.font_default));
+                mCount--;
+                if (mCount < 0) {
+                    assert mTimer != null;
+                    mTimer.cancel();
+                    mTimer = null;
+                    mGetCode.setText("发送验证码");
+                    mGetCode.setStrokeColorResource(R.color.colorAccent);
+                    mGetCode.setTextColor(getColor(R.color.colorAccent));
+                    mGetCode.setEnabled(true);
+                    mCount = 30;
+                }
             }
         });
     }

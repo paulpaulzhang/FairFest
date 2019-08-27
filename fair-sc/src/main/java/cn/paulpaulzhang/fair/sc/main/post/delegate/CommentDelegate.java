@@ -64,7 +64,7 @@ public class CommentDelegate extends FairDelegate {
             items.add(new Comment(url, "Paul", "很好", "2019-8-1"));
         }
 
-        mAdapter = new CommentAdapter(R.layout.view_comment_item, items);
+        mAdapter = new CommentAdapter(R.layout.item_comment, items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {

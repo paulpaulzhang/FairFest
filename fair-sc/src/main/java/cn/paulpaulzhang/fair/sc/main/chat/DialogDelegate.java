@@ -142,7 +142,6 @@ public class DialogDelegate extends FairDelegate
             Intent intent = new Intent(getContext(), MessageActivity.class);
             intent.putExtra("uid", JMessageClient.getMyInfo().getUserName());
             intent.putExtra("username", dialog.getId());
-            intent.putExtra("appkey", dialog.getConversation().getTargetAppKey());
             startActivity(intent);
         }
 

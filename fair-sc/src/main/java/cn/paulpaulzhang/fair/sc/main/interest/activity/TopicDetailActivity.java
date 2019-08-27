@@ -25,7 +25,6 @@ import com.gyf.immersionbar.ImmersionBar;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -40,12 +39,12 @@ import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache_;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache_;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.PostCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicDetailAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
@@ -112,9 +111,9 @@ public class TopicDetailActivity extends FairActivity {
         initCollapsing();
         initSwipeRefresh();
         initRecyclerView();
-        Box<TopicPostCache> postCacheBox = ObjectBox.get().boxFor(TopicPostCache.class);
-        Box<TopicUserCache> userCacheBox = ObjectBox.get().boxFor(TopicUserCache.class);
-        Box<TopicLikeCache> likeCacheBox = ObjectBox.get().boxFor(TopicLikeCache.class);
+        Box<PostCache> postCacheBox = ObjectBox.get().boxFor(PostCache.class);
+        Box<UserCache> userCacheBox = ObjectBox.get().boxFor(UserCache.class);
+        Box<LikeCache> likeCacheBox = ObjectBox.get().boxFor(LikeCache.class);
         postCacheBox.removeAll();
         userCacheBox.removeAll();
         likeCacheBox.removeAll();
@@ -155,14 +154,14 @@ public class TopicDetailActivity extends FairActivity {
             if (item != null) {
                 if (item.getItemType() == TopicDetail.DYNAMIC) {
                     Intent intent = new Intent(this, DynamicActivity.class);
-                    intent.putExtra("pid", item.getTopicPostCache().getId());
-                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
                     intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
                 } else {
                     Intent intent = new Intent(this, ArticleActivity.class);
-                    intent.putExtra("pid", item.getTopicPostCache().getId());
-                    intent.putExtra("uid", item.getTopicPostCache().getUid());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
                     intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
                 }
@@ -189,8 +188,8 @@ public class TopicDetailActivity extends FairActivity {
 
     @OnClick(R2.id.btn_follow)
     void follow() {
-        boolean isFollow = !mButtonFollow.getText().toString().equals("关注");
-        if (!isFollow) {
+        boolean followed = !mButtonFollow.getText().toString().equals("关注");
+        if (!followed) {
             RestClient.builder()
                     .url(Api.PAY_TOPIC)
                     .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
@@ -224,9 +223,7 @@ public class TopicDetailActivity extends FairActivity {
                         }
 
                     })
-                    .error(((code, msg) -> {
-                        Toasty.error(TopicDetailActivity.this, "操作失败 " + code, Toasty.LENGTH_SHORT).show();
-                    }))
+                    .error(((code, msg) -> Toasty.error(TopicDetailActivity.this, "操作失败 " + code, Toasty.LENGTH_SHORT).show()))
                     .build()
                     .post();
         }
@@ -242,7 +239,7 @@ public class TopicDetailActivity extends FairActivity {
                     String imgUrl = jsonObject.getString("imageUrl");
                     int payCount = jsonObject.getIntValue("payCount");
                     int postCount = jsonObject.getIntValue("postCount");
-                    tid = jsonObject.getLongValue("tid");
+                    tid = jsonObject.getLong("tid");
                     if (imgUrl == null || TextUtils.equals(imgUrl, "")) {
                         ImageUtil.setBlurImage(this, mBg, Constant.DEFAULT_AVATAR, 25);
                         mAvatar.setImageResource(R.drawable.ic_topic_128);
@@ -253,23 +250,24 @@ public class TopicDetailActivity extends FairActivity {
                     mDiscuss.setText(postCount + " 讨论");
                     mFollow.setText(payCount + " 关注");
                     loadData(Constant.REFRESH_DATA);
+
+                    RestClient.builder()
+                            .url(Api.IS_PAY_TOPIC)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("tid", tid)
+                            .success(r1 -> {
+                                String result = JSON.parseObject(r1).getString("result");
+                                if (TextUtils.equals(result, "已关注")) {
+                                    mButtonFollow.setText("已关注");
+                                } else {
+                                    mButtonFollow.setText("关注");
+                                }
+                            })
+                            .error(((code, msg) -> FairLogger.d(code)))
+                            .build()
+                            .get();
                 })
                 .error((code, msg) -> FairLogger.d("Header", code))
-                .build()
-                .get();
-        RestClient.builder()
-                .url(Api.IS_PAY_TOPIC)
-                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
-                .params("tid", tid)
-                .success(r -> {
-                    String result = JSON.parseObject(r).getString("result");
-                    if (TextUtils.equals(result, "已关注")) {
-                        mButtonFollow.setText("已关注");
-                    } else {
-                        mButtonFollow.setText("关注");
-                    }
-                })
-                .error(((code, msg) -> FairLogger.d(code)))
                 .build()
                 .get();
     }
@@ -277,20 +275,20 @@ public class TopicDetailActivity extends FairActivity {
     private int page = 0;
 
     private void loadData(int type) {
-        Box<TopicPostCache> postBox = ObjectBox.get().boxFor(TopicPostCache.class);
-        Box<TopicLikeCache> likeBox = ObjectBox.get().boxFor(TopicLikeCache.class);
+        Box<PostCache> postBox = ObjectBox.get().boxFor(PostCache.class);
+        Box<LikeCache> likeBox = ObjectBox.get().boxFor(LikeCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA, response -> {
                 page = 0;
-                JsonParseUtil.parseTopicPost(response, Constant.REFRESH_DATA);
-                List<TopicPostCache> topicPostCaches = postBox.query().orderDesc(TopicPostCache_.time).build().find();
+                JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
+                List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
                 List<TopicDetail> items = new ArrayList<>();
                 long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
                 for (int i = 0; i < count; i++) {
-                    TopicPostCache topicPostCache = topicPostCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(TopicLikeCache_.pid, topicPostCache.getId()).build().findFirst()).isLike();
-                    items.add(new TopicDetail(topicPostCache.getType(), topicPostCache, isLike));
+                    PostCache postCache = postCaches.get(i);
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                    items.add(new TopicDetail(postCache.getType(), postCache, isLike));
                 }
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);
@@ -301,8 +299,8 @@ public class TopicDetailActivity extends FairActivity {
             if (position + Constant.LOAD_MAX_DATABASE > size) {
                 requestData(page, Constant.LOAD_MORE_DATA, response -> {
                     page += 1;
-                    JsonParseUtil.parseTopicPost(response, Constant.LOAD_MORE_DATA);
-                    List<TopicPostCache> topicPostCaches = postBox.getAll();
+                    JsonParseUtil.parsePost(response, Constant.LOAD_MORE_DATA);
+                    List<PostCache> postCaches = postBox.getAll();
                     List<TopicDetail> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
@@ -310,9 +308,9 @@ public class TopicDetailActivity extends FairActivity {
                     }
                     long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
                     for (int i = position; i < count; i++) {
-                        TopicPostCache topicPostCache = topicPostCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(TopicLikeCache_.pid, topicPostCache.getId()).build().findFirst()).isLike();
-                        items.add(new TopicDetail(topicPostCache.getType(), topicPostCache, isLike));
+                        PostCache postCache = postCaches.get(i);
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findFirst()).isLike();
+                        items.add(new TopicDetail(postCache.getType(), postCache, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();
@@ -331,7 +329,7 @@ public class TopicDetailActivity extends FairActivity {
     private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url(Api.GET_POST_BY_TOPIC_ID)
+                    .url(Api.GET_POST_BY_TID)
                     .params("pageNo", 0)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("tid", tid)
@@ -345,7 +343,7 @@ public class TopicDetailActivity extends FairActivity {
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url(Api.GET_POST_BY_TOPIC_ID)
+                    .url(Api.GET_POST_BY_TID)
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("tid", tid)

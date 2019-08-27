@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +16,12 @@ import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicLikeCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicPostCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicUserCache;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -154,60 +151,68 @@ public final class JsonParseUtil {
         likeBox.put(followLikeCaches);
     }
 
-    public static void parseTopicPost(String response, int requestType) {
-        List<TopicPostCache> topicPostCaches = new ArrayList<>();
-        List<TopicUserCache> topicUserCaches = new ArrayList<>();
-        List<TopicLikeCache> topicLikeCaches = new ArrayList<>();
+    public static void parsePost(String response, int requestType) {
+        List<PostCache> postCaches = new ArrayList<>();
+        List<UserCache> userCaches = new ArrayList<>();
+        List<LikeCache> likeCaches = new ArrayList<>();
+
         Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
+        if (postMap != null) {
+            for (String key : postMap.keySet()) {
+                JSONObject object = (JSONObject) postMap.get(key);
+                assert object != null;
+                long id = object.getLongValue("pid");
+                long uid = object.getLongValue("uid");
+                int type = object.getIntValue("type");
+                String title = object.getString("title");
+                String content = object.getString("content");
+                String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
+                int likeCount = object.getIntValue("likeCount");
+                int commentCount = object.getIntValue("commentCount");
+                int shareCount = object.getIntValue("shareCount");
+                long time = object.getLongValue("time");
+                String device = object.getString("device");
+                PostCache postCache = new PostCache(id, uid, type, title, content, imagesUrl,
+                        likeCount, commentCount, shareCount, time, device);
+                postCaches.add(postCache);
+            }
+        }
+
         Map<String, Object> userMap = JSON.parseObject(response).getJSONObject("user").getInnerMap();
+        if (userMap != null) {
+            for (String key : userMap.keySet()) {
+                JSONObject object = (JSONObject) userMap.get(key);
+                assert object != null;
+                long uid = object.getLongValue("uid");
+                String username = object.getString("username");
+                String avatar = object.getString("avatar");
+
+                UserCache userCache = new UserCache(uid, username, avatar);
+                userCaches.add(userCache);
+            }
+        }
+
         Map<String, Object> isLikeMap = JSON.parseObject(response).getJSONObject("isLike").getInnerMap();
-
-        for (String key : postMap.keySet()) {
-            JSONObject object = (JSONObject) postMap.get(key);
-            long id = object.getLongValue("pid");
-            long uid = object.getLongValue("uid");
-            int type = object.getIntValue("type");
-            String title = object.getString("title");
-            String content = object.getString("content");
-            String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
-            int likeCount = object.getIntValue("likeCount");
-            int commentCount = object.getIntValue("commentCount");
-            int shareCount = object.getIntValue("shareCount");
-            long time = object.getLongValue("time");
-            String device = object.getString("device");
-            TopicPostCache topicPostCache = new TopicPostCache(id, uid, type, title, content, imagesUrl,
-                    likeCount, commentCount, shareCount, time, device);
-            topicPostCaches.add(topicPostCache);
+        if (isLikeMap != null) {
+            for (String key : isLikeMap.keySet()) {
+                boolean isLike = (boolean) isLikeMap.get(key);
+                long pid = Long.parseLong(key);
+                LikeCache likeCache = new LikeCache(pid, isLike);
+                likeCaches.add(likeCache);
+            }
         }
 
-        for (String key : userMap.keySet()) {
-            JSONObject object = (JSONObject) userMap.get(key);
-            long uid = object.getLongValue("uid");
-            String username = object.getString("username");
-            String avatar = object.getString("avatar");
-
-            TopicUserCache topicUserCache = new TopicUserCache(uid, username, avatar);
-            topicUserCaches.add(topicUserCache);
-        }
-
-        for (String key : isLikeMap.keySet()) {
-            boolean isLike = (boolean) isLikeMap.get(key);
-            long pid = Long.parseLong(key);
-            TopicLikeCache topicLikeCache = new TopicLikeCache(pid, isLike);
-            topicLikeCaches.add(topicLikeCache);
-        }
-
-        Box<TopicPostCache> postBox = ObjectBox.get().boxFor(TopicPostCache.class);
-        Box<TopicUserCache> userBox = ObjectBox.get().boxFor(TopicUserCache.class);
-        Box<TopicLikeCache> likeBox = ObjectBox.get().boxFor(TopicLikeCache.class);
+        Box<PostCache> postBox = ObjectBox.get().boxFor(PostCache.class);
+        Box<UserCache> userBox = ObjectBox.get().boxFor(UserCache.class);
+        Box<LikeCache> likeBox = ObjectBox.get().boxFor(LikeCache.class);
         if (requestType == Constant.REFRESH_DATA) {
             postBox.removeAll();
             userBox.removeAll();
             likeBox.removeAll();
         }
-        postBox.put(topicPostCaches);
-        userBox.put(topicUserCaches);
-        likeBox.put(topicLikeCaches);
+        postBox.put(postCaches);
+        userBox.put(userCaches);
+        likeBox.put(likeCaches);
     }
 
     public static void parseUser(String response) {
