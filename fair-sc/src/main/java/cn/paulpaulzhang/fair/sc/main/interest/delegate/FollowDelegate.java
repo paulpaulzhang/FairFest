@@ -13,19 +13,30 @@ import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
+import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
+import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.FollowAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
+import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -42,6 +53,8 @@ public class FollowDelegate extends AbstractDelegate {
     SwipeRefreshLayout mSwipeRefresh;
 
     private FollowAdapter mAdapter;
+
+    private long uid = FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name());
 
     @Override
     public Object setLayout() {
@@ -79,11 +92,15 @@ public class FollowDelegate extends AbstractDelegate {
             if (item != null) {
                 if (item.getItemType() == Follow.DYNAMIC) {
                     Intent intent = new Intent(getContext(), DynamicActivity.class);
-                    intent.putExtra("id", item.getFollowPostCache().getId());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
-                } else if (item.getItemType() == Follow.ARTICLE) {
+                } else {
                     Intent intent = new Intent(getContext(), ArticleActivity.class);
-                    intent.putExtra("id", item.getFollowPostCache().getId());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
                 }
 
@@ -91,64 +108,85 @@ public class FollowDelegate extends AbstractDelegate {
         });
     }
 
-    public void loadData(int type) {
+    private int page = 0;
+
+    private void loadData(int type) {
         Box<FollowPostCache> postBox = ObjectBox.get().boxFor(FollowPostCache.class);
+        Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA);
-            List<FollowPostCache> followPostCaches = postBox.getAll();
-            List<Follow> items = new ArrayList<>();
-            long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-            for (int i = 0; i < count; i++) {
-                FollowPostCache followPostCache = followPostCaches.get(i);
-                items.add(new Follow(followPostCache.getType(), followPostCache));
-            }
-            mAdapter.setNewData(items);
-            mSwipeRefresh.setRefreshing(false);
+            requestData(0, Constant.REFRESH_DATA, response -> {
+                page = 0;
+                JsonParseUtil.parseFollowPost(response, Constant.REFRESH_DATA);
+                List<FollowPostCache> postCaches = postBox.query().orderDesc(FollowPostCache_.time).build().find();
+                List<Follow> items = new ArrayList<>();
+                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
+                for (int i = 0; i < count; i++) {
+                    FollowPostCache postCache = postCaches.get(i);
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                    items.add(new Follow(postCache.getType(), postCache, isLike));
+                }
+                mAdapter.setNewData(items);
+                mSwipeRefresh.setRefreshing(false);
+            });
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
             if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(size, Constant.LOAD_MORE_DATA);
-                if (size == postBox.count()) {
-                    mAdapter.loadMoreEnd(true);
-                    return;
-                }
+                requestData(page, Constant.LOAD_MORE_DATA, response -> {
+                    page += 1;
+                    JsonParseUtil.parseFollowPost(response, Constant.LOAD_MORE_DATA);
+                    List<FollowPostCache> postCaches = postBox.getAll();
+                    List<Follow> items = new ArrayList<>();
+                    if (size == postBox.count()) {
+                        mAdapter.loadMoreEnd(true);
+                        return;
+                    }
+                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
+                    for (int i = position; i < count; i++) {
+                        FollowPostCache postCache = postCaches.get(i);
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                        items.add(new Follow(postCache.getType(), postCache, isLike));
+                    }
+                    mAdapter.addData(items);
+                    mAdapter.loadMoreComplete();
+                });
             }
-            List<FollowPostCache> followPostCaches = postBox.getAll();
-            List<Follow> items = new ArrayList<>();
 
-            long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-            for (int i = position; i < count; i++) {
-                FollowPostCache followPostCache = followPostCaches.get(i);
-                items.add(new Follow(followPostCache.getType(), followPostCache));
-            }
-            mAdapter.addData(items);
-            mAdapter.loadMoreComplete();
         }
     }
 
     /**
      * 从服务器下载数据到数据库
      *
-     * @param start 开始位置
-     * @param type  加载类型（刷新数据，加载更多）
+     * @param page 页数
+     * @param type 加载类型（刷新数据，加载更多）
      */
-    private void requestData(long start, int type) {
+    private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("position", 0)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseFollowPost(r, type))
+                    .url(Api.GET_POST_BY_UID_PAY_ALL_UID)
+                    .params("uid", uid)
+                    .params("pageNo", 0)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .success(success)
+                    .error((code, msg) -> {
+                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    })
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("position", start)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseFollowPost(r, type))
+                    .url(Api.GET_POST_BY_UID_PAY_ALL_UID)
+                    .params("uid", uid)
+                    .params("pageNo", page)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .success(success)
+                    .error((code, msg) -> {
+                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    })
                     .build()
                     .get();
         }

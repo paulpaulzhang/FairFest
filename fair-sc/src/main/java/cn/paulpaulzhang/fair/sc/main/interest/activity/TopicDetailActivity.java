@@ -309,7 +309,7 @@ public class TopicDetailActivity extends FairActivity {
                     long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
                     for (int i = position; i < count; i++) {
                         PostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findFirst()).isLike();
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
                         items.add(new TopicDetail(postCache.getType(), postCache, isLike));
                     }
                     mAdapter.addData(items);

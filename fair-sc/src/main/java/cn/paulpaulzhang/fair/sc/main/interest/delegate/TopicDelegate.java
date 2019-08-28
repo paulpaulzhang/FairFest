@@ -81,7 +81,7 @@ public class TopicDelegate extends AbstractDelegate {
         });
     }
 
-    public void loadData(int type) {
+    private void loadData(int type) {
         Box<TopicCache> topicBox = ObjectBox.get().boxFor(TopicCache.class);
 
         if (type == Constant.REFRESH_DATA) {

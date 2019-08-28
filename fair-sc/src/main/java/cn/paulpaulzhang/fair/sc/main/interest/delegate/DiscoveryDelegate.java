@@ -15,12 +15,18 @@ import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.net.RestClient;
+import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
@@ -31,8 +37,10 @@ import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.DiscoveryAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
+import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -88,18 +96,19 @@ public class DiscoveryDelegate extends AbstractDelegate {
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            if (position == Constant.USER_POSITION) {
-                return;
-            }
             Discovery item = (Discovery) adapter.getItem(position);
             if (item != null) {
                 if (item.getItemType() == Discovery.DYNAMIC) {
                     Intent intent = new Intent(getContext(), DynamicActivity.class);
-                    intent.putExtra("id", item.getDiscoveryPostCache().getId());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
-                } else if (item.getItemType() == Discovery.ARTICLE) {
+                } else {
                     Intent intent = new Intent(getContext(), ArticleActivity.class);
-                    intent.putExtra("id", item.getDiscoveryPostCache().getId());
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
                 }
 
@@ -134,85 +143,102 @@ public class DiscoveryDelegate extends AbstractDelegate {
         });
     }
 
-    /**
-     * 从数据库加载数据
-     *
-     * @param type 加载类型（刷新数据，加载更多）
-     */
-    public void loadData(int type) {
+    private int page = 0;
+
+    private void loadData(int type) {
         Box<DiscoveryPostCache> postBox = ObjectBox.get().boxFor(DiscoveryPostCache.class);
+        Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA);
-            //load post data
-            List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
-            List<Discovery> items = new ArrayList<>();
-            long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-            for (int i = 0; i < count; i++) {
-                DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
-                items.add(new Discovery(discoveryPostCache.getType(), discoveryPostCache));
-            }
-            //load user data
-            Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
-            List<RecommendUser> userItems = new ArrayList<>();
-            for (RecommendUserCache user : userBox.getAll()) {
-                userItems.add(new RecommendUser(user));
-            }
-            if (items.size() != 0) {
-                items.add(Constant.USER_POSITION, new Discovery(2, userItems));
-            }
-            mAdapter.setNewData(items);
-            mSwipeRefresh.setRefreshing(false);
+            requestData(0, Constant.REFRESH_DATA, response -> {
+                page = 0;
+                JsonParseUtil.parseDiscoveryPost(response, Constant.REFRESH_DATA);
+                List<DiscoveryPostCache> postCaches = postBox.query().orderDesc(DiscoveryPostCache_.time).build().find();
+                List<Discovery> items = new ArrayList<>();
+                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
+                for (int i = 0; i < count; i++) {
+                    DiscoveryPostCache postCache = postCaches.get(i);
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                    items.add(new Discovery(postCache.getType(), postCache, isLike));
+                }
+
+                //TODO load user data
+                Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
+                List<RecommendUser> userItems = new ArrayList<>();
+                for (RecommendUserCache user : userBox.getAll()) {
+                    userItems.add(new RecommendUser(user));
+                }
+                if (items.size() != 0) {
+                    items.add(Constant.USER_POSITION, new Discovery(2, userItems));
+                }
+
+                mAdapter.setNewData(items);
+                mSwipeRefresh.setRefreshing(false);
+            });
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
             if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(size, Constant.LOAD_MORE_DATA);
-                if (size == postBox.count()) {
-                    mAdapter.loadMoreEnd(true);
-                    return;
-                }
+                requestData(page, Constant.LOAD_MORE_DATA, response -> {
+                    page += 1;
+                    JsonParseUtil.parseDiscoveryPost(response, Constant.LOAD_MORE_DATA);
+                    List<DiscoveryPostCache> postCaches = postBox.getAll();
+                    List<Discovery> items = new ArrayList<>();
+                    if (size == postBox.count()) {
+                        mAdapter.loadMoreEnd(true);
+                        return;
+                    }
+                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
+                    for (int i = position; i < count; i++) {
+                        DiscoveryPostCache postCache = postCaches.get(i);
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                        items.add(new Discovery(postCache.getType(), postCache, isLike));
+                    }
+                    mAdapter.addData(items);
+                    mAdapter.loadMoreComplete();
+                });
             }
-            List<DiscoveryPostCache> discoveryPostCaches = postBox.getAll();
-            List<Discovery> items = new ArrayList<>();
 
-            long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-            for (int i = position; i < count; i++) {
-                DiscoveryPostCache discoveryPostCache = discoveryPostCaches.get(i);
-                items.add(new Discovery(discoveryPostCache.getType(), discoveryPostCache));
-            }
-            mAdapter.addData(items);
-            mAdapter.loadMoreComplete();
         }
     }
 
     /**
      * 从服务器下载数据到数据库
      *
-     * @param start 开始位置
-     * @param type  加载类型（刷新数据，加载更多）
+     * @param page 页数
+     * @param type 加载类型（刷新数据，加载更多）
      */
-    private void requestData(long start, int type) {
+    private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url("post")
-                    .params("position", 0)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, Constant.REFRESH_DATA))
+                    .params("uid", "uid")
+                    .params("pageNo", 0)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .success(success)
+                    .error((code, msg) -> {
+                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    })
                     .build()
                     .get();
+
             RestClient.builder()
                     .url("recommend")
                     .success(JsonParseUtil::parseRecommendUsers)
                     .build()
                     .get();
-
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
                     .url("post")
-                    .params("position", start)
-                    .params("number", Constant.LOAD_MAX_SEVER)
-                    .success(r -> JsonParseUtil.parseDiscoveryPost(r, Constant.REFRESH_DATA))
+                    .params("uid", "uid")
+                    .params("pageNo", page)
+                    .params("pageSize", Constant.LOAD_MAX_SEVER)
+                    .success(success)
+                    .error((code, msg) -> {
+                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        mSwipeRefresh.setRefreshing(false);
+                    })
                     .build()
                     .get();
         }

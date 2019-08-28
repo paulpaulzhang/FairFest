@@ -15,25 +15,32 @@ import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
-import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
+import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
@@ -57,28 +64,18 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, Follow item) {
-        if (item.getItemType() == Follow.DYNAMIC) {
-            FollowPostCache followPostCache = item.getFollowPostCache();
-            long id = followPostCache.getId();
-            long uid = followPostCache.getUid();
-            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
-            User current = localUserBox.get(
-                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-            long time = followPostCache.getTime();
-            String device = followPostCache.getDevice();
-            String content = followPostCache.getContent();
-            ArrayList<String> imgs = JsonParseUtil.parseImgs(followPostCache.getImagesUrl());
-            int likeCount = followPostCache.getLikeCount();
-            int commentCount = followPostCache.getCommentCount();
-            int shareCount = followPostCache.getShareCount();
+        if (item.getItemType() == TopicDetail.DYNAMIC) {
+            FollowPostCache postCache = item.getPostCache();
+            long id = postCache.getId();
+            long uid = postCache.getUid();
+            long time = postCache.getTime();
+            String device = postCache.getDevice();
+            String content = postCache.getContent();
+            ArrayList<String> imgs = JsonParseUtil.parseImgs(postCache.getImagesUrl());
+            int likeCount = postCache.getLikeCount();
+            int commentCount = postCache.getCommentCount();
+            int shareCount = postCache.getShareCount();
 
-            //判断当前用户是否对当前文章点赞点赞
-            Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
-            FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
-            boolean isLike = false;
-            if (followLikeCache != null) {
-                isLike = followLikeCache.isLike();
-            }
 
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
@@ -88,15 +85,19 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
 
             Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
-            FollowUserCache followUserCache = userBox.get(uid);
+            FollowUserCache userCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_dynamic, followUserCache.getUsername());
-            Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.setText(R.id.tv_username_dynamic, userCache.getUsername() == null ?
+                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
+            Glide.with(mContext).load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
-            mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
+            mAvatar.setOnClickListener(v -> {
+                Intent intent = new Intent(mContext, UserCenterActivity.class);
+                intent.putExtra("uid", userCache.getId());
+                mContext.startActivity(intent);
+            });
 
-            boolean finalIsLike = isLike;
-            if (finalIsLike) {
+            if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
@@ -105,51 +106,66 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             }
             mLike.setOnClickListener(v -> {
 
-                if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                if (item.isLike()) {
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_dislike")
-                            .params("id", id)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.CANCEL_THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                item.setLike(false);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
-                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
+                            "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_like")
-                            .params("id", id)
-                            .params("count", count)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                item.setLike(true);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 }
             });
 
             mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
             mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_dynamic, device)
-                    .setText(R.id.tv_time_dynamic, DateUtil.getTime(time));
+                    .setText(R.id.tv_time_dynamic, DateUtil.getTime(new Date(time)));
 
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
+            } else {
+                mLikeCount.setText("");
             }
+
             if (commentCount != 0) {
                 helper.setText(R.id.tv_comment_dynamic, String.valueOf(commentCount));
+            } else {
+                helper.setText(R.id.tv_comment_dynamic, "");
             }
 
             if (shareCount != 0) {
                 helper.setText(R.id.tv_share_dynamic, String.valueOf(shareCount));
+            } else {
+                helper.setText(R.id.tv_share_dynamic, "");
             }
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mDynamicContent = helper.getView(R.id.etv_content_dynamic);
-            mDynamicContent.setContent(content);
+            mDynamicContent.setContent(TextUtil.text2Post(content));
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
@@ -157,40 +173,34 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
-                    Toast.makeText(mContext, "你点击了自定义规则 内容是：" + c + " " + selfContent, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, TopicDetailActivity.class);
+                    intent.putExtra("name", TextUtil.getTopicName(c));
+                    mContext.startActivity(intent);
                 }
             });
             mDynamicContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
                     Intent intent = new Intent(mContext, DynamicActivity.class);
-                    intent.putExtra("id", id);
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     mContext.startActivity(intent);
                 }
             }, false);
-        } else if (item.getItemType() == Follow.ARTICLE) {
-            FollowPostCache followPostCache = item.getFollowPostCache();
-            long id = followPostCache.getId();
-            long uid = followPostCache.getUid();
-            Box<User> localUserBox = ObjectBox.get().boxFor(User.class);
-            User current = localUserBox.get(
-                    FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
 
-            long time = followPostCache.getTime();
-            String device = followPostCache.getDevice();
-            String content = followPostCache.getContent();
-            String title = followPostCache.getTitle();
-            ArrayList<String> imgs = JsonParseUtil.parseImgs(followPostCache.getImagesUrl());
-            int likeCount = followPostCache.getLikeCount();
-            int commentCount = followPostCache.getCommentCount();
-            int shareCount = followPostCache.getShareCount();
+        } else if (item.getItemType() == TopicDetail.ARTICLE) {
+            FollowPostCache postCache = item.getPostCache();
+            long id = postCache.getId();
+            long uid = postCache.getUid();
 
-            //判断当前用户是否对当前文章点赞点赞
-            Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
-            FollowLikeCache followLikeCache = likeBox.query().equal(FollowLikeCache_.pid, id).build().findFirst();
-            boolean isLike = false;
-            if (followLikeCache != null) {
-                isLike = followLikeCache.isLike();
-            }
+            long time = postCache.getTime();
+            String device = postCache.getDevice();
+            String content = postCache.getContent();
+            String title = postCache.getTitle();
+            ArrayList<String> imgs = JsonParseUtil.parseImgs(postCache.getImagesUrl());
+            int likeCount = postCache.getLikeCount();
+            int commentCount = postCache.getCommentCount();
+            int shareCount = postCache.getShareCount();
 
             GridView mArticleImg = helper.getView(R.id.gv_images_article);
             LinearLayout mLike = helper.getView(R.id.ll_like_article);
@@ -200,15 +210,19 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
 
             Box<FollowUserCache> userBox = ObjectBox.get().boxFor(FollowUserCache.class);
-            FollowUserCache followUserCache = userBox.get(uid);
+            FollowUserCache userCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_article, followUserCache.getUsername());
-            Glide.with(mContext).load(followUserCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.setText(R.id.tv_username_article, userCache.getUsername() == null ?
+                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
+            Glide.with(mContext).load(userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
-            mAvatar.setOnClickListener(v -> Toast.makeText(mContext, "用户详情", Toast.LENGTH_SHORT).show());
+            mAvatar.setOnClickListener(v -> {
+                Intent intent = new Intent(mContext, UserCenterActivity.class);
+                intent.putExtra("uid", userCache.getId());
+                mContext.startActivity(intent);
+            });
 
-            boolean finalIsLike = isLike;
-            if (finalIsLike) {
+            if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
                 mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
             } else {
@@ -216,29 +230,37 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
-                if (finalIsLike) {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
+                if (item.isLike()) {
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_dislike")
-                            .params("id", id)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.CANCEL_THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                item.setLike(false);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 } else {
-                    helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
-                    int count = Integer.parseInt(mLikeCount.getText().toString().trim()) + 1;
-                    mLikeCount.setText(String.valueOf(count));
-                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                    int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
+                            "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
-                            //TODO 点赞请求
-                            .url("set_like")
-                            .params("id", id)
-                            .params("count", count)
-                            .params("uid", current.getId())
-                            .build().post();
+                            .url(Api.THUMBSUP_POST)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", id)
+                            .success(r -> {
+                                helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                item.setLike(true);
+                            })
+                            .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
+                            .build()
+                            .post();
                 }
             });
 
@@ -250,18 +272,25 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
 
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
+            } else {
+                mLikeCount.setText("");
             }
+
             if (commentCount != 0) {
                 helper.setText(R.id.tv_comment_article, String.valueOf(commentCount));
+            } else {
+                helper.setText(R.id.tv_comment_article, "");
             }
 
             if (shareCount != 0) {
                 helper.setText(R.id.tv_share_article, String.valueOf(shareCount));
+            } else {
+                helper.setText(R.id.tv_share_article, "");
             }
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mArticleContent = helper.getView(R.id.etv_content_article);
-            mArticleContent.setContent(content);
+            mArticleContent.setContent(TextUtil.text2Post(content));
             mArticleContent.setOnClickListener(v -> Toast.makeText(mContext, "查看更多", Toast.LENGTH_SHORT).show());
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
@@ -270,16 +299,21 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
-                    Toast.makeText(mContext, "你点击了自定义规则 内容是：" + c + " " + selfContent, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, TopicDetailActivity.class);
+                    intent.putExtra("name", TextUtil.getTopicName(c));
+                    mContext.startActivity(intent);
                 }
             });
             mArticleContent.setExpandOrContractClickListener(t -> {
                 if (t.equals(StatusType.STATUS_EXPAND)) {
                     Intent intent = new Intent(mContext, ArticleActivity.class);
-                    intent.putExtra("id", id);
+                    intent.putExtra("pid", item.getPostCache().getId());
+                    intent.putExtra("uid", item.getPostCache().getUid());
+                    intent.putExtra("isLike", item.isLike());
                     mContext.startActivity(intent);
                 }
             }, false);
+
         }
     }
 }

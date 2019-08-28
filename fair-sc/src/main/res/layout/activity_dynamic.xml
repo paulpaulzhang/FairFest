@@ -87,9 +87,9 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btn_follow"
                         style="@style/MyMaterialButton.OutLine.Blue"
-                        android:layout_width="60dp"
+                        android:layout_width="80dp"
                         android:layout_height="40dp"
-                        android:layout_marginEnd="30dp"
+                        android:layout_marginEnd="15dp"
                         android:text="@string/follow"
                         android:textColor="@color/colorAccent"
                         android:textSize="12sp"
@@ -109,6 +109,8 @@
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     app:ep_link_color="@color/colorAccent"
+                    app:ep_need_animation="true"
+                    app:ep_need_expand="false"
                     app:ep_need_link="true"
                     app:ep_need_mention="true"
                     app:ep_need_self="true"
@@ -144,6 +146,7 @@
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tab_dynamic"
+            android:layout_gravity="bottom"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@android:color/white"

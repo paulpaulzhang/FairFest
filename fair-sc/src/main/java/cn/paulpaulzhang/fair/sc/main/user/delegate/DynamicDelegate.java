@@ -86,9 +86,9 @@ public class DynamicDelegate extends FairDelegate {
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            TopicDetail item = (TopicDetail) adapter.getItem(position);
+            Dynamic item = (Dynamic) adapter.getItem(position);
             if (item != null) {
-                if (item.getItemType() == TopicDetail.DYNAMIC) {
+                if (item.getItemType() == Dynamic.DYNAMIC) {
                     Intent intent = new Intent(getContext(), DynamicActivity.class);
                     intent.putExtra("pid", item.getPostCache().getId());
                     intent.putExtra("uid", item.getPostCache().getUid());
@@ -122,7 +122,7 @@ public class DynamicDelegate extends FairDelegate {
                 long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
                 for (int i = 0; i < count; i++) {
                     PostCache postCache = postCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findFirst()).isLike();
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
                     items.add(new Dynamic(postCache.getType(), postCache, isLike));
                 }
                 mAdapter.setNewData(items);
@@ -143,7 +143,7 @@ public class DynamicDelegate extends FairDelegate {
                     long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
                     for (int i = position; i < count; i++) {
                         PostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findFirst()).isLike();
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
                         items.add(new Dynamic(postCache.getType(), postCache, isLike));
                     }
                     mAdapter.addData(items);
@@ -168,7 +168,7 @@ public class DynamicDelegate extends FairDelegate {
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
                     .success(success)
-                    .error(((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show()))
+                    .error((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show())
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
@@ -178,7 +178,7 @@ public class DynamicDelegate extends FairDelegate {
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
                     .success(success)
-                    .error(((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show()))
+                    .error((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show())
                     .build()
                     .get();
         }

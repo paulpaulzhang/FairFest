@@ -13,6 +13,7 @@ import java.util.List;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import es.dmoral.toasty.Toasty;
 
@@ -33,7 +34,7 @@ public class RecommendUserAdapter extends BaseQuickAdapter<RecommendUser, BaseVi
         String url = item.getUserCache().getAvatar();
         ImageUtil.setBlurImage(mContext, mDraweeView, url, 10);
         helper.setText(R.id.tv_user, item.getUserCache().getUsername())
-                .setText(R.id.tv_time, "来 校园π 187天了")
+                .setText(R.id.tv_time, "来 校园π"+ DateUtil.getIntervalAsDay(item.getUserCache().getTime(), System.currentTimeMillis()) + "天了")
                 .setText(R.id.tv_follow, item.getUserCache().getPayCount() + " 关注")
                 .setText(R.id.tv_fans, item.getUserCache().getFansCount() + "粉丝");
         MaterialButton mButton = helper.getView(R.id.btn_follow);

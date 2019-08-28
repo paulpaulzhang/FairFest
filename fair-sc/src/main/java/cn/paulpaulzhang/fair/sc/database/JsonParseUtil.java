@@ -22,6 +22,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -33,50 +34,54 @@ import io.objectbox.Box;
  */
 public final class JsonParseUtil {
     public static void parseDiscoveryPost(String response, int requestType) {
-        List<DiscoveryPostCache> discoveryPostCaches = new ArrayList<>();
-        List<DiscoveryUserCache> discoveryUserCaches = new ArrayList<>();
-        List<DiscoveryLikeCache> discoveryLikeCaches = new ArrayList<>();
-        JSONObject result = JSON.parseObject(response).getJSONObject("result");
-        JSONArray postArr = result.getJSONArray("post");
-        JSONArray userArr = result.getJSONArray("user");
-        JSONArray likeArr = result.getJSONArray("like");
+        List<DiscoveryPostCache> postCaches = new ArrayList<>();
+        List<DiscoveryUserCache> userCaches = new ArrayList<>();
+        List<DiscoveryLikeCache> likeCaches = new ArrayList<>();
 
-        for (int i = 0; i < postArr.size(); i++) {
-            JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLongValue("id");
-            long uid = object.getLongValue("uid");
-            int type = object.getIntValue("type");
-            String title = object.getString("title");
-            String content = object.getString("content");
-            String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
-            int likeCount = object.getIntValue("likeCount");
-            int commentCount = object.getIntValue("commentCount");
-            int shareCount = object.getIntValue("shareCount");
-            long time = object.getLongValue("time");
-            String device = object.getString("device");
-            DiscoveryPostCache discoveryPostCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
-                    likeCount, commentCount, shareCount, time, device);
-            discoveryPostCaches.add(discoveryPostCache);
-
-
+        Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
+        if (postMap != null) {
+            for (String key : postMap.keySet()) {
+                JSONObject object = (JSONObject) postMap.get(key);
+                assert object != null;
+                long id = object.getLongValue("pid");
+                long uid = object.getLongValue("uid");
+                int type = object.getIntValue("type");
+                String title = object.getString("title");
+                String content = object.getString("content");
+                String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
+                int likeCount = object.getIntValue("likeCount");
+                int commentCount = object.getIntValue("commentCount");
+                int shareCount = object.getIntValue("shareCount");
+                long time = object.getLongValue("time");
+                String device = object.getString("device");
+                DiscoveryPostCache postCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
+                        likeCount, commentCount, shareCount, time, device);
+                postCaches.add(postCache);
+            }
         }
 
-        for (int i = 0; i < userArr.size(); i++) {
-            JSONObject object = userArr.getJSONObject(i);
-            long id = object.getLong("id");
-            String username = object.getString("username");
-            String avatar = object.getString("avatar");
+        Map<String, Object> userMap = JSON.parseObject(response).getJSONObject("user").getInnerMap();
+        if (userMap != null) {
+            for (String key : userMap.keySet()) {
+                JSONObject object = (JSONObject) userMap.get(key);
+                assert object != null;
+                long uid = object.getLongValue("uid");
+                String username = object.getString("username");
+                String avatar = object.getString("avatar");
 
-            DiscoveryUserCache discoveryUserCache = new DiscoveryUserCache(id, username, avatar);
-            discoveryUserCaches.add(discoveryUserCache);
+                DiscoveryUserCache userCache = new DiscoveryUserCache(uid, username, avatar);
+                userCaches.add(userCache);
+            }
         }
 
-        for (int i = 0; i < likeArr.size(); i++) {
-            JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLongValue("pid");
-            boolean isLike = object.getBooleanValue("isLike");
-            DiscoveryLikeCache discoveryLikeCache = new DiscoveryLikeCache(pid, isLike);
-            discoveryLikeCaches.add(discoveryLikeCache);
+        Map<String, Object> isLikeMap = JSON.parseObject(response).getJSONObject("isLike").getInnerMap();
+        if (isLikeMap != null) {
+            for (String key : isLikeMap.keySet()) {
+                boolean isLike = (boolean) isLikeMap.get(key);
+                long pid = Long.parseLong(key);
+                DiscoveryLikeCache likeCache = new DiscoveryLikeCache(pid, isLike);
+                likeCaches.add(likeCache);
+            }
         }
 
         Box<DiscoveryPostCache> postBox = ObjectBox.get().boxFor(DiscoveryPostCache.class);
@@ -87,54 +92,60 @@ public final class JsonParseUtil {
             userBox.removeAll();
             likeBox.removeAll();
         }
-        postBox.put(discoveryPostCaches);
-        userBox.put(discoveryUserCaches);
-        likeBox.put(discoveryLikeCaches);
+        postBox.put(postCaches);
+        userBox.put(userCaches);
+        likeBox.put(likeCaches);
     }
 
     public static void parseFollowPost(String response, int requestType) {
-        List<FollowPostCache> followPostCaches = new ArrayList<>();
-        List<FollowUserCache> followUserCaches = new ArrayList<>();
-        List<FollowLikeCache> followLikeCaches = new ArrayList<>();
-        JSONObject result = JSON.parseObject(response).getJSONObject("result");
-        JSONArray postArr = result.getJSONArray("post");
-        JSONArray userArr = result.getJSONArray("user");
-        JSONArray likeArr = result.getJSONArray("like");
+        List<FollowPostCache> postCaches = new ArrayList<>();
+        List<FollowUserCache> userCaches = new ArrayList<>();
+        List<FollowLikeCache> likeCaches = new ArrayList<>();
 
-        for (int i = 0; i < postArr.size(); i++) {
-            JSONObject object = postArr.getJSONObject(i);
-            long id = object.getLongValue("id");
-            long uid = object.getLongValue("uid");
-            int type = object.getIntValue("type");
-            String title = object.getString("title");
-            String content = object.getString("content");
-            String imagesUrl = object.getJSONArray("imagesUrl").toJSONString();
-            int likeCount = object.getIntValue("likeCount");
-            int commentCount = object.getIntValue("commentCount");
-            int shareCount = object.getIntValue("shareCount");
-            long time = object.getLongValue("time");
-            String device = object.getString("device");
-            FollowPostCache followPostCache = new FollowPostCache(id, uid, type, title, content, imagesUrl,
-                    likeCount, commentCount, shareCount, time, device);
-            followPostCaches.add(followPostCache);
+        Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
+        if (postMap != null) {
+            for (String key : postMap.keySet()) {
+                JSONObject object = (JSONObject) postMap.get(key);
+                assert object != null;
+                long id = object.getLongValue("pid");
+                long uid = object.getLongValue("uid");
+                int type = object.getIntValue("type");
+                String title = object.getString("title");
+                String content = object.getString("content");
+                String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
+                int likeCount = object.getIntValue("likeCount");
+                int commentCount = object.getIntValue("commentCount");
+                int shareCount = object.getIntValue("shareCount");
+                long time = object.getLongValue("time");
+                String device = object.getString("device");
+                FollowPostCache postCache = new FollowPostCache(id, uid, type, title, content, imagesUrl,
+                        likeCount, commentCount, shareCount, time, device);
+                postCaches.add(postCache);
+            }
         }
 
-        for (int i = 0; i < userArr.size(); i++) {
-            JSONObject object = userArr.getJSONObject(i);
-            long id = object.getLongValue("id");
-            String username = object.getString("username");
-            String avatar = object.getString("avatar");
+        Map<String, Object> userMap = JSON.parseObject(response).getJSONObject("user").getInnerMap();
+        if (userMap != null) {
+            for (String key : userMap.keySet()) {
+                JSONObject object = (JSONObject) userMap.get(key);
+                assert object != null;
+                long uid = object.getLongValue("uid");
+                String username = object.getString("username");
+                String avatar = object.getString("avatar");
 
-            FollowUserCache followUserCache = new FollowUserCache(id, username, avatar);
-            followUserCaches.add(followUserCache);
+                FollowUserCache userCache = new FollowUserCache(uid, username, avatar);
+                userCaches.add(userCache);
+            }
         }
 
-        for (int i = 0; i < likeArr.size(); i++) {
-            JSONObject object = likeArr.getJSONObject(i);
-            long pid = object.getLongValue("pid");
-            boolean isLike = object.getBoolean("isLike");
-            FollowLikeCache followLikeCache = new FollowLikeCache(pid, isLike);
-            followLikeCaches.add(followLikeCache);
+        Map<String, Object> isLikeMap = JSON.parseObject(response).getJSONObject("isLike").getInnerMap();
+        if (isLikeMap != null) {
+            for (String key : isLikeMap.keySet()) {
+                boolean isLike = (boolean) isLikeMap.get(key);
+                long pid = Long.parseLong(key);
+                FollowLikeCache likeCache = new FollowLikeCache(pid, isLike);
+                likeCaches.add(likeCache);
+            }
         }
 
         Box<FollowPostCache> postBox = ObjectBox.get().boxFor(FollowPostCache.class);
@@ -145,10 +156,9 @@ public final class JsonParseUtil {
             userBox.removeAll();
             likeBox.removeAll();
         }
-
-        postBox.put(followPostCaches);
-        userBox.put(followUserCaches);
-        likeBox.put(followLikeCaches);
+        postBox.put(postCaches);
+        userBox.put(userCaches);
+        likeBox.put(likeCaches);
     }
 
     public static void parsePost(String response, int requestType) {

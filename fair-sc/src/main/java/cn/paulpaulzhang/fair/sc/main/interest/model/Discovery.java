@@ -22,13 +22,16 @@ public class Discovery implements MultiItemEntity {
 
     private int itemType;
 
-    private DiscoveryPostCache discoveryPostCache;
+    private DiscoveryPostCache postCache;
 
     private List<RecommendUser> userItems;
 
-    public Discovery(int itemType, DiscoveryPostCache discoveryPostCache) {
+    private boolean isLike;
+
+    public Discovery(int itemType, DiscoveryPostCache postCache, boolean isLike) {
         this.itemType = itemType;
-        this.discoveryPostCache = discoveryPostCache;
+        this.postCache = postCache;
+        this.isLike = isLike;
     }
 
     public Discovery(int itemType, List<RecommendUser> userItems) {
@@ -41,11 +44,19 @@ public class Discovery implements MultiItemEntity {
         return itemType;
     }
 
-    public DiscoveryPostCache getDiscoveryPostCache() {
-        return discoveryPostCache;
+    public DiscoveryPostCache getPostCache() {
+        return postCache;
     }
 
     public List<RecommendUser> getUserItems() {
         return userItems;
+    }
+
+    public boolean isLike() {
+        return isLike;
+    }
+
+    public void setLike(boolean like) {
+        isLike = like;
     }
 }
