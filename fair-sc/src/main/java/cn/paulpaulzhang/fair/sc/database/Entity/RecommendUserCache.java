@@ -28,6 +28,9 @@ public class RecommendUserCache {
 
     private long time; //注册时间
 
+    public RecommendUserCache() {
+    }
+
     public RecommendUserCache(long id,
                               String username,
                               int payCount,

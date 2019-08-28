@@ -18,6 +18,9 @@ public class DiscoveryLikeCache {
 
     private boolean isLike;
 
+    public DiscoveryLikeCache() {
+    }
+
     public DiscoveryLikeCache(long pid, boolean isLike) {
         this.pid = pid;
         this.isLike = isLike;

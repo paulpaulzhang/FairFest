@@ -39,6 +39,9 @@ public class FollowPostCache {
 
     private String device; //设备型号
 
+    public FollowPostCache() {
+    }
+
     public FollowPostCache(long id,
                            long uid,
                            int type,

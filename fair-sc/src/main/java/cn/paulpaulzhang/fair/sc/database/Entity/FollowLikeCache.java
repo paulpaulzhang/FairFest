@@ -18,6 +18,9 @@ public class FollowLikeCache {
 
     private boolean isLike;
 
+    public FollowLikeCache() {
+    }
+
     public FollowLikeCache(long pid, boolean isLike) {
         this.pid = pid;
         this.isLike = isLike;

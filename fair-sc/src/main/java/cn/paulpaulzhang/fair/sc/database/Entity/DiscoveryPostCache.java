@@ -38,6 +38,9 @@ public class DiscoveryPostCache {
 
     private String device; //设备型号
 
+    public DiscoveryPostCache() {
+    }
+
     public DiscoveryPostCache(long id,
                               long uid,
                               int type,

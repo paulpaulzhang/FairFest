@@ -18,6 +18,9 @@ public class FollowUserCache {
 
     private String avatar; // 头像url
 
+    public FollowUserCache() {
+    }
+
     public FollowUserCache(long id, String username, String avatar) {
         this.id = id;
         this.username = username;

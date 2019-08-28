@@ -18,6 +18,9 @@ public class UserCache {
 
     private String avatar; // 头像url
 
+    public UserCache() {
+    }
+
     public UserCache(long id, String username, String avatar) {
         this.id = id;
         this.username = username;

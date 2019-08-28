@@ -148,19 +148,19 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
             } else {
-                mLikeCount.setText("");
+                mLikeCount.setText(" ");
             }
 
             if (commentCount != 0) {
                 helper.setText(R.id.tv_comment_dynamic, String.valueOf(commentCount));
             } else {
-                helper.setText(R.id.tv_comment_dynamic, "");
+                helper.setText(R.id.tv_comment_dynamic, " ");
             }
 
             if (shareCount != 0) {
                 helper.setText(R.id.tv_share_dynamic, String.valueOf(shareCount));
             } else {
-                helper.setText(R.id.tv_share_dynamic, "");
+                helper.setText(R.id.tv_share_dynamic, " ");
             }
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
@@ -273,19 +273,19 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             if (likeCount != 0) {
                 mLikeCount.setText(String.valueOf(likeCount));
             } else {
-                mLikeCount.setText("");
+                mLikeCount.setText(" ");
             }
 
             if (commentCount != 0) {
                 helper.setText(R.id.tv_comment_article, String.valueOf(commentCount));
             } else {
-                helper.setText(R.id.tv_comment_article, "");
+                helper.setText(R.id.tv_comment_article, " ");
             }
 
             if (shareCount != 0) {
                 helper.setText(R.id.tv_share_article, String.valueOf(shareCount));
             } else {
-                helper.setText(R.id.tv_share_article, "");
+                helper.setText(R.id.tv_share_article, " ");
             }
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));

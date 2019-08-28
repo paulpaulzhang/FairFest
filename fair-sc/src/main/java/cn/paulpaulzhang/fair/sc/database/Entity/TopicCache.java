@@ -23,6 +23,9 @@ public class TopicCache {
 
     private int post; //帖子数
 
+    public TopicCache() {
+    }
+
     public TopicCache(long id, String name, String img, int follow, int post) {
         this.id = id;
         this.name = name;
