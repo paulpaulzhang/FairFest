@@ -8,12 +8,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.TransitionRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -51,6 +53,7 @@ import cn.paulpaulzhang.fair.sc.main.HomeActivity;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.DialogFixtures;
 import cn.paulpaulzhang.fair.sc.main.chat.fixtures.Transform;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Dialog;
+import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -80,6 +83,9 @@ public class DialogDelegate extends FairDelegate
 
     @BindView(R2.id.civ_user)
     CircleImageView mUser;
+
+    @BindView(R2.id.ll_search)
+    LinearLayout mSearch;
 
     private ImageLoader mImageLoader;
     private DialogsListAdapter<Dialog> mDialogListAdapter;
@@ -118,6 +124,9 @@ public class DialogDelegate extends FairDelegate
         mImageLoader = (imageView, url, payload) -> Glide.with(this).load(url).placeholder(R.drawable.default_placeholder).into(imageView);
         initAdapter();
         initSwipeRefresh();
+
+        mSearch.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
+
     }
 
     private void initSwipeRefresh() {

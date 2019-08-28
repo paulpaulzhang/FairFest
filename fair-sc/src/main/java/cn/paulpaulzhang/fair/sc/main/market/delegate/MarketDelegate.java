@@ -6,10 +6,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -31,6 +33,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.AbstractDelegate;
 import cn.paulpaulzhang.fair.sc.main.market.adapter.ProductAdapter;
 import cn.paulpaulzhang.fair.sc.main.market.model.Product;
+import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -56,6 +59,9 @@ public class MarketDelegate extends AbstractDelegate {
     @BindView(R2.id.srl_market)
     SwipeRefreshLayout mSwipeRefresh;
 
+    @BindView(R2.id.ll_search)
+    LinearLayout mSearch;
+
     private ProductAdapter mAdapter;
 
 
@@ -80,6 +86,9 @@ public class MarketDelegate extends AbstractDelegate {
 
         initRecyclerView();
         initSwipeRefresh();
+
+        mSearch.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
+
     }
 
     private void loadUser() {

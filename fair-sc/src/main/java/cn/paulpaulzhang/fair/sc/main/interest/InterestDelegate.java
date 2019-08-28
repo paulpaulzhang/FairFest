@@ -8,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -43,6 +45,7 @@ import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -70,8 +73,10 @@ public class InterestDelegate extends FairDelegate implements
     @BindView(R2.id.toolbar)
     Toolbar mToolbar;
 
+    @BindView(R2.id.ll_search)
+    LinearLayout mSearch;
+
     private TabViewPagerAdapter mAdapter;
-    private FairDelegate currentDelegate;
     private int lastPosition = 0;
 
     @Override
@@ -89,6 +94,8 @@ public class InterestDelegate extends FairDelegate implements
             }
             return true;
         });
+
+        mSearch.setOnClickListener(v-> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
         initTab();
         loadUser();
     }

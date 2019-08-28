@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="15dp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/ll_search"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/fillet_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/civ_user"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:id="@+id/iv_back"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_back"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:layout_width="0dp"
+            android:id="@+id/et_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:background="@null"
+            android:imeOptions="actionSearch"
+            android:gravity="center_vertical"
+            android:hint="@string/app_name"
+            android:textColor="@color/font_default" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_delete"
+            android:layout_width="20dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_delete_search"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:id="@+id/iv_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_search"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/rv_search"/>
+
+</LinearLayout>

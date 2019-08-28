@@ -3,10 +3,12 @@ package cn.paulpaulzhang.fair.sc.main.user.delegate;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +25,7 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.SettingActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
@@ -58,6 +61,9 @@ public class UserDelegate extends FairDelegate {
     @BindView(R2.id.tv_fans_count)
     AppCompatTextView mFansCount;
 
+    @BindView(R2.id.ll_search)
+    LinearLayout mSearch;
+
     @Override
     public Object setLayout() {
         return R.layout.delegate_user;
@@ -67,6 +73,9 @@ public class UserDelegate extends FairDelegate {
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         initSwipeRefresh();
         requestUserData();
+
+        mSearch.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
+
     }
 
     private void loadUserData() {

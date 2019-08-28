@@ -60,5 +60,6 @@
             android:name=".main.user.activity.SettingActivity"
             android:label="@string/setting" />
         <activity android:name=".main.interest.activity.BigEventActivity" />
+        <activity android:name=".main.search.SearchActivity" />
     </application>
 </manifest>
