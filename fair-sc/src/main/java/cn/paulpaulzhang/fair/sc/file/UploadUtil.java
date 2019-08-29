@@ -90,9 +90,8 @@ public class UploadUtil {
                 try {
                     FileInputStream in = new FileInputStream(file);
                     String extension = FileUtil.getExtension(file.getPath());
-                    String nameByTime = FileUtil.getFileNameByTime( "FairSchool_"+ user.getUsername(), extension);
+                    String nameByTime = FileUtil.getFileNameByTime("FairSchool_" + user.getId(), extension);
                     String path = uploadFile(nameByTime, in);
-                    FairLogger.d("url", path);
                     if (path == null || path.isEmpty()) {
                         activity.runOnUiThread(listener::onError);
                         return;

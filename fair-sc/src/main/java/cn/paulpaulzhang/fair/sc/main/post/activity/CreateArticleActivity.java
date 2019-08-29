@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -302,7 +303,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
                 }
                 Map<String, String> imgMap = new TreeMap<>();
                 for (int i = 0; i < paths.size(); i++) {
-                    imgMap.put("i" + 0, paths.get(i));
+                    imgMap.put("i" + i, paths.get(i));
                 }
                 RestClient.builder()
                         .url(Api.SEND_POST)
@@ -349,4 +350,5 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
             }
         }
     }
+
 }

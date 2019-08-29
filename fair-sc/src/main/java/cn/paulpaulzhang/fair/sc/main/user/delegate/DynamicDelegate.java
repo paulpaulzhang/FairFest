@@ -114,7 +114,6 @@ public class DynamicDelegate extends FairDelegate {
         int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA, response -> {
-
                 page = 0;
                 JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
                 List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
@@ -126,6 +125,7 @@ public class DynamicDelegate extends FairDelegate {
                     items.add(new Dynamic(postCache.getType(), postCache, isLike));
                 }
                 mAdapter.setNewData(items);
+                mRecyclerView.scrollToPosition(0);
             });
 
         } else if (type == Constant.LOAD_MORE_DATA) {

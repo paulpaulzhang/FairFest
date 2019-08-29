@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.sc.database;
 
+import android.text.TextUtils;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -24,6 +26,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
+import cn.paulpaulzhang.fair.util.text.TextUtil;
 import io.objectbox.Box;
 
 /**
@@ -37,6 +40,11 @@ public final class JsonParseUtil {
         List<DiscoveryPostCache> postCaches = new ArrayList<>();
         List<DiscoveryUserCache> userCaches = new ArrayList<>();
         List<DiscoveryLikeCache> likeCaches = new ArrayList<>();
+
+        String result = JSON.parseObject(response).getString("result");
+        if (TextUtils.equals(result, "未知错误")) {
+            return;
+        }
 
         Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
         if (postMap != null) {
@@ -102,6 +110,11 @@ public final class JsonParseUtil {
         List<FollowUserCache> userCaches = new ArrayList<>();
         List<FollowLikeCache> likeCaches = new ArrayList<>();
 
+        String result = JSON.parseObject(response).getString("result");
+        if (TextUtils.equals(result, "未知错误")) {
+            return;
+        }
+
         Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
         if (postMap != null) {
             for (String key : postMap.keySet()) {
@@ -165,6 +178,11 @@ public final class JsonParseUtil {
         List<PostCache> postCaches = new ArrayList<>();
         List<UserCache> userCaches = new ArrayList<>();
         List<LikeCache> likeCaches = new ArrayList<>();
+
+        String result = JSON.parseObject(response).getString("result");
+        if (TextUtils.equals(result, "未知错误")) {
+            return;
+        }
 
         Map<String, Object> postMap = JSON.parseObject(response).getJSONObject("post").getInnerMap();
         if (postMap != null) {

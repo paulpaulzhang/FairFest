@@ -66,7 +66,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
         final String code = Objects.requireNonNull(mCode.getText()).toString().trim();
 
         boolean isPass = true;
-        if (phone.isEmpty() || phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
+        if (phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
             mPhone.setError(getString(R.string.error_phone_number));
             isPass = false;
         } else {
@@ -95,7 +95,7 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
     void getCode() {
         final String phone = Objects.requireNonNull(mPhone.getText()).toString().trim();
 
-        if (phone.isEmpty() || phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
+        if (phone.length() != 11 || !Patterns.PHONE.matcher(phone).matches()) {
             mPhone.setError(getString(R.string.error_phone_number));
         } else {
             mPhone.setError(null);

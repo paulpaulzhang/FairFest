@@ -86,7 +86,7 @@ public class UserDelegate extends FairDelegate {
                     .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                     .into(mUserAvatar);
             mUsername.setText(user.getUsername() == null ?
-                    String.valueOf(user.getId()).substring(8) : user.getUsername());
+                    String.valueOf(user.getId()) : user.getUsername());
             mDynamicCount.setText(String.valueOf(user.getDynamicCount()));
             mPayCount.setText(String.valueOf(user.getPaysCount()));
             mFansCount.setText(String.valueOf(user.getFansCount()));

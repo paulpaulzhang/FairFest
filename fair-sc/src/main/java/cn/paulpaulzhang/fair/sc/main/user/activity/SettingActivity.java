@@ -24,6 +24,7 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 
@@ -69,6 +70,7 @@ public class SettingActivity extends FairActivity {
                 })
                 .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
                 .show();
+
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(android.R.color.holo_red_light));
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.font_default));
     }

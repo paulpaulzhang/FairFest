@@ -24,6 +24,9 @@ public class Transform {
     public static Message getLatestMessage(Conversation conversation) {
 
         cn.jpush.im.android.api.model.Message message = conversation.getLatestMessage();
+        if (message == null) {
+            return null;
+        }
         switch (message.getContentType()) {
             case text:
                 TextContent textContent = (TextContent) message.getContent();

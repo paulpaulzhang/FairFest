@@ -35,6 +35,7 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.sc.main.user.model.Dynamic;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -187,7 +188,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                 }
             }, false);
 
-        } else if (item.getItemType() == TopicDetail.ARTICLE) {
+        } else if (item.getItemType() == Dynamic.ARTICLE) {
             PostCache postCache = item.getPostCache();
             long id = postCache.getId();
             long uid = postCache.getUid();

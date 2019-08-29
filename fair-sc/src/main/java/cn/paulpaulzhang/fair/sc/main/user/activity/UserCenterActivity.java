@@ -344,7 +344,7 @@ public class UserCenterActivity extends FairActivity {
             mBackground.setImageResource(R.mipmap.user_background);
         }
         mName.setText(user.getUsername() == null ?
-                String.valueOf(user.getId()).substring(8) : user.getUsername());
+                String.valueOf(user.getId()) : user.getUsername());
         mTitleName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
         mIntroduction.setText(user.getIntroduction() != null ? user.getIntroduction() : "这个人很懒，什么也没有写");
         mPayCount.setText(String.valueOf(user.getPaysCount()));
