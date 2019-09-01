@@ -135,6 +135,11 @@ dependencies {
         exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
     }
 
+    api('com.afollestad.material-dialogs:datetime:3.1.0') {
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib'
+        exclude group: 'org.jetbrains.kotlin', module: 'kotlin-stdlib-common'
+    }
+
     api 'top.zibin:Luban:1.1.8'
 
     api 'com.zhihu.android:matisse:0.5.2-beta5'

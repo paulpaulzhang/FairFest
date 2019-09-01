@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -255,7 +254,7 @@ public class MessageActivity extends FairActivity implements
         MaterialDialog dialog = new MaterialDialog(this, MaterialDialog.getDEFAULT_BEHAVIOR());
 
         if (message.getImageUrl() == null) {
-            DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_select_dialog,
+            DialogCustomViewExtKt.customView(dialog, R.layout.dialog_select_message,
                     null, false, true, false, true);
             View customerView = DialogCustomViewExtKt.getCustomView(dialog);
             customerView.findViewById(R.id.tv_copy).setOnClickListener(v -> {
@@ -272,7 +271,7 @@ public class MessageActivity extends FairActivity implements
                 dialog.dismiss();
             });
         } else {
-            DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_delete_dialog,
+            DialogCustomViewExtKt.customView(dialog, R.layout.dialog_delete_message,
                     null, false, true, false, true);
             View customerView = DialogCustomViewExtKt.getCustomView(dialog);
             customerView.findViewById(R.id.tv_delete).setOnClickListener(v -> {

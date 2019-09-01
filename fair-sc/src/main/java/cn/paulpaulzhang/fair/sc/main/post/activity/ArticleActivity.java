@@ -383,7 +383,7 @@ public class ArticleActivity extends FairActivity implements View.OnClickListene
 
     private void initBottomDialog() {
         MaterialDialog dialog = new MaterialDialog(this, new BottomSheet(LayoutMode.WRAP_CONTENT));
-        DialogCustomViewExtKt.customView(dialog, R.layout.view_edit_bottom_dialog,
+        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_comment_bottom,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(dialog, this);
         dialog.cornerRadius(8f, null);

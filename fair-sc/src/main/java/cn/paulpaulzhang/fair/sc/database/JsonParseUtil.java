@@ -1,6 +1,7 @@
 package cn.paulpaulzhang.fair.sc.database;
 
 import android.text.TextUtils;
+import android.util.ArraySet;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -9,9 +10,11 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.constant.Constant;
+import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryUserCache;
@@ -19,12 +22,16 @@ import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.Major;
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.School;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
+import cn.paulpaulzhang.fair.util.file.FileUtil;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import io.objectbox.Box;
@@ -112,6 +119,7 @@ public final class JsonParseUtil {
 
         String result = JSON.parseObject(response).getString("result");
         if (TextUtils.equals(result, "未知错误")) {
+            FairLogger.d("FOLLOW-POST", "未知错误");
             return;
         }
 
@@ -319,6 +327,43 @@ public final class JsonParseUtil {
 
             RecommendUserCache user = new RecommendUserCache(id, username, followers, fans, avatar, time);
             userCacheBox.put(user);
+        }
+    }
+
+    public static void parseSchoolList(String json) {
+        Set<String> schoolSet = new ArraySet<>();
+        JSONArray schoolList = JSON.parseObject(json).getJSONArray("schoolList");
+        for (int i = 0; i < schoolList.size(); i++) {
+            JSONObject schoolsObject = schoolList.getJSONObject(i);
+            JSONArray schools = schoolsObject.getJSONArray("school");
+            for (int j = 0; j < schools.size(); j++) {
+                JSONObject schoolObject = schools.getJSONObject(j);
+                String name = schoolObject.getString("name");
+                schoolSet.add(name);
+            }
+        }
+
+        Box<School> schoolBox = ObjectBox.get().boxFor(School.class);
+        for (String str : schoolSet) {
+            schoolBox.put(new School(str));
+        }
+    }
+
+    public static void parseMajorList(String json) {
+        Set<String> majorSet = new ArraySet<>();
+        JSONArray majorList = JSON.parseObject(json).getJSONArray("majorList");
+        for (int i = 0; i < majorList.size(); i++) {
+            JSONObject majorsObject = majorList.getJSONObject(i);
+            JSONArray majors = majorsObject.getJSONArray("class");
+            for (int j = 0; j < majors.size(); j++) {
+                String name = majors.getJSONObject(j).getString("name");
+                majorSet.add(name);
+            }
+        }
+
+        Box<Major> majorBox = ObjectBox.get().boxFor(Major.class);
+        for (String str : majorSet) {
+            majorBox.put(new Major(str));
         }
     }
 }

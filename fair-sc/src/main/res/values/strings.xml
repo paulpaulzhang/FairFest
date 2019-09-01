@@ -77,8 +77,26 @@
     <string name="age">年龄</string>
     <string name="gender">性别</string>
     <string name="school">学校</string>
-    <string name="college">学院</string>
+    <string name="college">专业</string>
     <string name="log_out">退出登录</string>
     <string name="big_event">大事件</string>
     <string name="rmb">￥</string>
+    <string name="avatar">头像</string>
+    <string name="personal_page_bg">个人主页背景</string>
+    <string name="username">用户名</string>
+    <string name="birthday">生日</string>
+    <string name="constellation">星座</string>
+    <string name="sid">学号</string>
+    <string name="introduction">签名</string>
+    <string name="change_introduction">修改签名</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="set_sid_only_once">学号设置后不可修改，谨慎输入</string>
+    <string name="edit_username">修改用户名</string>
+    <string name="unset">未设置</string>
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="change_birthday">更改生日</string>
+    <string name="select_date">选择日期</string>
+    <string name="touch_search">点击搜索</string>
 </resources>

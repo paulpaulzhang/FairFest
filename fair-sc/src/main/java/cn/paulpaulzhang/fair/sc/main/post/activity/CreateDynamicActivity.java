@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -248,8 +247,8 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
             topics.add(new Topic(cache));
         }
         MaterialDialog dialog = new MaterialDialog(this, new BottomSheet());
-        DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_topic_list_dialog,
-                null, false, true, false, true);
+        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_topic_list,
+                null, false, false, false, true);
         View customerView = DialogCustomViewExtKt.getCustomView(dialog);
         dialog.cornerRadius(8f, null);
         RecyclerView recyclerView = customerView.findViewById(R.id.rv_topic_list);

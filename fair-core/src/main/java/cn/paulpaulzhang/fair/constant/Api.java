@@ -9,7 +9,7 @@ package cn.paulpaulzhang.fair.constant;
 public class Api {
     public static final String FTP_HOST = "www.matchstickmen.club";
 
-    public static final String FTP_PATH = "/data/ftp/pub/img";
+    public static final String FTP_PATH = "/data/ftp/pub/img/app";
 
     public static final String FTP_USERNAME = "zhangluming";
 
@@ -58,5 +58,27 @@ public class Api {
     public static final String GET_POST_BY_UID = "matchstickmen/getPostByUid.action";
 
     public static final String GET_POST_BY_UID_PAY_ALL_UID = "matchstickmen/getPostByUidPayAllUid.action";
+
+    public static final String DELETE_POST = "matchstickmen/deletePost.action";
+
+    public static final String EDIT_USERNAME = "matchstickmen/editUsername.action";
+
+    public static final String EDIT_GENDER = "matchstickmen/editGender.action ";
+
+    public static final String EDIT_EMAIL = "matchstickmen/editEmail.action";
+
+    public static final String EDIT_SCHOOL = "matchstickmen/editSchool.action";
+
+    public static final String EDIT_STUDENT_ID = "matchstickmen/editStudentId.action";
+
+    public static final String EDIT_INTRODUCTION = "matchstickmen/editIntroduction.action";
+
+    public static final String EDIT_COLLEGE = "matchstickmen/editCollege.action";
+
+    public static final String EDIT_BIRTHDAY = "matchstickmen/editBirthday.action";
+
+    public static final String EDIT_AVATAR = "matchstickmen/editAvatar.action";
+
+    public static final String EDIT_BACKGROUND = "matchstickmen/editBackground.action";
 
 }

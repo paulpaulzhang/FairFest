@@ -2,19 +2,25 @@ package cn.paulpaulzhang.fair.sc.main.user.delegate;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.alibaba.fastjson.JSON;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
+import cn.paulpaulzhang.fair.app.AccountManager;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
@@ -27,15 +33,18 @@ import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.SettingActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.DynamicAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.model.Dynamic;
+import cn.paulpaulzhang.fair.sc.sign.SignUpActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
@@ -103,6 +112,36 @@ public class DynamicDelegate extends FairDelegate {
                 }
 
             }
+        });
+
+        mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+            Dynamic dynamic = (Dynamic) adapter.getItem(position);
+            if (dynamic != null) {
+                long pid = dynamic.getPostCache().getId();
+                AlertDialog dialog = new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+                        .setTitle("删除确认")
+                        .setMessage("点击确认将删除此动态，该操作不可撤销")
+                        .setPositiveButton("确认", (dialogInterface, i) -> RestClient.builder()
+                                .url(Api.DELETE_POST)
+                                .params("pid", pid)
+                                .success(response -> {
+                                    String result = JSON.parseObject(response).getString("result");
+                                    if (TextUtils.equals(result, "ok")) {
+                                        Box<PostCache> box = ObjectBox.get().boxFor(PostCache.class);
+                                        box.remove(pid);
+                                        adapter.remove(position);
+                                    }
+                                })
+                                .error((code, msg) -> Toasty.error(getContext(), "删除失败", Toasty.LENGTH_SHORT).show())
+                                .build()
+                                .post())
+                        .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
+                        .show();
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Objects.requireNonNull(getContext()).getColor(android.R.color.holo_red_light));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getContext().getColor(R.color.font_default));
+            }
+            return true;
         });
     }
 

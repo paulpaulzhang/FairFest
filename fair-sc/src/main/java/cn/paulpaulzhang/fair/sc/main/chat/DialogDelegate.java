@@ -1,19 +1,12 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.TransitionRes;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -58,7 +51,6 @@ import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
-import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 
@@ -159,7 +151,7 @@ public class DialogDelegate extends FairDelegate
     @Override
     public void onDialogLongClick(Dialog dialog) {
         MaterialDialog materialDialog = new MaterialDialog(Objects.requireNonNull(getContext()), MaterialDialog.getDEFAULT_BEHAVIOR());
-        DialogCustomViewExtKt.customView(materialDialog, R.layout.view_custom_remove_dialog,
+        DialogCustomViewExtKt.customView(materialDialog, R.layout.dialog_remove_dialog,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(materialDialog, this);
         materialDialog.cornerRadius(4f, null);

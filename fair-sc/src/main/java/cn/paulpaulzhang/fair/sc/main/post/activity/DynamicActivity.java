@@ -27,7 +27,6 @@ import com.bumptech.glide.Glide;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.flyco.tablayout.SlidingTabLayout;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
@@ -48,7 +47,6 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
-import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
@@ -346,7 +344,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
 
     private void initBottomDialog() {
         MaterialDialog dialog = new MaterialDialog(this, new BottomSheet(LayoutMode.WRAP_CONTENT));
-        DialogCustomViewExtKt.customView(dialog, R.layout.view_edit_bottom_dialog,
+        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_comment_bottom,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(dialog, this);
         dialog.cornerRadius(8f, null);

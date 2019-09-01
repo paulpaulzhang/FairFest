@@ -1,22 +1,15 @@
 package cn.paulpaulzhang.fair.sc.main.interest;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.materialdialogs.LayoutMode;
@@ -40,14 +33,10 @@ import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.main.interest.delegate.DiscoveryDelegate;
-import cn.paulpaulzhang.fair.sc.main.interest.delegate.FollowDelegate;
-import cn.paulpaulzhang.fair.sc.main.interest.delegate.TopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.objectbox.Box;
@@ -178,7 +167,7 @@ public class InterestDelegate extends FairDelegate implements
 
     private void initBottomDialog() {
         MaterialDialog dialog = new MaterialDialog(Objects.requireNonNull(getContext()), new BottomSheet(LayoutMode.WRAP_CONTENT));
-        DialogCustomViewExtKt.customView(dialog, R.layout.view_custom_create_bottom_dialog,
+        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_create_bottom,
                 null, false, true, false, true);
         LifecycleExtKt.lifecycleOwner(dialog, this);
         dialog.cornerRadius(8f, null);

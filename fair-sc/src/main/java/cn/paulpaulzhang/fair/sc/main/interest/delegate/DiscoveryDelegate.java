@@ -118,9 +118,10 @@ public class DiscoveryDelegate extends AbstractDelegate {
 
     private void initHeader(View view) {
         List<String> data = new ArrayList<>();
-        data.add("http://pic37.nipic.com/20140113/8800276_184927469000_2.png");
-        data.add("http://pic40.nipic.com/20140331/9469669_142840860000_2.jpg");
-        data.add("http://pic41.nipic.com/20140508/18609517_112216473140_2.jpg");
+        data.add("http:/www.matchstickmen.club/banner/banner1.jpg");
+        data.add("http:/www.matchstickmen.club/banner/banner2.jpg");
+        data.add("http:/www.matchstickmen.club/banner/banner3.jpg");
+        data.add("http:/www.matchstickmen.club/banner/banner4.jpg");
 
         ConvenientBanner<String> mConvenientBanner = view.findViewById(R.id.cb_discovery);
         mConvenientBanner.setPages(new BannerHolderCreator(), data)

@@ -19,7 +19,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -37,7 +36,6 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
 import com.yalantis.ucrop.UCrop;
-import com.yalantis.ucrop.UCropActivity;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
@@ -45,11 +43,8 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import cn.jpush.im.android.api.JMessageClient;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
@@ -58,12 +53,11 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
+import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.main.chat.MessageActivity;
-import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
-import cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity;
-import cn.paulpaulzhang.fair.sc.main.post.model.Image;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.ViewPagerAdapter;
-import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.DynamicDelegate;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
@@ -74,9 +68,8 @@ import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.user
@@ -194,7 +187,7 @@ public class UserCenterActivity extends FairActivity {
         mBackground.setOnClickListener(v -> {
             if (uid == FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())) {
                 MaterialDialog materialDialog = new MaterialDialog(this, MaterialDialog.getDEFAULT_BEHAVIOR());
-                DialogCustomViewExtKt.customView(materialDialog, R.layout.view_custom_change_bg_dialog,
+                DialogCustomViewExtKt.customView(materialDialog, R.layout.dialog_change_bg,
                         null, false, true, false, true);
                 LifecycleExtKt.lifecycleOwner(materialDialog, this);
                 materialDialog.cornerRadius(4f, null);
@@ -212,6 +205,12 @@ public class UserCenterActivity extends FairActivity {
         mAvatar.setOnClickListener(v -> {
             Intent intent = new Intent(this, PhotoActivity.class);
             intent.putExtra("path", user.getAvatar() == null ? Constant.DEFAULT_AVATAR : user.getAvatar());
+            startActivity(intent);
+        });
+
+        mEdit.setOnClickListener(v -> {
+            Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("uid", uid);
             startActivity(intent);
         });
 
@@ -338,11 +337,9 @@ public class UserCenterActivity extends FairActivity {
         Glide.with(this)
                 .load(user.getAvatar() != null ? user.getAvatar() : Constant.DEFAULT_AVATAR)
                 .into(mTitleAvatar);
-        if (user.getBackground() != null) {
-            Glide.with(this).load(user.getBackground()).into(mBackground);
-        } else {
-            mBackground.setImageResource(R.mipmap.user_background);
-        }
+        Glide.with(this)
+                .load(user.getBackground() != null ? user.getBackground() : Constant.DEFAULT_BACKGROUND)
+                .into(mBackground);
         mName.setText(user.getUsername() == null ?
                 String.valueOf(user.getId()) : user.getUsername());
         mTitleName.setText(user.getUsername() != null ? user.getUsername() : user.getPhone());
@@ -458,7 +455,45 @@ public class UserCenterActivity extends FairActivity {
             final Uri uri = UCrop.getOutput(data);
             if (uri != null) {
                 Glide.with(UserCenterActivity.this).load(uri).into(mBackground);
-                //TODO UPLOAD BACKGROUND
+                String path = uri.getPath();
+                if (path != null) {
+                    UploadUtil util = UploadUtil.INSTANCE();
+                    List<File> files = new ArrayList<>();
+                    files.add(new File(path));
+                    util.uploadFile(this, files, new IUploadFileListener() {
+                        @Override
+                        public void onSuccess(List<String> paths) {
+                            if (paths == null || paths.size() != 1) {
+                                Toasty.error(UserCenterActivity.this, "上传失败", Toasty.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            RestClient.builder()
+                                    .url(Api.EDIT_BACKGROUND)
+                                    .params("uid", uid)
+                                    .params("background", paths.get(0))
+                                    .success(response -> {
+                                        String result = JSON.parseObject(response).getString("result");
+                                        if (TextUtils.equals(result, "ok")) {
+                                            Box<User> userBox = ObjectBox.get().boxFor(User.class);
+                                            User user = userBox.get(uid);
+                                            user.setBackground(paths.get(0));
+                                            userBox.put(user);
+                                        }
+                                    })
+                                    .error((code, msg) ->
+                                            Toasty.error(UserCenterActivity.this, "上传失败 " + code, Toasty.LENGTH_SHORT).show())
+                                    .build()
+                                    .post();
+                        }
+
+                        @Override
+                        public void onError() {
+                            Toasty.error(UserCenterActivity.this, "上传失败", Toasty.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
         } else if (requestCode == UCrop.RESULT_ERROR) {
             Toasty.error(UserCenterActivity.this, "无法裁剪图片", Toasty.LENGTH_SHORT).show();
@@ -493,7 +528,7 @@ public class UserCenterActivity extends FairActivity {
         UCrop.Options options = new UCrop.Options();
         options.setToolbarColor(getColor(R.color.colorAccent)); // 设置标题栏颜色
         options.setStatusBarColor(getColor(R.color.colorAccent)); //设置状态栏颜色
-        options.setToolbarWidgetColor(getColor(android.R.color.black));
+        options.setToolbarWidgetColor(getColor(android.R.color.white));
         UCrop.of(uri, destinationUri)
                 .withAspectRatio(DimenUtil.getScreenWidthByDp(), 360)
                 .withMaxResultSize(1080, 1080)
@@ -539,5 +574,10 @@ public class UserCenterActivity extends FairActivity {
 
     public long getUid() {
         return uid;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

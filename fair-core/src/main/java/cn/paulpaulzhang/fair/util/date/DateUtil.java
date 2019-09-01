@@ -212,4 +212,9 @@ public class DateUtil {
         return date;
     }
 
+    public static long string2Long(String time, String format) {
+        Date date = string2Date(time, format);
+        return date.getTime();
+    }
+
 }
