@@ -56,6 +56,7 @@ import cn.paulpaulzhang.fair.sc.main.chat.holder.InCommingTextMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.holder.OutCommingImageMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.holder.OutCommingTextMessageHolder;
 import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
@@ -109,10 +110,7 @@ public class MessageActivity extends FairActivity implements
 
         mHandler = new BackgroundHandler(this);
 
-
         conversation = Conversation.createSingleConversation(username);
-
-
         conversation.setUnReadMessageCnt(0);
 
         initToolbar(mToolbar, conversation.getTitle());
@@ -142,8 +140,9 @@ public class MessageActivity extends FairActivity implements
         mMessageListAdapter.setOnMessageClickListener(this);
         mMessageListAdapter.setLoadMoreListener(this);
         mMessageListAdapter.registerViewClickListener(R.id.messageUserAvatar, (view, message) -> {
-
-            Toasty.info(this, message.getUser().getName(), Toasty.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, UserCenterActivity.class);
+            intent.putExtra("uid", Long.parseLong(message.getUser().getId()));
+            startActivity(intent);
         });
 
         mMessageListAdapter.setDateHeadersFormatter(this);
@@ -194,7 +193,6 @@ public class MessageActivity extends FairActivity implements
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        FairLogger.d("SUBMIT");
         cn.jpush.im.android.api.model.Message jmessage = JMessageClient.createSingleTextMessage(username, input.toString());
         JMessageClient.sendMessage(jmessage);
         jmessage.setOnSendCompleteCallback(new BasicCallback() {
@@ -208,7 +206,6 @@ public class MessageActivity extends FairActivity implements
                 }
             }
         });
-
         return true;
     }
 

@@ -1,5 +1,7 @@
 package cn.paulpaulzhang.fair.sc.database.Entity;
 
+import androidx.annotation.NonNull;
+
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -48,5 +50,11 @@ public class LikeCache {
 
     public boolean isLike() {
         return isLike;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return pid + "  " + isLike;
     }
 }

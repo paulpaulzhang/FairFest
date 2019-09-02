@@ -73,7 +73,6 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
             int commentCount = postCache.getCommentCount();
             int shareCount = postCache.getShareCount();
 
-
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
             LinearLayout mComment = helper.getView(R.id.ll_comment_dynamic);
@@ -111,7 +110,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
                             .params("pid", id)
                             .success(r -> {
                                 helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
                                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                                 item.setLike(false);
                             })
@@ -162,7 +161,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mDynamicContent = helper.getView(R.id.etv_content_dynamic);
-            mDynamicContent.setContent(TextUtil.text2Post(content));
+            mDynamicContent.setContent(TextUtil.textHightLightTopic(content));
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
@@ -235,7 +234,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
                             .params("pid", id)
                             .success(r -> {
                                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
                                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                                 item.setLike(false);
                             })
@@ -287,7 +286,7 @@ public class TopicDetailAdapter extends BaseMultiItemQuickAdapter<TopicDetail, B
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mArticleContent = helper.getView(R.id.etv_content_article);
-            mArticleContent.setContent(TextUtil.text2Post(content));
+            mArticleContent.setContent(TextUtil.textHightLightTopic(content));
             mArticleContent.setOnClickListener(v -> Toast.makeText(mContext, "查看更多", Toast.LENGTH_SHORT).show());
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content

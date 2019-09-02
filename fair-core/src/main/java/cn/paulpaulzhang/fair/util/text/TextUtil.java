@@ -1,7 +1,5 @@
 package cn.paulpaulzhang.fair.util.text;
 
-import android.text.TextUtils;
-
 /**
  * 包名: cn.paulpaulzhang.fair.util.text
  * 创建时间: 8/20/2019
@@ -9,7 +7,7 @@ import android.text.TextUtils;
  * 描述:
  */
 public class TextUtil {
-    public static String text2Post(String text) {
+    public static String textHightLightTopic(String text) {
         char brackets = '[';
         StringBuilder builder = new StringBuilder();
         for (int i = 0; i < text.length(); i++) {
@@ -29,7 +27,7 @@ public class TextUtil {
     }
 
     public static void main(String[] args) {
-        String s = text2Post("#你好啊# 啊#啊#啊啊");
+        String s = textHightLightTopic("#你好啊# 啊#啊#啊啊");
         System.out.println(s);
     }
 

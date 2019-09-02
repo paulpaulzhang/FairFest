@@ -33,6 +33,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.BigEventActivity;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.TeamActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.DiscoveryAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
@@ -133,8 +134,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
         view.findViewById(R.id.ll_big_event).setOnClickListener(v -> startActivity(new Intent(getContext(), BigEventActivity.class)));
         view.findViewById(R.id.ll_announcement).setOnClickListener(v -> {
         });
-        view.findViewById(R.id.ll_course_table).setOnClickListener(v -> {
-        });
+        view.findViewById(R.id.ll_team).setOnClickListener(v -> startActivity(new Intent(getContext(), TeamActivity.class)));
         view.findViewById(R.id.ll_help).setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), TopicDetailActivity.class);
             intent.putExtra("name", "校园帮");

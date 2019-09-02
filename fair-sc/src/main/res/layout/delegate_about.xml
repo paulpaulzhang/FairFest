@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/t_level"
             app:layout_constraintStart_toEndOf="@id/t_level"
             app:layout_constraintTop_toTopOf="@id/t_level" />
@@ -59,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/t_age"
             app:layout_constraintStart_toEndOf="@id/t_age"
             app:layout_constraintTop_toTopOf="@id/t_age" />
@@ -79,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/t_gender"
             app:layout_constraintStart_toEndOf="@id/t_gender"
             app:layout_constraintTop_toTopOf="@id/t_gender" />
@@ -99,6 +102,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/t_school"
             app:layout_constraintStart_toEndOf="@id/t_school"
             app:layout_constraintTop_toTopOf="@id/t_school" />
@@ -119,6 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:textSize="16sp"
+            android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="@id/t_college"
             app:layout_constraintStart_toEndOf="@id/t_college"
             app:layout_constraintTop_toTopOf="@id/t_college" />

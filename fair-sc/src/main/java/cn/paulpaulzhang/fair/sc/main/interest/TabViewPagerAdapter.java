@@ -28,8 +28,8 @@ public class TabViewPagerAdapter extends FragmentPagerAdapter {
 
     public TabViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-        delegates.add(new DiscoveryDelegate());
         delegates.add(new FollowDelegate());
+        delegates.add(new DiscoveryDelegate());
         delegates.add(new TopicDelegate());
     }
 

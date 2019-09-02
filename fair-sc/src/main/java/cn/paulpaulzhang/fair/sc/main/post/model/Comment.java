@@ -13,13 +13,19 @@ public class Comment {
 
     private String content;
 
-    private String time;
+    private long time;
 
-    public Comment(String avatarUrl, String username, String content, String time) {
+    private String imgUrl;
+
+    private long uid;
+
+    public Comment(long uid, String avatarUrl, String username, String content, String imgUrl, long time) {
         this.avatarUrl = avatarUrl;
         this.username = username;
         this.content = content;
         this.time = time;
+        this.imgUrl = imgUrl;
+        this.uid = uid;
     }
 
     public String getAvatarUrl() {
@@ -46,11 +52,27 @@ public class Comment {
         this.content = content;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 }

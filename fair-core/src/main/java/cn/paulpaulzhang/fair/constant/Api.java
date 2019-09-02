@@ -81,4 +81,12 @@ public class Api {
 
     public static final String EDIT_BACKGROUND = "matchstickmen/editBackground.action";
 
+    public static final String ADD_COMMENT = "matchstickmen/addComment.action";
+
+    public static final String GET_USER_THUMBSUP_BY_PID = "matchstickmen/getUserThumbsupByPid.action";
+
+    public static final String GET_TOPICS_BY_UID = "matchstickmen/getTopicsByUid.action";
+
+    public static final String GET_USER_COMMENT_BY_PID = "matchstickmen/getCommentByPid.action";
+
 }

@@ -167,22 +167,24 @@ public class SignUpActivity extends FairActivity implements ITimerListener {
     @Override
     public void onTimer() {
         runOnUiThread(() -> {
-            assert mGetCode != null;
-            mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
-            mGetCode.setEnabled(false);
-            mGetCode.setStrokeColorResource(android.R.color.darker_gray);
-            mGetCode.setTextColor(getColor(R.color.font_default));
-            mGetCode.setTextColor(getColor(android.R.color.darker_gray));
-            mCount--;
-            if (mCount < 0) {
-                assert mTimer != null;
-                mTimer.cancel();
-                mTimer = null;
-                mGetCode.setText("发送验证码");
-                mGetCode.setStrokeColorResource(R.color.colorAccent);
-                mGetCode.setTextColor(getColor(R.color.colorAccent));
-                mGetCode.setEnabled(true);
-                mCount = 30;
+            if (mGetCode != null) {
+                mGetCode.setText(MessageFormat.format("重新获取{0}s", mCount));
+                mGetCode.setEnabled(false);
+                mGetCode.setStrokeColorResource(android.R.color.darker_gray);
+                mGetCode.setTextColor(getColor(R.color.font_default));
+                mGetCode.setTextColor(getColor(android.R.color.darker_gray));
+                mCount--;
+                if (mCount < 0) {
+                    if (mTimer != null) {
+                        mTimer.cancel();
+                        mTimer = null;
+                        mGetCode.setText("发送验证码");
+                        mGetCode.setStrokeColorResource(R.color.colorAccent);
+                        mGetCode.setTextColor(getColor(R.color.colorAccent));
+                        mGetCode.setEnabled(true);
+                        mCount = 30;
+                    }
+                }
             }
         });
     }

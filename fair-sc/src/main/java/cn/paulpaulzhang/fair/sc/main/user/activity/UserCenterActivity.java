@@ -59,6 +59,7 @@ import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.main.chat.MessageActivity;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
+import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.DynamicDelegate;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.dimen.DimenUtil;
@@ -159,9 +160,6 @@ public class UserCenterActivity extends FairActivity {
         initToolbar(mToolbar);
         initHeader();
         initTab();
-        if (uid != -1) {
-            requestData();
-        }
 
     }
 
@@ -428,6 +426,9 @@ public class UserCenterActivity extends FairActivity {
 
         AboutDelegate aboutDelegate = (AboutDelegate) mPagerAdapter.getItem(2);
         aboutDelegate.loadUserData(user);
+
+        ConcernTopicDelegate topicDelegate = (ConcernTopicDelegate) mPagerAdapter.getItem(1);
+        topicDelegate.loadData();
     }
 
     private String getAlpha(int i) {
@@ -579,5 +580,8 @@ public class UserCenterActivity extends FairActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (uid != -1) {
+            requestData();
+        }
     }
 }

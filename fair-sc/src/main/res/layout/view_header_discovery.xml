@@ -80,7 +80,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_course_table"
+                android:id="@+id/ll_team"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
@@ -94,13 +94,13 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/discovery_icon_size"
                     android:layout_height="@dimen/discovery_icon_size"
-                    android:src="@drawable/ic_course_table" />
+                    android:src="@drawable/ic_team" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/discovery_margin_top"
-                    android:text="@string/course_table"
+                    android:text="@string/team"
                     android:textColor="@android:color/black"
                     android:textSize="@dimen/discovery_header_text_size" />
             </LinearLayout>

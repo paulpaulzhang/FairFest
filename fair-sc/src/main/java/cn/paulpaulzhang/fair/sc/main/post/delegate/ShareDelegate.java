@@ -16,6 +16,7 @@ import butterknife.BindView;
 import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.post.activity.PostActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Share;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ShareAdapter;
 import es.dmoral.toasty.Toasty;
@@ -51,7 +52,10 @@ public class ShareDelegate extends FairDelegate {
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
                 android.R.color.holo_green_light);
         mSwipeRefresh.setOnRefreshListener(() -> {
-
+            PostActivity activity = (PostActivity) getActivity();
+            if (activity != null) {
+                activity.initHeader();
+            }
         });
     }
 
@@ -59,10 +63,6 @@ public class ShareDelegate extends FairDelegate {
     private void initRecyclerView() {
         List<Share> items = new ArrayList<>();
 
-        for (int i = 0; i < 30; i++) {
-            String url = "http://img4.imgtn.bdimg.com/it/u=3328407446,2075123598&fm=26&gp=0.jpg";
-            items.add(new Share(url, "Paul"));
-        }
 
         mAdapter = new ShareAdapter(R.layout.item_share, items);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

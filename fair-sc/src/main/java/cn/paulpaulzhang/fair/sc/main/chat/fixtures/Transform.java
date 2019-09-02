@@ -59,7 +59,6 @@ public class Transform {
                         null,
                         new Date(message.getCreateTime()), message);
                 msg.setImage(new Message.Image(imageContent.getLocalThumbnailPath()));
-
                 return msg;
             default:
         }

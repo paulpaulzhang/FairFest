@@ -2,12 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cn.paulpaulzhang.fair.sc">
 
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
-
     <application>
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
             <intent-filter>
@@ -52,7 +46,9 @@
             android:label="@string/post_article"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity" />
-        <activity android:name=".main.chat.MessageActivity" />
+        <activity
+            android:name=".main.chat.MessageActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".main.chat.PhotoActivity" />
         <activity android:name=".main.user.activity.UserCenterActivity" />
         <activity android:name=".main.user.activity.PhotoActivity" />
@@ -62,5 +58,12 @@
         <activity android:name=".main.interest.activity.BigEventActivity" />
         <activity android:name=".main.search.SearchActivity" />
         <activity android:name=".main.user.activity.EditActivity" />
+        <activity android:name=".main.interest.activity.TeamActivity" />
     </application>
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 </manifest>

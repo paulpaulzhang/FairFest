@@ -11,27 +11,37 @@
         android:id="@id/messageUserAvatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        app:layout_constraintBottom_toBottomOf="@id/bubble"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/ll"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
-        android:id="@id/bubble"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical"
+        android:minHeight="40dp"
+        android:id="@+id/ll"
+        android:gravity="bottom"
         app:layout_constraintEnd_toStartOf="@id/messageUserAvatar"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:id="@id/messageText"
+        <LinearLayout
+            android:id="@id/bubble"
             android:layout_width="wrap_content"
-            android:maxWidth="207dp"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:id="@id/messageText"
+                android:layout_width="wrap_content"
+                android:maxWidth="207dp"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
+
 
     <TextView
         android:visibility="gone"
@@ -39,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="@id/bubble"
-        app:layout_constraintTop_toBottomOf="@id/bubble" />
+        app:layout_constraintStart_toStartOf="@id/ll"
+        app:layout_constraintTop_toBottomOf="@id/ll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

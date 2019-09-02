@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -14,6 +13,9 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.materialdialogs.LayoutMode;
@@ -30,25 +32,32 @@ import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
-
-import org.jetbrains.annotations.NotNull;
+import com.sunhapper.x.spedit.SpUtil;
+import com.sunhapper.x.spedit.view.SpXEditText;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
+import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
+import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.LikeDelegate;
 import cn.paulpaulzhang.fair.sc.main.post.delegate.ShareDelegate;
@@ -61,6 +70,7 @@ import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import io.objectbox.Box;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.post
@@ -68,7 +78,7 @@ import es.dmoral.toasty.Toasty;
  * 创建人: zlm31
  * 描述:
  */
-public class DynamicActivity extends FairActivity implements View.OnClickListener {
+public class DynamicActivity extends PostActivity implements IMentionTopicListener {
 
     @BindView(R2.id.tb_dynamic)
     MaterialToolbar mToolbar;
@@ -112,10 +122,6 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
     @BindView(R2.id.iv_share)
     AppCompatImageView mShare;
 
-    private long pid;
-    private long uid;
-    private boolean isLike;
-
 
     @Override
     public int setLayout() {
@@ -141,7 +147,8 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         initBottomMenu();
     }
 
-    private void initHeader() {
+    @Override
+    public void initHeader() {
         requestData();
 
         if (uid == FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())) {
@@ -186,14 +193,12 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
 
     private void initTab() {
         String[] titles = new String[]{getString(R.string.like), getString(R.string.comment), getString(R.string.share)};
-        ArrayList<Fragment> delegates = new ArrayList<>();
-        delegates.add(new LikeDelegate());
-        delegates.add(new CommentDelegate());
-        delegates.add(new ShareDelegate());
-        mTabLayout.setViewPager(mViewPager, titles, this, delegates);
-        mViewPager.setCurrentItem(1);
+        mPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mViewPager.setAdapter(mPagerAdapter);
+        mTabLayout.setViewPager(mViewPager, titles);
         mTabLayout.setCurrentTab(1);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setCurrentItem(1);
+        mViewPager.setOffscreenPageLimit(3);
     }
 
     private void initBottomMenu() {
@@ -221,7 +226,7 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
                         int shareCount = object.getJSONObject("post").getIntValue("shareCount");
 
                         List<String> imgUrls = JsonParseUtil.parseImgs(images);
-                        mContent.setContent(TextUtil.text2Post(content));
+                        mContent.setContent(TextUtil.textHightLightTopic(content));
                         mGridView.setAdapter(new NineAdapter(imgUrls, this));
                         mTime.setText(DateUtil.getTime(time));
                         mDevice.setText(device);
@@ -244,14 +249,14 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
                     JSONObject object = JSON.parseObject(response);
                     String result = object.getString("result");
                     if (TextUtils.equals(result, "ok")) {
-                        String avatar = object.getString("avatar");
-                        String username = object.getString("username");
-
+                        JSONObject user = object.getJSONObject("user");
+                        String avatar = user.getString("avatar");
+                        String username = user.getString("username");
                         Glide.with(this)
                                 .load(avatar == null ? Constant.DEFAULT_AVATAR : avatar)
                                 .into(mAvatar);
+                        mUsername.setText(username == null ? String.valueOf(uid) : username);
 
-                        mUsername.setText(username == null ? String.valueOf(uid).substring(8) : username);
                     } else {
                         Toasty.error(this, "请求错误，请重试", Toasty.LENGTH_SHORT).show();
                     }
@@ -351,32 +356,72 @@ public class DynamicActivity extends FairActivity implements View.OnClickListene
         dialog.show();
 
         View customerView = DialogCustomViewExtKt.getCustomView(dialog);
+        SpXEditText mComment = customerView.findViewById(R.id.et_edit);
 
-        customerView.findViewById(R.id.iv_mention).setOnClickListener(this);
-        customerView.findViewById(R.id.iv_topic).setOnClickListener(this);
-        customerView.findViewById(R.id.iv_send).setOnClickListener(this);
-        AppCompatEditText mEditText = customerView.findViewById(R.id.et_edit);
-        new Handler().postDelayed(() -> KeyBoardUtil.showKeyboard(mEditText), 10);
+        customerView.findViewById(R.id.iv_mention).setOnClickListener(v -> {
+
+        });
+        customerView.findViewById(R.id.iv_topic).setOnClickListener(v -> {
+            Box<TopicCache> topicCacheBox = ObjectBox.get().boxFor(TopicCache.class);
+            List<Topic> topics = new ArrayList<>();
+            for (TopicCache cache : topicCacheBox.getAll()) {
+                topics.add(new Topic(cache));
+            }
+            MaterialDialog topicDialog = new MaterialDialog(this, new BottomSheet());
+            DialogCustomViewExtKt.customView(topicDialog, R.layout.dialog_topic_list,
+                    null, false, false, false, true);
+            View topicView = DialogCustomViewExtKt.getCustomView(topicDialog);
+            topicDialog.cornerRadius(8f, null);
+            RecyclerView recyclerView = topicView.findViewById(R.id.rv_topic_list);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            TopicAdapter mAdapter = new TopicAdapter(R.layout.item_topic, topics);
+            recyclerView.setAdapter(mAdapter);
+            mAdapter.setOnItemClickListener((adapter, view, position) -> {
+                Topic topic = (Topic) adapter.getItem(position);
+                if (topic != null) {
+                    String tname = topic.getTopicCache().getName();
+                    SpUtil.insertSpannableString(mComment.getEditableText(),
+                            new MentionTopic(tname, topic.getTopicCache().getId(), this).getSpannableString());
+                    topicIdList.add(topic.getTopicCache().getId());
+                }
+                topicDialog.dismiss();
+            });
+            topicDialog.show();
+        });
+        customerView.findViewById(R.id.iv_send).setOnClickListener(v -> {
+            if (Objects.requireNonNull(mComment.getText()).toString().isEmpty()) {
+                return;
+            }
+            RestClient.builder()
+                    .url(Api.ADD_COMMENT)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pid", pid)
+                    .params("content", mComment.getText().toString())
+                    .params("imagesUrl", "")
+                    .success(response -> {
+                        String result = JSON.parseObject(response).getString("result");
+                        if (!TextUtils.equals(result, "ok")) {
+                            Toasty.error(this, "发表失败", Toasty.LENGTH_SHORT).show();
+                        } else {
+                            dialog.dismiss();
+                        }
+                    })
+                    .error((code, msg) -> Toasty.error(this, "发表失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+
+        });
+        new Handler().postDelayed(() -> KeyBoardUtil.showKeyboard(mComment), 10);
     }
-
 
     @Override
-    public boolean onOptionsItemSelected(@NotNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.iv_mention) {
-
-        } else if (view.getId() == R.id.iv_topic) {
-
-        } else if (view.getId() == R.id.iv_send) {
-
+    public void removeTag(long id) {
+        for (int i = 0; i < topicIdList.size(); i++) {
+            if (topicIdList.get(i) == id) {
+                topicIdList.remove(i);
+                return;
+            }
         }
     }
+
 }

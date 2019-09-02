@@ -51,7 +51,7 @@
                 tools:ignore="RtlHardcoded" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
             android:id="@+id/tv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -59,7 +59,14 @@
             android:layout_marginTop="5dp"
             android:lineSpacingExtra="4dp"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:ep_link_color="@color/colorAccent"
+            app:ep_need_animation="true"
+            app:ep_need_expand="false"
+            app:ep_need_link="true"
+            app:ep_need_mention="true"
+            app:ep_need_self="true"
+            app:ep_self_color="@color/colorAccent"/>
     </LinearLayout>
 
 

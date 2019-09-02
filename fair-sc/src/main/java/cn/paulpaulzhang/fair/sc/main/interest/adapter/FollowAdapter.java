@@ -24,8 +24,6 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache;
-import cn.paulpaulzhang.fair.sc.database.Entity.FollowLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
@@ -114,7 +112,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                             .params("pid", id)
                             .success(r -> {
                                 helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
                                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                                 item.setLike(false);
                             })
@@ -165,7 +163,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mDynamicContent = helper.getView(R.id.etv_content_dynamic);
-            mDynamicContent.setContent(TextUtil.text2Post(content));
+            mDynamicContent.setContent(TextUtil.textHightLightTopic(content));
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
@@ -238,7 +236,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                             .params("pid", id)
                             .success(r -> {
                                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
                                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                                 item.setLike(false);
                             })
@@ -290,7 +288,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mArticleContent = helper.getView(R.id.etv_content_article);
-            mArticleContent.setContent(TextUtil.text2Post(content));
+            mArticleContent.setContent(TextUtil.textHightLightTopic(content));
             mArticleContent.setOnClickListener(v -> Toast.makeText(mContext, "查看更多", Toast.LENGTH_SHORT).show());
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content

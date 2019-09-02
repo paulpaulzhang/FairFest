@@ -381,14 +381,21 @@ public class EditActivity extends FairActivity {
         dialog.show();
 
         Box<School> schoolBox = ObjectBox.get().boxFor(School.class);
+        StringAdapter mAdapter = new StringAdapter
+                (R.layout.item_string_list, Arrays.asList(schoolBox.query().build().property(School_.name).findStrings()));
         if (schoolBox.count() == 0) {
             Toasty.info(EditActivity.this, "正在加载学校列表...", Toasty.LENGTH_SHORT).show();
-            JsonParseUtil.parseSchoolList(FileUtil.getRawFile(R.raw.china_university_list));
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    JsonParseUtil.parseSchoolList(FileUtil.getRawFile(R.raw.china_university_list));
+                    runOnUiThread(() -> mAdapter.setNewData(Arrays.asList(schoolBox.query().build().property(School_.name).findStrings())));
+                }
+            }.start();
         }
 
         View customerView = DialogCustomViewExtKt.getCustomView(dialog);
-        StringAdapter mAdapter = new StringAdapter
-                (R.layout.item_string_list, Arrays.asList(schoolBox.query().build().property(School_.name).findStrings()));
         RecyclerView mRecyclerView = customerView.findViewById(R.id.rv_list);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(customerView.getContext()));
@@ -477,7 +484,7 @@ public class EditActivity extends FairActivity {
 
     @OnClick(R2.id.cl_college)
     void editCollege() {
-        if (user.getSchool() != null) {
+        if (user.getCollege() != null) {
             return;
         }
 
@@ -489,14 +496,21 @@ public class EditActivity extends FairActivity {
         dialog.show();
 
         Box<Major> majorBox = ObjectBox.get().boxFor(Major.class);
+        StringAdapter mAdapter = new StringAdapter
+                (R.layout.item_string_list, Arrays.asList(majorBox.query().build().property(Major_.name).findStrings()));
         if (majorBox.count() == 0) {
             Toasty.info(EditActivity.this, "正在加载专业列表...", Toasty.LENGTH_SHORT).show();
-            JsonParseUtil.parseMajorList(FileUtil.getRawFile(R.raw.major_list));
+            new Thread() {
+                @Override
+                public void run() {
+                    super.run();
+                    JsonParseUtil.parseMajorList(FileUtil.getRawFile(R.raw.major_list));
+                    runOnUiThread(() -> mAdapter.setNewData(Arrays.asList(majorBox.query().build().property(Major_.name).findStrings())));
+                }
+            }.start();
         }
 
         View customerView = DialogCustomViewExtKt.getCustomView(dialog);
-        StringAdapter mAdapter = new StringAdapter
-                (R.layout.item_string_list, Arrays.asList(majorBox.query().build().property(Major_.name).findStrings()));
         RecyclerView mRecyclerView = customerView.findViewById(R.id.rv_list);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(customerView.getContext()));
@@ -630,7 +644,6 @@ public class EditActivity extends FairActivity {
                                 Toasty.error(EditActivity.this, "上传失败", Toasty.LENGTH_SHORT).show();
                                 return;
                             }
-
                             RestClient.builder()
                                     .url(Api.EDIT_BACKGROUND)
                                     .params("uid", uid)
@@ -672,7 +685,6 @@ public class EditActivity extends FairActivity {
                                 Toasty.error(EditActivity.this, "上传失败", Toasty.LENGTH_SHORT).show();
                                 return;
                             }
-
                             RestClient.builder()
                                     .url(Api.EDIT_AVATAR)
                                     .params("uid", uid)
@@ -682,6 +694,12 @@ public class EditActivity extends FairActivity {
                                         if (TextUtils.equals(result, "ok")) {
                                             user.setAvatar(paths.get(0));
                                             userBox.put(user);
+                                            JMessageClient.updateUserAvatar(new File(path), new BasicCallback() {
+                                                @Override
+                                                public void gotResult(int i, String s) {
+                                                    FairLogger.d(i + "   " + s);
+                                                }
+                                            });
                                             Glide.with(EditActivity.this).load(uri).into(mAvatar);
                                         }
                                     })

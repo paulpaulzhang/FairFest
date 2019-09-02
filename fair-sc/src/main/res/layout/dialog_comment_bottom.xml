@@ -19,7 +19,7 @@
             android:textColor="@color/font_default"
             android:textSize="18sp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <com.sunhapper.x.spedit.view.SpXEditText
             android:id="@+id/et_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

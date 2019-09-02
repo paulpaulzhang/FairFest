@@ -75,14 +75,13 @@ public class DynamicDelegate extends FairDelegate {
         if (activity != null) {
             uid = activity.getUid();
         }
-
-        initRecyclerView();
         Box<PostCache> postCacheBox = ObjectBox.get().boxFor(PostCache.class);
         Box<UserCache> userCacheBox = ObjectBox.get().boxFor(UserCache.class);
         Box<LikeCache> likeCacheBox = ObjectBox.get().boxFor(LikeCache.class);
         postCacheBox.removeAll();
         userCacheBox.removeAll();
         likeCacheBox.removeAll();
+        initRecyclerView();
         loadData(Constant.REFRESH_DATA);
     }
 
@@ -154,13 +153,18 @@ public class DynamicDelegate extends FairDelegate {
         if (type == Constant.REFRESH_DATA) {
             requestData(0, Constant.REFRESH_DATA, response -> {
                 page = 0;
+                FairLogger.json("JSON", response);
+
                 JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
+
+                FairLogger.d("DATABASE", likeBox.getAll());
+
                 List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
                 List<Dynamic> items = new ArrayList<>();
                 long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
                 for (int i = 0; i < count; i++) {
                     PostCache postCache = postCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
+                    boolean isLike = likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().property(LikeCache_.isLike).findBoolean();
                     items.add(new Dynamic(postCache.getType(), postCache, isLike));
                 }
                 mAdapter.setNewData(items);
@@ -206,6 +210,7 @@ public class DynamicDelegate extends FairDelegate {
                     .params("pageNo", 0)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
+                    .params("localUid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .success(success)
                     .error((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show())
                     .build()
@@ -216,6 +221,7 @@ public class DynamicDelegate extends FairDelegate {
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
+                    .params("localUid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .success(success)
                     .error((code, msg) -> Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show())
                     .build()

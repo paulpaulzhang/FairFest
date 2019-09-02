@@ -24,6 +24,9 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -366,4 +369,5 @@ public class TopicDetailActivity extends FairActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -1,6 +1,8 @@
 package cn.paulpaulzhang.fair.sc.database.Entity;
 
 
+import androidx.annotation.NonNull;
+
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.annotation.Uid;
@@ -279,5 +281,11 @@ public class User {
 
     public void setFeatures(String features) {
         this.features = features;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return school + "  " + college + "  " + studentId;
     }
 }

@@ -72,8 +72,6 @@ public class UserDelegate extends FairDelegate {
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         initSwipeRefresh();
-        requestUserData();
-
         mSearch.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
 
     }
@@ -171,5 +169,11 @@ public class UserDelegate extends FairDelegate {
     @OnClick(R2.id.cl_my_record)
     void browseRecord() {
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        requestUserData();
     }
 }

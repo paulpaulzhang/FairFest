@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/user_bg"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/civ_user"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:id="@+id/tv_username"
+                android:textSize="24sp"
+                android:layout_marginStart="10dp"
+                android:textColor="@android:color/black"
+                app:layout_constraintStart_toEndOf="@id/civ_user"
+                app:layout_constraintTop_toTopOf="@id/civ_user"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                app:layout_constraintBottom_toBottomOf="@id/civ_user"
+                app:layout_constraintStart_toStartOf="@id/tv_username"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_gender_era"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/fillet_bg_blue"
+                    android:gravity="center"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_college"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/fillet_bg_white"
+                    android:gravity="center"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_introduction"
+                android:layout_width="wrap_content"
+                android:ellipsize="end"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@id/civ_user"
+                app:layout_constraintTop_toBottomOf="@id/civ_user"/>
+
+            <LinearLayout
+                app:layout_constraintTop_toBottomOf="@id/tv_introduction"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_follow"
+                    style="@style/MyMaterialButton.Edit"
+                    android:layout_width="100dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/font_default"
+                    android:gravity="center"
+                    android:text="@string/edit"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:icon="@drawable/ic_follow" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_message"
+                    style="@style/MyMaterialButton.Edit"
+                    android:layout_width="100dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/font_default"
+                    android:gravity="center"
+                    android:text="@string/edit"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:icon="@drawable/ic_message" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+
+</com.google.android.material.card.MaterialCardView>

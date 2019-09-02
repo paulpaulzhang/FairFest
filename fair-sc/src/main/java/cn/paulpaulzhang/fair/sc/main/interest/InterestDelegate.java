@@ -66,7 +66,7 @@ public class InterestDelegate extends FairDelegate implements
     LinearLayout mSearch;
 
     private TabViewPagerAdapter mAdapter;
-    private int lastPosition = 0;
+    private int lastPosition = 1;
 
     @Override
     public Object setLayout() {
@@ -84,28 +84,29 @@ public class InterestDelegate extends FairDelegate implements
             return true;
         });
 
-        mSearch.setOnClickListener(v-> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
+        mSearch.setOnClickListener(v -> startActivity(new Intent(getContext(), SearchActivity.class), ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity()).toBundle()));
         initTab();
         loadUser();
     }
 
     private void initTab() {
         String[] titles = new String[]{
-                getString(R.string.discovery),
                 getString(R.string.follow),
+                getString(R.string.discovery),
                 getString(R.string.topic)};
 
         mAdapter = new TabViewPagerAdapter
                 (getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setCurrentItem(0);
+
         mViewPager.setOffscreenPageLimit(3);
         mViewPager.addOnPageChangeListener(this);
         mTabLayout.setViewPager(mViewPager, titles);
-        mTabLayout.setCurrentTab(0);
+        mTabLayout.setCurrentTab(1);
+        mViewPager.setCurrentItem(1);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.getTitleView(0).setTextSize(18);
-        mTabLayout.getTitleView(0).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        mTabLayout.getTitleView(1).setTextSize(18);
+        mTabLayout.getTitleView(1).setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
     }
 
     private void loadUser() {

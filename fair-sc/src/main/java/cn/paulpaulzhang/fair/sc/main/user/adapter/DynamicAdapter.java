@@ -1,12 +1,14 @@
 package cn.paulpaulzhang.fair.sc.main.user.adapter;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -88,7 +90,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
             UserCache userCache = userBox.get(uid);
 
             helper.setText(R.id.tv_username_dynamic, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
+                    String.valueOf(userCache.getId()) : userCache.getUsername());
             Glide.with(mContext).load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> {
@@ -105,23 +107,29 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
-
                 if (item.isLike()) {
+                    FairLogger.d("like-> not like");
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     RestClient.builder()
                             .url(Api.CANCEL_THUMBSUP_POST)
                             .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                             .params("pid", id)
                             .success(r -> {
-                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
-                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
-                                item.setLike(false);
+                                String result = JSON.parseObject(r).getString("result");
+                                if (TextUtils.equals(result, "ok")) {
+                                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                                    mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
+                                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                    item.setLike(false);
+                                }
+                                FairLogger.d("pid", id);
+
                             })
                             .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
                 } else {
+                    FairLogger.d("not like -> like");
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
                             "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
@@ -129,10 +137,14 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                             .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                             .params("pid", id)
                             .success(r -> {
-                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
-                                mLikeCount.setText(String.valueOf(count));
-                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
-                                item.setLike(true);
+                                String result = JSON.parseObject(r).getString("result");
+                                if (TextUtils.equals(result, "ok")) {
+                                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
+                                    mLikeCount.setText(String.valueOf(count));
+                                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                    item.setLike(true);
+                                }
+                                FairLogger.d("pid", id);
                             })
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
@@ -165,7 +177,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
 
             mDynamicImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mDynamicContent = helper.getView(R.id.etv_content_dynamic);
-            mDynamicContent.setContent(TextUtil.text2Post(content));
+            mDynamicContent.setContent(TextUtil.textHightLightTopic(content));
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
@@ -213,7 +225,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
             UserCache userCache = userBox.get(uid);
 
             helper.setText(R.id.tv_username_article, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
+                    String.valueOf(userCache.getId()) : userCache.getUsername());
             Glide.with(mContext).load(userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> {
@@ -238,7 +250,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                             .params("pid", id)
                             .success(r -> {
                                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_like);
-                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
                                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
                                 item.setLike(false);
                             })
@@ -290,7 +302,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
 
             mArticleImg.setAdapter(new NineAdapter(imgs, mContext));
             ExpandableTextView mArticleContent = helper.getView(R.id.etv_content_article);
-            mArticleContent.setContent(TextUtil.text2Post(content));
+            mArticleContent.setContent(TextUtil.textHightLightTopic(content));
             mArticleContent.setOnClickListener(v -> Toast.makeText(mContext, "查看更多", Toast.LENGTH_SHORT).show());
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
