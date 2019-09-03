@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.main.post.adapter;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity;
@@ -38,7 +40,16 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, Comment item) {
         CircleImageView mUser = helper.getView(R.id.civ_user);
-        Glide.with(mContext).load(item.getAvatarUrl()).into(mUser);
+        Glide.with(mContext).
+                load(item.getAvatarUrl() == null ? Constant.DEFAULT_AVATAR : item.getAvatarUrl())
+                .into(mUser);
+        SimpleDraweeView mImg = helper.getView(R.id.dv_img);
+        if (item.getImgUrl() == null || item.getImgUrl().isEmpty()) {
+            mImg.setVisibility(View.GONE);
+        } else {
+            mImg.setVisibility(View.VISIBLE);
+            mImg.setImageURI(item.getImgUrl());
+        }
 
         helper.setText(R.id.tv_user, item.getUsername())
                 .setText(R.id.tv_time, DateUtil.getTime(item.getTime()));
@@ -49,8 +60,20 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
             mContext.startActivity(intent);
         });
 
+        mImg.setOnClickListener(v -> {
+            Intent intent = new Intent(mContext, PhotoPreviewActivity.class);
+            intent.putExtra("path", item.getImgUrl());
+            mContext.startActivity(intent);
+        });
+
         ExpandableTextView mContent = helper.getView(R.id.tv_content);
-        mContent.setContent(TextUtil.textHightLightTopic(item.getContent()));
+        if (item.getContent() == null || item.getContent().isEmpty()) {
+            mContent.setVisibility(View.GONE);
+        } else {
+            mContent.setVisibility(View.VISIBLE);
+            mContent.setContent(TextUtil.textHightLightTopic(item.getContent()));
+        }
+
         mContent.setLinkClickListener((t, c, selfContent) -> {
             if (t.equals(LinkType.LINK_TYPE)) {
                 Toast.makeText(mContext, "你点击了链接 内容是：" + c, Toast.LENGTH_SHORT).show();

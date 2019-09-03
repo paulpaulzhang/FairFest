@@ -1,6 +1,9 @@
 package cn.paulpaulzhang.fair.sc.main.post.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -34,7 +37,11 @@ import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
 import com.sunhapper.x.spedit.SpUtil;
 import com.sunhapper.x.spedit.view.SpXEditText;
+import com.zhihu.matisse.Matisse;
+import com.zhihu.matisse.MimeType;
+import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +58,8 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
+import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
@@ -60,8 +69,10 @@ import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
+import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -69,6 +80,9 @@ import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
+import pub.devrel.easypermissions.EasyPermissions;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.post
@@ -380,6 +394,10 @@ public class ArticleActivity extends PostActivity implements IMentionTopicListen
 
     }
 
+    private AppCompatImageView mImgShow;
+    private AppCompatImageView mDelete;
+    private File imgFile;
+
     private void initBottomDialog() {
         MaterialDialog dialog = new MaterialDialog(this, new BottomSheet(LayoutMode.WRAP_CONTENT));
         DialogCustomViewExtKt.customView(dialog, R.layout.dialog_comment_bottom,
@@ -391,9 +409,21 @@ public class ArticleActivity extends PostActivity implements IMentionTopicListen
         View customerView = DialogCustomViewExtKt.getCustomView(dialog);
         SpXEditText mComment = customerView.findViewById(R.id.et_edit);
 
+        mImgShow = customerView.findViewById(R.id.image_view);
+        mDelete = customerView.findViewById(R.id.iv_delete);
+
+        mDelete.setOnClickListener(v -> {
+            mImgShow.setVisibility(View.GONE);
+            imgFile = null;
+            mDelete.setVisibility(View.GONE);
+        });
+
         customerView.findViewById(R.id.iv_mention).setOnClickListener(v -> {
 
         });
+
+        customerView.findViewById(R.id.iv_img).setOnClickListener(v -> openAlbum());
+
         customerView.findViewById(R.id.iv_topic).setOnClickListener(v -> {
             Box<TopicCache> topicCacheBox = ObjectBox.get().boxFor(TopicCache.class);
             List<Topic> topics = new ArrayList<>();
@@ -421,27 +451,50 @@ public class ArticleActivity extends PostActivity implements IMentionTopicListen
             });
             topicDialog.show();
         });
+
         customerView.findViewById(R.id.iv_send).setOnClickListener(v -> {
-            if (Objects.requireNonNull(mComment.getText()).toString().isEmpty()) {
+            if (Objects.requireNonNull(mComment.getText()).toString().isEmpty() && imgFile == null) {
                 return;
             }
-            RestClient.builder()
-                    .url(Api.ADD_COMMENT)
-                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
-                    .params("pid", pid)
-                    .params("content", mComment.getText().toString())
-                    .params("imagesUrl", "")
-                    .success(response -> {
-                        String result = JSON.parseObject(response).getString("result");
-                        if (!TextUtils.equals(result, "ok")) {
-                            Toasty.error(this, "发表失败", Toasty.LENGTH_SHORT).show();
-                        } else {
-                            dialog.dismiss();
-                        }
-                    })
-                    .error((code, msg) -> Toasty.error(this, "发表失败 " + code, Toasty.LENGTH_SHORT).show())
-                    .build()
-                    .post();
+            UploadUtil util = UploadUtil.INSTANCE();
+            List<File> files = new ArrayList<>();
+            if (imgFile != null) {
+                files.add(imgFile);
+            }
+            FairLoader.showLoading(ArticleActivity.this);
+            util.uploadFile(ArticleActivity.this, files, new IUploadFileListener() {
+                @Override
+                public void onSuccess(List<String> paths) {
+                    RestClient.builder()
+                            .url(Api.ADD_COMMENT)
+                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                            .params("pid", pid)
+                            .params("content", mComment.getText().toString())
+                            .params("imagesUrl", paths.size() == 0 ? "" : paths.get(0))
+                            .success(response -> {
+                                FairLoader.stopLoading();
+                                FairLogger.d("IMG" + (paths.size() == 0 ? "" : paths.get(0)));
+                                String result = JSON.parseObject(response).getString("result");
+                                if (!TextUtils.equals(result, "ok")) {
+                                    Toasty.error(ArticleActivity.this, "发表失败", Toasty.LENGTH_SHORT).show();
+                                } else {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .error((code, msg) -> {
+                                Toasty.error(ArticleActivity.this, "发表失败 " + code, Toasty.LENGTH_SHORT).show();
+                                FairLoader.stopLoading();
+                            })
+                            .build()
+                            .post();
+                }
+
+                @Override
+                public void onError() {
+                    FairLoader.stopLoading();
+                    Toasty.error(ArticleActivity.this, "发表失败 ", Toasty.LENGTH_SHORT).show();
+                }
+            });
 
         });
         new Handler().postDelayed(() -> KeyBoardUtil.showKeyboard(mComment), 10);
@@ -455,5 +508,61 @@ public class ArticleActivity extends PostActivity implements IMentionTopicListen
                 return;
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            compressPhoto(Matisse.obtainResult(data).get(0));
+        }
+    }
+
+    private void openAlbum() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            Matisse.from(this)
+                    .choose(MimeType.ofImage())
+                    .maxSelectable(1)
+                    .countable(true)
+                    .capture(true)
+                    .captureStrategy(new CaptureStrategy(true, "cn.paulpaulzhang.fairfest.fileprovider"))
+                    .gridExpectedSize(getResources()
+                            .getDimensionPixelSize(R.dimen.grid_expected_size))
+                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    .thumbnailScale(0.85f)
+                    .theme(R.style.Matisse_Zhihu_Custom)
+                    .imageEngine(new Glide4Engine())
+                    .forResult(Constant.REQUEST_CODE_CHOOSE);
+        } else {
+            EasyPermissions.requestPermissions(this, "打开图库需要存储读取权限", 1001,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    private void compressPhoto(Uri uri) {
+        Luban.with(this)
+                .load(uri)
+                .ignoreBy(0)
+                .setTargetDir(Objects.requireNonNull(getExternalCacheDir()).getAbsolutePath())
+                .filter(path -> !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif")))
+                .setCompressListener(new OnCompressListener() {
+                    @Override
+                    public void onStart() {
+                    }
+
+                    @Override
+                    public void onSuccess(File file) {
+                        imgFile = file;
+                        mImgShow.setVisibility(View.VISIBLE);
+                        Glide.with(ArticleActivity.this).load(file).into(mImgShow);
+                        mDelete.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toasty.error(ArticleActivity.this, "加载失败", Toasty.LENGTH_SHORT).show();
+                    }
+                }).launch();
     }
 }

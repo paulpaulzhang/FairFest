@@ -28,6 +28,8 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.PostActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Comment;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.CommentAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.model.Like;
+import cn.paulpaulzhang.fair.ui.loader.FairLoader;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -89,6 +91,7 @@ public class CommentDelegate extends FairDelegate {
 
     private void loadData() {
         requestData(response -> {
+            FairLogger.json("JSON", response);
             String result = JSON.parseObject(response).getString("result");
             if (TextUtils.equals(result, "ok")) {
                 List<Comment> comments = new ArrayList<>();
