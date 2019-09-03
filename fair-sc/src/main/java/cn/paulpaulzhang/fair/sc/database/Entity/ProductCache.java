@@ -16,11 +16,11 @@ public class ProductCache {
     @Id(assignable = true)
     private long id;
 
-    private String headImg;
+    private String headImg;  //商品image
 
-    private String overview;
+    private String overview; //商品名称 etc
 
-    private float price;
+    private float price;  //商品价格
 
     public ProductCache() {
     }

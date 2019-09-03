@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -151,7 +152,8 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
             Image item = (Image) adapter.getItem(position);
             if (item != null) {
                 intent.putExtra("path", item.getFile().getPath());
-                startActivity(intent);
+                //noinspection unchecked
+                startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
             }
         });
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {

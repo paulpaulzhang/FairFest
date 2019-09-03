@@ -59,6 +59,7 @@
         <activity android:name=".main.search.SearchActivity" />
         <activity android:name=".main.user.activity.EditActivity" />
         <activity android:name=".main.interest.activity.TeamActivity" />
+        <activity android:name=".main.interest.activity.AnnouncementActivity" />
     </application>
 
 

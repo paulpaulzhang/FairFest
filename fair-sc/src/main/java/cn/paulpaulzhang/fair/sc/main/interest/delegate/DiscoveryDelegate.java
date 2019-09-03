@@ -32,6 +32,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.AnnouncementActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.BigEventActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TeamActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
@@ -132,8 +133,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 .setOnItemClickListener(position -> Toast.makeText(getContext(), position + "", Toast.LENGTH_SHORT).show());
 
         view.findViewById(R.id.ll_big_event).setOnClickListener(v -> startActivity(new Intent(getContext(), BigEventActivity.class)));
-        view.findViewById(R.id.ll_announcement).setOnClickListener(v -> {
-        });
+        view.findViewById(R.id.ll_announcement).setOnClickListener(v -> startActivity(new Intent(getContext(), AnnouncementActivity.class)));
         view.findViewById(R.id.ll_team).setOnClickListener(v -> startActivity(new Intent(getContext(), TeamActivity.class)));
         view.findViewById(R.id.ll_help).setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), TopicDetailActivity.class);
@@ -141,6 +141,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
             startActivity(intent);
         });
         view.findViewById(R.id.ll_map).setOnClickListener(v -> {
+            Toasty.info(Objects.requireNonNull(getContext()), "即将上线", Toasty.LENGTH_SHORT).show();
         });
     }
 

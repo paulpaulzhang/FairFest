@@ -19,6 +19,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -161,6 +162,10 @@ public class UserCenterActivity extends FairActivity {
         initHeader();
         initTab();
 
+        if (uid != -1) {
+            requestData();
+        }
+
     }
 
     @Override
@@ -203,7 +208,8 @@ public class UserCenterActivity extends FairActivity {
         mAvatar.setOnClickListener(v -> {
             Intent intent = new Intent(this, PhotoActivity.class);
             intent.putExtra("path", user.getAvatar() == null ? Constant.DEFAULT_AVATAR : user.getAvatar());
-            startActivity(intent);
+            //noinspection unchecked
+            startActivity(intent,  ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
         });
 
         mEdit.setOnClickListener(v -> {
@@ -580,8 +586,5 @@ public class UserCenterActivity extends FairActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (uid != -1) {
-            requestData();
-        }
     }
 }

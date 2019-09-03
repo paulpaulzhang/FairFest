@@ -52,13 +52,22 @@ public class BigEventActivity extends FairActivity {
 
         initToolbar(mToolbar, getString(R.string.big_event));
 
+        initSwipeRefresh();
+        initRecyclerView();
+
+    }
+
+    private void initRecyclerView() {
         mAdapter = new BigEventAdapter(R.layout.item_big_event, create());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+    }
 
+    private void initSwipeRefresh() {
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_light);
         mSwipeRefresh.setOnRefreshListener(() -> mSwipeRefresh.setRefreshing(false));
-
     }
 
     private List<BigEvent> create() {

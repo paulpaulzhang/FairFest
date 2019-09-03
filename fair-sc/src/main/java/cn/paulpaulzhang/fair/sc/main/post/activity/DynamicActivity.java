@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -380,6 +381,15 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
         mImgShow = customerView.findViewById(R.id.image_view);
         mDelete = customerView.findViewById(R.id.iv_delete);
+
+        mImgShow.setOnClickListener(v -> {
+            if (imgFile != null) {
+                Intent intent = new Intent(DynamicActivity.this, PhotoPreviewActivity.class);
+                intent.putExtra("path", imgFile.getPath());
+                //noinspection unchecked
+                startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
+            }
+        });
 
         mDelete.setOnClickListener(v -> {
             mImgShow.setVisibility(View.GONE);

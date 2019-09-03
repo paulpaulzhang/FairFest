@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.main.post.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
 
 import androidx.annotation.Nullable;
 
@@ -32,11 +33,15 @@ public class PhotoPreviewActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+
+        getWindow().setExitTransition(new Fade());
+        getWindow().setEnterTransition(new Fade());
+
         ImmersionBar.with(this).init();
         Intent intent = getIntent();
         String path = intent.getStringExtra("path");
         Glide.with(this).load(path).into(mPhotoView);
 
-        mPhotoView.setOnClickListener(v -> finish());
+        mPhotoView.setOnClickListener(v -> finishAfterTransition());
     }
 }

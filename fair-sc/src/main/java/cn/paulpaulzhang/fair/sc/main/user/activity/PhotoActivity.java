@@ -2,12 +2,15 @@ package cn.paulpaulzhang.fair.sc.main.user.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
+import android.transition.Fade;
 import android.view.PixelCopy;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -50,8 +53,13 @@ public class PhotoActivity extends FairActivity {
         return R.layout.activity_photo;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+
+        getWindow().setExitTransition(new Fade());
+        getWindow().setEnterTransition(new Fade());
+
         ImmersionBar.with(this).init();
         Intent intent = getIntent();
         String path = intent.getStringExtra("path");

@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_gender_era"
+                    android:id="@+id/tv_gender"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginEnd="16dp"
@@ -90,18 +90,6 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_follow"
-                    style="@style/MyMaterialButton.Edit"
-                    android:layout_width="100dp"
-                    android:layout_height="45dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@color/font_default"
-                    android:gravity="center"
-                    android:text="@string/edit"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    app:icon="@drawable/ic_follow" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_message"
@@ -111,7 +99,7 @@
                     android:layout_marginStart="20dp"
                     android:background="@color/font_default"
                     android:gravity="center"
-                    android:text="@string/edit"
+                    android:text="@string/message"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     app:icon="@drawable/ic_message" />

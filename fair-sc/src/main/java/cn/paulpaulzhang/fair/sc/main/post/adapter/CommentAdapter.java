@@ -52,17 +52,12 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
         }
 
         helper.setText(R.id.tv_user, item.getUsername())
-                .setText(R.id.tv_time, DateUtil.getTime(item.getTime()));
+                .setText(R.id.tv_time, DateUtil.getTime(item.getTime()))
+                .addOnClickListener(R.id.dv_img);
 
         mUser.setOnClickListener(view -> {
             Intent intent = new Intent(mContext, UserCenterActivity.class);
             intent.putExtra("uid", item.getUid());
-            mContext.startActivity(intent);
-        });
-
-        mImg.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, PhotoPreviewActivity.class);
-            intent.putExtra("path", item.getImgUrl());
             mContext.startActivity(intent);
         });
 
