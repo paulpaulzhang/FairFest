@@ -100,6 +100,12 @@ public class PublishActivity extends FairActivity {
                 Toasty.info(this, "商品信息不能为空", Toasty.LENGTH_SHORT).show();
                 return;
             }
+            try {
+                Float.valueOf(price);
+            } catch (Exception e) {
+                Toasty.info(this, "价格输入有误", Toasty.LENGTH_SHORT).show();
+                return;
+            }
             if (imgFile == null) {
                 Toasty.info(this, "商品图片不能为空", Toasty.LENGTH_SHORT).show();
                 return;
