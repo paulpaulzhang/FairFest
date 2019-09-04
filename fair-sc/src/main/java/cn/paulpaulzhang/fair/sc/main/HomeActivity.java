@@ -110,7 +110,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
 
     private void requestPermissions() {
         EasyPermissions.requestPermissions(this, "应用需要存取图片", 1000,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
     }
 
     private void initBottomNavigation() {

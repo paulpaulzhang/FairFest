@@ -190,7 +190,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
     @OnClick(R2.id.iv_picture)
     void openAlbum() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
             Matisse.from(this)
                     .choose(MimeType.ofImage())
                     .maxSelectable(9)
@@ -206,7 +206,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
                     .forResult(Constant.REQUEST_CODE_CHOOSE);
         } else {
             EasyPermissions.requestPermissions(this, "打开图库需要存储读取权限", 1001,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
         }
     }
 
