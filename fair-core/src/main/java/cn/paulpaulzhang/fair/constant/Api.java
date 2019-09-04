@@ -89,4 +89,8 @@ public class Api {
 
     public static final String GET_USER_COMMENT_BY_PID = "matchstickmen/getCommentByPid.action";
 
+    public static final String ADD_STORE = "matchstickmen/addStore.action";
+
+    public static final String LIST_STORE_BY_PAGE = "matchstickmen/listStoreByPage.action";
+
 }

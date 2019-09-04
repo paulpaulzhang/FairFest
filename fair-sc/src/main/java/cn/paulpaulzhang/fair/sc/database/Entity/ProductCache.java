@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.database.Entity;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Uid;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.database.Entity
@@ -16,6 +17,10 @@ public class ProductCache {
     @Id(assignable = true)
     private long id;
 
+    private long uid;
+
+    private long time;
+
     private String headImg;  //商品image
 
     private String overview; //商品名称 etc
@@ -25,8 +30,10 @@ public class ProductCache {
     public ProductCache() {
     }
 
-    public ProductCache(long id, String headImg, String overview, float price) {
+    public ProductCache(long id, long uid, long time, String headImg, String overview, float price) {
         this.id = id;
+        this.uid = uid;
+        this.time = time;
         this.headImg = headImg;
         this.overview = overview;
         this.price = price;
@@ -38,6 +45,22 @@ public class ProductCache {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getUid() {
+        return uid;
+    }
+
+    public void setUid(long uid) {
+        this.uid = uid;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public String getHeadImg() {

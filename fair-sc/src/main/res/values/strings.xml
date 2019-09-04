@@ -99,4 +99,8 @@
     <string name="change_birthday">更改生日</string>
     <string name="select_date">选择日期</string>
     <string name="touch_search">点击搜索</string>
+    <string name="goods_info">商品信息</string>
+    <string name="price">价格</string>
+    <string name="goods_picture">商品预览图</string>
+    <string name="publish_goods">发布商品</string>
 </resources>

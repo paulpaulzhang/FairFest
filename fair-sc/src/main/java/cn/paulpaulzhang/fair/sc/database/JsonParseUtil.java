@@ -24,6 +24,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.LikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.Major;
 import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
+import cn.paulpaulzhang.fair.sc.database.Entity.ProductCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.School;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
@@ -368,5 +369,30 @@ public final class JsonParseUtil {
         for (String str : majorSet) {
             majorBox.put(new Major(str));
         }
+    }
+
+    public static void parseProduct(String response, int type) {
+        JSONObject object = JSON.parseObject(response);
+        String result = object.getString("result");
+        if (!TextUtils.equals(result, "ok")) {
+            return;
+        }
+        JSONArray array = object.getJSONArray("storeList");
+        List<ProductCache> productCaches = new ArrayList<>();
+        Box<ProductCache> productCacheBox = ObjectBox.get().boxFor(ProductCache.class);
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject product = array.getJSONObject(i);
+            long sid = product.getLongValue("sid");
+            String headImg = product.getString("headImg");
+            String overview = product.getString("overview");
+            float price = product.getFloatValue("price");
+            long uid = product.getLongValue("uid");
+            long time = product.getLongValue("time");
+            productCaches.add(new ProductCache(sid, uid, time, headImg, overview, price));
+        }
+        if (type == Constant.REFRESH_DATA) {
+            productCacheBox.removeAll();
+        }
+        productCacheBox.put(productCaches);
     }
 }

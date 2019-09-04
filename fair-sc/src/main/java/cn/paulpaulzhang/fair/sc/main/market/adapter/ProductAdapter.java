@@ -1,7 +1,9 @@
 package cn.paulpaulzhang.fair.sc.main.market.adapter;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 
@@ -23,6 +25,9 @@ public class ProductAdapter extends BaseQuickAdapter<Product, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Product item) {
-//        helper.setText(R.id.tv_overview, item.getProductCache().getOverview());
+        helper.setText(R.id.tv_overview, item.getProductCache().getOverview())
+                .setText(R.id.tv_price, String.valueOf(item.getProductCache().getPrice()));
+        AppCompatImageView mHeadImg = helper.getView(R.id.iv_image);
+        Glide.with(mContext).load(item.getProductCache().getHeadImg()).into(mHeadImg);
     }
 }
