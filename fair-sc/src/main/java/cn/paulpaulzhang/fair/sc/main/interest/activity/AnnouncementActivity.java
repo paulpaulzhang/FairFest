@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.gyf.immersionbar.ImmersionBar;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.activities.FairActivity;
@@ -29,6 +30,7 @@ public class AnnouncementActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
+        ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
         initToolbar(mToolbar, "公告");
     }
 }
