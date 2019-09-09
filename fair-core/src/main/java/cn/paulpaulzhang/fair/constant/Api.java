@@ -93,4 +93,6 @@ public class Api {
 
     public static final String LIST_STORE_BY_PAGE = "matchstickmen/listStoreByPage.action";
 
+    public static final String GET_POST_BY_ALGORITHMS = "matchstickmen/getPostNoAlgorithms.action";
+
 }

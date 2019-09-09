@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="13sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/civ_user"
                 app:layout_constraintLeft_toRightOf="@id/civ_user"
                 tools:ignore="RtlHardcoded" />
         </androidx.constraintlayout.widget.ConstraintLayout>

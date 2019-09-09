@@ -150,8 +150,8 @@ public class TopicDetailActivity extends FairActivity {
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setLoadMoreView(new SimpleLoadMoreView());
         mAdapter.disableLoadMoreIfNotFullPage(mRecyclerView);
-        mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
+        mAdapter.setPreLoadNumber(3);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             TopicDetail item = (TopicDetail) adapter.getItem(position);
             if (item != null) {
@@ -275,23 +275,20 @@ public class TopicDetailActivity extends FairActivity {
                 .get();
     }
 
-    private int page = 0;
+    private int page = 1;
 
     private void loadData(int type) {
         Box<PostCache> postBox = ObjectBox.get().boxFor(PostCache.class);
         Box<LikeCache> likeBox = ObjectBox.get().boxFor(LikeCache.class);
-        int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA, response -> {
-                page = 0;
+            requestData(1, Constant.REFRESH_DATA, response -> {
+                page = 1;
                 JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
                 List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
                 List<TopicDetail> items = new ArrayList<>();
-                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-                for (int i = 0; i < count; i++) {
-                    PostCache postCache = postCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                    items.add(new TopicDetail(postCache.getType(), postCache, isLike));
+                for (PostCache post : postCaches) {
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                    items.add(new TopicDetail(post.getType(), post, isLike));
                 }
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);
@@ -299,27 +296,25 @@ public class TopicDetailActivity extends FairActivity {
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
-            if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(page, Constant.LOAD_MORE_DATA, response -> {
-                    page += 1;
+            if (size >= Constant.LOAD_MAX_SEVER) {
+                requestData(++page, Constant.LOAD_MORE_DATA, response -> {
                     JsonParseUtil.parsePost(response, Constant.LOAD_MORE_DATA);
-                    List<PostCache> postCaches = postBox.getAll();
                     List<TopicDetail> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
                         return;
                     }
-                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-                    for (int i = position; i < count; i++) {
-                        PostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                        items.add(new TopicDetail(postCache.getType(), postCache, isLike));
+                    List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find(size, Constant.LOAD_MAX_DATABASE);
+                    for (PostCache post : postCaches) {
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                        items.add(new TopicDetail(post.getType(), post, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();
                 });
+            } else {
+                mAdapter.loadMoreEnd(true);
             }
-
         }
     }
 
@@ -333,7 +328,7 @@ public class TopicDetailActivity extends FairActivity {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url(Api.GET_POST_BY_TID)
-                    .params("pageNo", 0)
+                    .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("tid", tid)
                     .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))

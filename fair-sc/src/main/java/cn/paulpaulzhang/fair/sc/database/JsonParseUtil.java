@@ -58,21 +58,23 @@ public final class JsonParseUtil {
         if (postMap != null) {
             for (String key : postMap.keySet()) {
                 JSONObject object = (JSONObject) postMap.get(key);
-                assert object != null;
-                long id = object.getLongValue("pid");
-                long uid = object.getLongValue("uid");
-                int type = object.getIntValue("type");
-                String title = object.getString("title");
-                String content = object.getString("content");
-                String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
-                int likeCount = object.getIntValue("likeCount");
-                int commentCount = object.getIntValue("commentCount");
-                int shareCount = object.getIntValue("shareCount");
-                long time = object.getLongValue("time");
-                String device = object.getString("device");
-                DiscoveryPostCache postCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
-                        likeCount, commentCount, shareCount, time, device);
-                postCaches.add(postCache);
+                if (object != null) {
+                    long id = object.getLongValue("pid");
+                    long uid = object.getLongValue("uid");
+                    int type = object.getIntValue("type");
+                    String title = object.getString("title");
+                    String content = object.getString("content");
+                    String imagesUrl = object.getJSONObject("imagesUrl").toJSONString();
+                    int likeCount = object.getIntValue("likeCount");
+                    int commentCount = object.getIntValue("commentCount");
+                    int shareCount = object.getIntValue("shareCount");
+                    long time = object.getLongValue("time");
+                    String device = object.getString("device");
+                    DiscoveryPostCache postCache = new DiscoveryPostCache(id, uid, type, title, content, imagesUrl,
+                            likeCount, commentCount, shareCount, time, device);
+                    postCaches.add(postCache);
+                }
+
             }
         }
 
@@ -80,13 +82,15 @@ public final class JsonParseUtil {
         if (userMap != null) {
             for (String key : userMap.keySet()) {
                 JSONObject object = (JSONObject) userMap.get(key);
-                assert object != null;
-                long uid = object.getLongValue("uid");
-                String username = object.getString("username");
-                String avatar = object.getString("avatar");
+                if (object != null) {
+                    long uid = object.getLongValue("uid");
+                    String username = object.getString("username");
+                    String avatar = object.getString("avatar");
 
-                DiscoveryUserCache userCache = new DiscoveryUserCache(uid, username, avatar);
-                userCaches.add(userCache);
+                    DiscoveryUserCache userCache = new DiscoveryUserCache(uid, username, avatar);
+                    userCaches.add(userCache);
+                }
+
             }
         }
 

@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
@@ -27,6 +28,7 @@ import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.PostCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
@@ -42,6 +44,7 @@ import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
 import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
@@ -141,27 +144,24 @@ public class DiscoveryDelegate extends AbstractDelegate {
             startActivity(intent);
         });
         view.findViewById(R.id.ll_map).setOnClickListener(v -> {
-            Toasty.info(Objects.requireNonNull(getContext()), "即将上线", Toasty.LENGTH_SHORT).show();
+            Toasty.info(Objects.requireNonNull(getContext()), "敬请期待", Toasty.LENGTH_SHORT).show();
         });
     }
 
-    private int page = 0;
+    private int page = 1;
 
     private void loadData(int type) {
         Box<DiscoveryPostCache> postBox = ObjectBox.get().boxFor(DiscoveryPostCache.class);
         Box<DiscoveryLikeCache> likeBox = ObjectBox.get().boxFor(DiscoveryLikeCache.class);
-        int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA, response -> {
-                page = 0;
+            requestData(1, Constant.REFRESH_DATA, response -> {
+                page = 1;
                 JsonParseUtil.parseDiscoveryPost(response, Constant.REFRESH_DATA);
                 List<DiscoveryPostCache> postCaches = postBox.query().orderDesc(DiscoveryPostCache_.time).build().find();
                 List<Discovery> items = new ArrayList<>();
-                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-                for (int i = 0; i < count; i++) {
-                    DiscoveryPostCache postCache = postCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                    items.add(new Discovery(postCache.getType(), postCache, isLike));
+                for (DiscoveryPostCache post : postCaches) {
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                    items.add(new Discovery(post.getType(), post, isLike));
                 }
 
                 //TODO load user data
@@ -170,7 +170,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 for (RecommendUserCache user : userBox.getAll()) {
                     userItems.add(new RecommendUser(user));
                 }
-                if (items.size() != 0) {
+                if (items.size() != 0 && userItems.size() != 0) {
                     items.add(Constant.USER_POSITION, new Discovery(2, userItems));
                 }
 
@@ -180,27 +180,25 @@ public class DiscoveryDelegate extends AbstractDelegate {
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
-            if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(page, Constant.LOAD_MORE_DATA, response -> {
-                    page += 1;
+            if (size >= Constant.LOAD_MAX_SEVER) {
+                requestData(++page, Constant.LOAD_MORE_DATA, response -> {
                     JsonParseUtil.parseDiscoveryPost(response, Constant.LOAD_MORE_DATA);
-                    List<DiscoveryPostCache> postCaches = postBox.getAll();
                     List<Discovery> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
                         return;
                     }
-                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-                    for (int i = position; i < count; i++) {
-                        DiscoveryPostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                        items.add(new Discovery(postCache.getType(), postCache, isLike));
+                    List<DiscoveryPostCache> postCaches = postBox.query().orderDesc(DiscoveryPostCache_.time).build().find(size, Constant.LOAD_MAX_DATABASE);
+                    for (DiscoveryPostCache post : postCaches) {
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(DiscoveryLikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                        items.add(new Discovery(post.getType(), post, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();
                 });
+            } else {
+                mAdapter.loadMoreEnd(true);
             }
-
         }
     }
 
@@ -213,9 +211,9 @@ public class DiscoveryDelegate extends AbstractDelegate {
     private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("uid", "uid")
-                    .params("pageNo", 0)
+                    .url(Api.GET_POST_BY_ALGORITHMS)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .success(success)
                     .error((code, msg) -> {
@@ -232,13 +230,13 @@ public class DiscoveryDelegate extends AbstractDelegate {
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url("post")
-                    .params("uid", "uid")
+                    .url(Api.GET_POST_BY_ALGORITHMS)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .success(success)
                     .error((code, msg) -> {
-                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
+                        Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code + "  " + msg, Toasty.LENGTH_SHORT).show();
                         mSwipeRefresh.setRefreshing(false);
                     })
                     .build()

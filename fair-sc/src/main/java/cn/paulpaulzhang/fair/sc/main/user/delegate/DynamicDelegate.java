@@ -144,56 +144,45 @@ public class DynamicDelegate extends FairDelegate {
         });
     }
 
-    private int page = 0;
+    private int page = 1;
 
     public void loadData(int type) {
         Box<PostCache> postBox = ObjectBox.get().boxFor(PostCache.class);
         Box<LikeCache> likeBox = ObjectBox.get().boxFor(LikeCache.class);
-        int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA, response -> {
-                page = 0;
-                FairLogger.json("JSON", response);
-
+            requestData(1, Constant.REFRESH_DATA, response -> {
+                page = 1;
                 JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
-
-                FairLogger.d("DATABASE", likeBox.getAll());
-
                 List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
                 List<Dynamic> items = new ArrayList<>();
-                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-                for (int i = 0; i < count; i++) {
-                    PostCache postCache = postCaches.get(i);
-                    boolean isLike = likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().property(LikeCache_.isLike).findBoolean();
-                    items.add(new Dynamic(postCache.getType(), postCache, isLike));
+                for (PostCache post : postCaches) {
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                    items.add(new Dynamic(post.getType(), post, isLike));
                 }
                 mAdapter.setNewData(items);
-                mRecyclerView.scrollToPosition(0);
             });
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
-            if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(page, Constant.LOAD_MORE_DATA, response -> {
-                    page += 1;
+            if (size >= Constant.LOAD_MAX_SEVER) {
+                requestData(++page, Constant.LOAD_MORE_DATA, response -> {
                     JsonParseUtil.parsePost(response, Constant.LOAD_MORE_DATA);
-                    List<PostCache> postCaches = postBox.getAll();
                     List<Dynamic> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
                         return;
                     }
-                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-                    for (int i = position; i < count; i++) {
-                        PostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                        items.add(new Dynamic(postCache.getType(), postCache, isLike));
+                    List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find(size, Constant.LOAD_MAX_DATABASE);
+                    for (PostCache post : postCaches) {
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                        items.add(new Dynamic(post.getType(), post, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();
                 });
+            } else {
+                mAdapter.loadMoreEnd(true);
             }
-
         }
     }
 
@@ -207,7 +196,7 @@ public class DynamicDelegate extends FairDelegate {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url(Api.GET_POST_BY_UID)
-                    .params("pageNo", 0)
+                    .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
                     .params("localUid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))

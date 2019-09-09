@@ -108,23 +108,20 @@ public class FollowDelegate extends AbstractDelegate {
         });
     }
 
-    private int page = 0;
+    private int page = 1;
 
     private void loadData(int type) {
         Box<FollowPostCache> postBox = ObjectBox.get().boxFor(FollowPostCache.class);
         Box<FollowLikeCache> likeBox = ObjectBox.get().boxFor(FollowLikeCache.class);
-        int position = mAdapter.getData().size();
         if (type == Constant.REFRESH_DATA) {
-            requestData(0, Constant.REFRESH_DATA, response -> {
-                page = 0;
+            requestData(1, Constant.REFRESH_DATA, response -> {
+                page = 1;
                 JsonParseUtil.parseFollowPost(response, Constant.REFRESH_DATA);
                 List<FollowPostCache> postCaches = postBox.query().orderDesc(FollowPostCache_.time).build().find();
                 List<Follow> items = new ArrayList<>();
-                long count = Math.min(postBox.count(), Constant.LOAD_MAX_DATABASE);
-                for (int i = 0; i < count; i++) {
-                    FollowPostCache postCache = postCaches.get(i);
-                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                    items.add(new Follow(postCache.getType(), postCache, isLike));
+                for (FollowPostCache post : postCaches) {
+                    boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                    items.add(new Follow(post.getType(), post, isLike));
                 }
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);
@@ -132,27 +129,25 @@ public class FollowDelegate extends AbstractDelegate {
 
         } else if (type == Constant.LOAD_MORE_DATA) {
             long size = postBox.count();
-            if (position + Constant.LOAD_MAX_DATABASE > size) {
-                requestData(page, Constant.LOAD_MORE_DATA, response -> {
-                    page += 1;
+            if (size >= Constant.LOAD_MAX_SEVER) {
+                requestData(++page, Constant.LOAD_MORE_DATA, response -> {
                     JsonParseUtil.parseFollowPost(response, Constant.LOAD_MORE_DATA);
-                    List<FollowPostCache> postCaches = postBox.getAll();
                     List<Follow> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
                         return;
                     }
-                    long count = Math.min(postBox.count() - position, Constant.LOAD_MAX_DATABASE);
-                    for (int i = position; i < count; i++) {
-                        FollowPostCache postCache = postCaches.get(i);
-                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, postCache.getId()).build().findUnique()).isLike();
-                        items.add(new Follow(postCache.getType(), postCache, isLike));
+                    List<FollowPostCache> postCaches = postBox.query().orderDesc(FollowPostCache_.time).build().find(size, Constant.LOAD_MAX_DATABASE);
+                    for (FollowPostCache post : postCaches) {
+                        boolean isLike = Objects.requireNonNull(likeBox.query().equal(FollowLikeCache_.pid, post.getId()).build().findUnique()).isLike();
+                        items.add(new Follow(post.getType(), post, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();
                 });
+            } else {
+                mAdapter.loadMoreEnd(true);
             }
-
         }
     }
 
@@ -167,7 +162,7 @@ public class FollowDelegate extends AbstractDelegate {
             RestClient.builder()
                     .url(Api.GET_POST_BY_UID_PAY_ALL_UID)
                     .params("uid", uid)
-                    .params("pageNo", 0)
+                    .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .success(success)
                     .error((code, msg) -> {

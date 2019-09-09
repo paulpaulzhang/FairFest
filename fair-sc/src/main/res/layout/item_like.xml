@@ -7,44 +7,43 @@
     app:cardCornerRadius="0dp"
     app:cardElevation="@dimen/card_elevation">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_height="match_parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/civ_user"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginStart="10dp" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:orientation="vertical"
-            android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_weight="1">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_user"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="0dp"
-                android:gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toEndOf="@id/civ_user"
+            app:layout_constraintTop_toTopOf="@id/civ_user" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="20dp"
-                android:textSize="12sp"
-                android:paddingEnd="10dp"
-                android:paddingStart="0dp"
-                android:gravity="center_vertical"
-                android:id="@+id/tv_time"/>
-        </LinearLayout>
 
-    </LinearLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="15dp"
+            android:gravity="center_vertical"
+            android:paddingStart="0dp"
+            android:paddingEnd="10dp"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@id/civ_user"
+            app:layout_constraintStart_toStartOf="@id/tv_user" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
