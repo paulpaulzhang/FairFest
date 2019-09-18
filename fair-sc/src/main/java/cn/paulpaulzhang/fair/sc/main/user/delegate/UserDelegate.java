@@ -25,9 +25,15 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.market.activity.PublishActivity;
 import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.FansActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.GoodsManageActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.PayActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.SettingActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.ShoppingCartActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserDynamicActivity;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -133,17 +139,21 @@ public class UserDelegate extends FairDelegate {
 
     @OnClick(R2.id.ll_dynamic)
     void dynamic() {
-
+        startActivity(new Intent(getContext(), UserDynamicActivity.class));
     }
 
     @OnClick(R2.id.ll_pay)
     void pay() {
-
+        Intent intent = new Intent(getContext(), PayActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     @OnClick(R2.id.ll_fans)
     void fans() {
-
+        Intent intent = new Intent(getContext(), FansActivity.class);
+        intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
+        startActivity(intent);
     }
 
     @OnClick(R2.id.cl_my_collection)
@@ -158,17 +168,17 @@ public class UserDelegate extends FairDelegate {
 
     @OnClick(R2.id.cl_my_want_buy)
     void wantBuy() {
-
+        startActivity(new Intent(getContext(), ShoppingCartActivity.class));
     }
 
-    @OnClick(R2.id.cl_my_order)
-    void order() {
-
+    @OnClick(R2.id.cl_my_free)
+    void free() {
+        startActivity(new Intent(getContext(), GoodsManageActivity.class));
     }
 
-    @OnClick(R2.id.cl_my_record)
-    void browseRecord() {
-
+    @OnClick(R2.id.cl_sold)
+    void sold() {
+        startActivity(new Intent(getContext(), PublishActivity.class));
     }
 
     @Override

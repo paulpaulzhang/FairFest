@@ -95,4 +95,17 @@ public class Api {
 
     public static final String GET_POST_BY_ALGORITHMS = "matchstickmen/getPostNoAlgorithms.action";
 
+    public static final String GET_PAY_USER_LIST = "matchstickmen/getPayUserList.action";
+
+    public static final String GET_USER_FANS_LIST = "matchstickmen/getUserFansList.action";
+
+    public static final String GET_STORE_BY_UID = "matchstickmen/getStoreByUid.action";
+
+    public static final String GET_STORE_BY_UID_BUY = "matchstickmen/getStoreByUidBuy.action";
+
+    public static final String DELETE_STORE = "matchstickmen/deleteStore.action";
+
+    public static final String GET_POST_BY_UID_THUMBSUP = "matchstickmen/getPostByUidThumbsup";
+
+
 }

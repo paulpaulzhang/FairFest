@@ -33,7 +33,7 @@ public class FairApp extends Application {
     public void onCreate() {
         super.onCreate();
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(FairLogger::d);
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
         Fair.init(this)
                 .withApiHost("http://www.matchstickmen.club:8080/")

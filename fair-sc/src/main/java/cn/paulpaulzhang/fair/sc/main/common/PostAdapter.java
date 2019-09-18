@@ -1,14 +1,12 @@
-package cn.paulpaulzhang.fair.sc.main.user.adapter;
+package cn.paulpaulzhang.fair.sc.main.common;
 
 import android.content.Intent;
-import android.text.TextUtils;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -30,14 +28,11 @@ import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
-import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
-import cn.paulpaulzhang.fair.sc.main.user.model.Dynamic;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,28 +40,27 @@ import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
- * 包名：cn.paulpaulzhang.fair.sc.main.user.adapter
- * 创建时间：8/26/19
- * 创建人： paulpaulzhang
- * 描述：
+ * 包名: cn.paulpaulzhang.fair.sc.main.interest.follow
+ * 创建时间: 7/21/2019
+ * 创建人: zlm31
+ * 描述:
  */
-public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewHolder> {
-
+public class PostAdapter extends BaseMultiItemQuickAdapter<PostItem, BaseViewHolder> {
     /**
      * Same as QuickAdapter#QuickAdapter(Context,int) but with
      * some initialization data.
      *
      * @param data A new list is created out of this one to avoid mutable list
      */
-    public DynamicAdapter(List<Dynamic> data) {
+    public PostAdapter(List<PostItem> data) {
         super(data);
-        addItemType(TopicDetail.DYNAMIC, R.layout.item_dynamic);
-        addItemType(TopicDetail.ARTICLE, R.layout.item_article);
+        addItemType(PostItem.DYNAMIC, R.layout.item_dynamic);
+        addItemType(PostItem.ARTICLE, R.layout.item_article);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, Dynamic item) {
-        if (item.getItemType() == TopicDetail.DYNAMIC) {
+    protected void convert(BaseViewHolder helper, PostItem item) {
+        if (item.getItemType() == PostItem.DYNAMIC) {
             PostCache postCache = item.getPostCache();
             long id = postCache.getId();
             long uid = postCache.getUid();
@@ -77,7 +71,6 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
             int likeCount = postCache.getLikeCount();
             int commentCount = postCache.getCommentCount();
             int shareCount = postCache.getShareCount();
-
 
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
@@ -90,7 +83,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
             UserCache userCache = userBox.get(uid);
 
             helper.setText(R.id.tv_username_dynamic, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()) : userCache.getUsername());
+                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
             Glide.with(mContext).load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> {
@@ -107,29 +100,23 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
+
                 if (item.isLike()) {
-                    FairLogger.d("like-> not like");
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     RestClient.builder()
                             .url(Api.CANCEL_THUMBSUP_POST)
                             .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                             .params("pid", id)
                             .success(r -> {
-                                String result = JSON.parseObject(r).getString("result");
-                                if (TextUtils.equals(result, "ok")) {
-                                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
-                                    mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
-                                    mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
-                                    item.setLike(false);
-                                }
-                                FairLogger.d("pid", id);
-
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_like);
+                                mLikeCount.setText(count == 0 ? " " : String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
+                                item.setLike(false);
                             })
                             .error((code, msg) -> Toasty.error(mContext, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
                 } else {
-                    FairLogger.d("not like -> like");
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim().isEmpty() ?
                             "0" : mLikeCount.getText().toString().trim()) + 1;
                     RestClient.builder()
@@ -137,14 +124,10 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                             .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                             .params("pid", id)
                             .success(r -> {
-                                String result = JSON.parseObject(r).getString("result");
-                                if (TextUtils.equals(result, "ok")) {
-                                    helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
-                                    mLikeCount.setText(String.valueOf(count));
-                                    mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
-                                    item.setLike(true);
-                                }
-                                FairLogger.d("pid", id);
+                                helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
+                                mLikeCount.setText(String.valueOf(count));
+                                mLikeCount.setTextColor(mContext.getColor(R.color.colorAccent));
+                                item.setLike(true);
                             })
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
@@ -200,7 +183,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
                 }
             }, false);
 
-        } else if (item.getItemType() == Dynamic.ARTICLE) {
+        } else if (item.getItemType() == PostItem.ARTICLE) {
             PostCache postCache = item.getPostCache();
             long id = postCache.getId();
             long uid = postCache.getUid();
@@ -225,7 +208,7 @@ public class DynamicAdapter extends BaseMultiItemQuickAdapter<Dynamic, BaseViewH
             UserCache userCache = userBox.get(uid);
 
             helper.setText(R.id.tv_username_article, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()) : userCache.getUsername());
+                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
             Glide.with(mContext).load(userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
 
             mAvatar.setOnClickListener(v -> {

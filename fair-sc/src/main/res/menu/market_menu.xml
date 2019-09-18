@@ -7,11 +7,7 @@
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/order"
-        android:title="@string/order"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/publish"
-        android:title="@string/publish_goods"
+        android:title="@string/publish_free"
         app:showAsAction="never" />
 </menu>

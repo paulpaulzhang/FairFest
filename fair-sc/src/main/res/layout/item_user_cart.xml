@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="6dp"
+    android:background="@android:color/white"
+    android:padding="5dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
+    app:cardElevation="@dimen/card_elevation">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="3dp"
+            android:gravity="bottom"
+            android:text="@string/rmb"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/tv_name"
+            app:layout_constraintTop_toBottomOf="@id/dv_picture" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:gravity="bottom"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/tv_icon"
+            app:layout_constraintStart_toEndOf="@id/tv_icon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginStart="10dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLines="4"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/dv_picture"
+            app:layout_constraintTop_toTopOf="@id/dv_picture" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="end"
+            android:textColor="@android:color/holo_orange_dark"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_icon" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/dv_picture"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="5dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="@id/tv_name"
+            app:layout_constraintTop_toBottomOf="@id/tv_name"
+            app:roundedCornerRadius="4dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_buy"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="85dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/buy"
+            android:textColor="@color/font_default"
+            app:cornerRadius="200dp"
+            app:elevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_status"
+            app:rippleColor="@android:color/white"
+            app:strokeColor="@color/font_default" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_delete"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="85dp"
+            android:layout_height="45dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center"
+            android:text="@string/delete"
+            android:textColor="@android:color/holo_red_light"
+            app:cornerRadius="200dp"
+            app:elevation="0dp"
+            app:layout_constraintEnd_toStartOf="@id/btn_buy"
+            app:layout_constraintTop_toTopOf="@id/btn_buy"
+            app:rippleColor="@android:color/white"
+            app:strokeColor="@color/font_default" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

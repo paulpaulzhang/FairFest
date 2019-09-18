@@ -24,9 +24,6 @@ import com.gyf.immersionbar.ImmersionBar;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -49,8 +46,8 @@ import cn.paulpaulzhang.fair.sc.database.Entity.PostCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
-import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicDetailAdapter;
-import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
+import cn.paulpaulzhang.fair.sc.main.common.PostAdapter;
+import cn.paulpaulzhang.fair.sc.main.common.PostItem;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
@@ -95,7 +92,7 @@ public class TopicDetailActivity extends FairActivity {
     @BindView(R2.id.srl_topic)
     SwipeRefreshLayout mSwipeRefresh;
 
-    private TopicDetailAdapter mAdapter;
+    private PostAdapter mAdapter;
     private String name;
     private long tid;
 
@@ -145,7 +142,7 @@ public class TopicDetailActivity extends FairActivity {
     }
 
     private void initRecyclerView() {
-        mAdapter = new TopicDetailAdapter(new ArrayList<>());
+        mAdapter = new PostAdapter(new ArrayList<>());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setLoadMoreView(new SimpleLoadMoreView());
@@ -153,9 +150,9 @@ public class TopicDetailActivity extends FairActivity {
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            TopicDetail item = (TopicDetail) adapter.getItem(position);
+            PostItem item = (PostItem) adapter.getItem(position);
             if (item != null) {
-                if (item.getItemType() == TopicDetail.DYNAMIC) {
+                if (item.getItemType() == PostItem.DYNAMIC) {
                     Intent intent = new Intent(this, DynamicActivity.class);
                     intent.putExtra("pid", item.getPostCache().getId());
                     intent.putExtra("uid", item.getPostCache().getUid());
@@ -285,10 +282,10 @@ public class TopicDetailActivity extends FairActivity {
                 page = 1;
                 JsonParseUtil.parsePost(response, Constant.REFRESH_DATA);
                 List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find();
-                List<TopicDetail> items = new ArrayList<>();
+                List<PostItem> items = new ArrayList<>();
                 for (PostCache post : postCaches) {
                     boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
-                    items.add(new TopicDetail(post.getType(), post, isLike));
+                    items.add(new PostItem(post.getType(), post, isLike));
                 }
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);
@@ -299,7 +296,7 @@ public class TopicDetailActivity extends FairActivity {
             if (size >= Constant.LOAD_MAX_SEVER) {
                 requestData(++page, Constant.LOAD_MORE_DATA, response -> {
                     JsonParseUtil.parsePost(response, Constant.LOAD_MORE_DATA);
-                    List<TopicDetail> items = new ArrayList<>();
+                    List<PostItem> items = new ArrayList<>();
                     if (size == postBox.count()) {
                         mAdapter.loadMoreEnd(true);
                         return;
@@ -307,7 +304,7 @@ public class TopicDetailActivity extends FairActivity {
                     List<PostCache> postCaches = postBox.query().orderDesc(PostCache_.time).build().find(size, Constant.LOAD_MAX_DATABASE);
                     for (PostCache post : postCaches) {
                         boolean isLike = Objects.requireNonNull(likeBox.query().equal(LikeCache_.pid, post.getId()).build().findUnique()).isLike();
-                        items.add(new TopicDetail(post.getType(), post, isLike));
+                        items.add(new PostItem(post.getType(), post, isLike));
                     }
                     mAdapter.addData(items);
                     mAdapter.loadMoreComplete();

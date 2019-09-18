@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.post.delegate;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -27,6 +28,7 @@ import cn.paulpaulzhang.fair.sc.R2;
 import cn.paulpaulzhang.fair.sc.main.post.activity.PostActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Like;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.LikeAdapter;
+import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import es.dmoral.toasty.Toasty;
 
@@ -80,6 +82,13 @@ public class LikeDelegate extends FairDelegate {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Like item = (Like) adapter.getItem(position);
+            if (item != null) {
+                Intent intent = new Intent(getContext(), UserCenterActivity.class);
+                intent.putExtra("uid", item.getUid());
+                startActivity(intent);
+            }
+
         });
     }
 

@@ -99,8 +99,14 @@
     <string name="change_birthday">更改生日</string>
     <string name="select_date">选择日期</string>
     <string name="touch_search">点击搜索</string>
-    <string name="goods_info">商品信息</string>
+    <string name="goods_info">宝贝信息</string>
     <string name="price">价格</string>
-    <string name="goods_picture">商品预览图</string>
-    <string name="publish_goods">发布商品</string>
+    <string name="goods_picture">宝贝预览图</string>
+    <string name="publish_free">出售宝贝</string>
+    <string name="my_free">宝贝管理</string>
+    <string name="shelf">上架</string>
+    <string name="obtained">下架</string>
+    <string name="delete">删除</string>
+    <string name="goods_name">宝贝名称</string>
+    <string name="buy">购买</string>
 </resources>

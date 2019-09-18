@@ -16,10 +16,10 @@ public class ObjectBox {
                 .androidContext(context.getApplicationContext())
                 .build();
 
-        if (BuildConfig.DEBUG) {
-            boolean started = new AndroidObjectBrowser(boxStore).start(context.getApplicationContext());
-            FairLogger.i("ObjectBrowser", "Started: " + started);
-        }
+//        if (BuildConfig.DEBUG) {
+//            boolean started = new AndroidObjectBrowser(boxStore).start(context.getApplicationContext());
+//            FairLogger.i("ObjectBrowser", "Started: " + started);
+//        }
     }
 
     public static BoxStore get() {

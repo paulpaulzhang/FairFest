@@ -83,9 +83,7 @@ public class MarketDelegate extends AbstractDelegate {
         setHasOptionsMenu(true);
         mToolbar.inflateMenu(R.menu.market_menu);
         mToolbar.setOnMenuItemClickListener(item -> {
-            if (item.getItemId() == R.id.order) {
-                Toasty.info(Objects.requireNonNull(getContext()), "订单", Toasty.LENGTH_SHORT).show();
-            } else if (item.getItemId() == R.id.want_buy) {
+            if (item.getItemId() == R.id.want_buy) {
                 Toasty.info(Objects.requireNonNull(getContext()), "想买", Toasty.LENGTH_SHORT).show();
             } else if (item.getItemId() == R.id.publish) {
                 startActivity(new Intent(getContext(), PublishActivity.class));
@@ -119,7 +117,7 @@ public class MarketDelegate extends AbstractDelegate {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Product item = (Product) adapter.getItem(position);
             if (item != null) {
-
+                // TODO
             }
         });
 
@@ -145,7 +143,9 @@ public class MarketDelegate extends AbstractDelegate {
                 long count = Math.min(productCacheBox.count(), Constant.LOAD_MAX_DATABASE);
                 for (int i = 0; i < count; i++) {
                     ProductCache productCache = productCaches.get(i);
-                    items.add(new Product(productCache));
+                    if (productCache.getIsSold() == 0) {
+                        items.add(new Product(productCache));
+                    }
                 }
                 mAdapter.setNewData(items);
                 mSwipeRefresh.setRefreshing(false);

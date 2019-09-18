@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.post.model.Like;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
@@ -30,15 +31,10 @@ public class LikeAdapter extends BaseQuickAdapter<Like, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, Like item) {
         CircleImageView mUser = helper.getView(R.id.civ_user);
-        Glide.with(mContext).load(item.getAvatar()).into(mUser);
-
+        Glide.with(mContext).
+                load(item.getAvatar() == null ? Constant.DEFAULT_AVATAR : item.getAvatar())
+                .into(mUser);
         helper.setText(R.id.tv_user, item.getUsername())
                 .setText(R.id.tv_time, DateUtil.getTime(item.getTime()));
-
-        mUser.setOnClickListener(view -> {
-            Intent intent = new Intent(mContext, UserCenterActivity.class);
-            intent.putExtra("uid", item.getUid());
-            mContext.startActivity(intent);
-        });
     }
 }

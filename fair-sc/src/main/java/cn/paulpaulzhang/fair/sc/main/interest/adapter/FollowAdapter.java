@@ -29,7 +29,6 @@ import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
-import cn.paulpaulzhang.fair.sc.main.interest.model.TopicDetail;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
@@ -62,7 +61,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, Follow item) {
-        if (item.getItemType() == TopicDetail.DYNAMIC) {
+        if (item.getItemType() == Follow.DYNAMIC) {
             FollowPostCache postCache = item.getPostCache();
             long id = postCache.getId();
             long uid = postCache.getUid();
@@ -186,7 +185,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 }
             }, false);
 
-        } else if (item.getItemType() == TopicDetail.ARTICLE) {
+        } else if (item.getItemType() == Follow.ARTICLE) {
             FollowPostCache postCache = item.getPostCache();
             long id = postCache.getId();
             long uid = postCache.getUid();

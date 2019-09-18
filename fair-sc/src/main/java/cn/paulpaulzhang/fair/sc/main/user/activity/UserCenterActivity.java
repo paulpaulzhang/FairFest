@@ -128,6 +128,12 @@ public class UserCenterActivity extends FairActivity {
     @BindView(R2.id.tv_fans_count)
     AppCompatTextView mFansCount;
 
+    @BindView(R2.id.tv_pay)
+    AppCompatTextView mPay;
+
+    @BindView(R2.id.tv_fans)
+    AppCompatTextView mFans;
+
     @BindView(R2.id.tv_gender_era)
     AppCompatTextView mGenderEra;
 
@@ -214,6 +220,18 @@ public class UserCenterActivity extends FairActivity {
 
         mEdit.setOnClickListener(v -> {
             Intent intent = new Intent(this, EditActivity.class);
+            intent.putExtra("uid", uid);
+            startActivity(intent);
+        });
+
+        mPay.setOnClickListener(v->{
+            Intent intent = new Intent(this, PayActivity.class);
+            intent.putExtra("uid", uid);
+            startActivity(intent);
+        });
+
+        mFans.setOnClickListener(v->{
+            Intent intent = new Intent(this, FansActivity.class);
             intent.putExtra("uid", uid);
             startActivity(intent);
         });

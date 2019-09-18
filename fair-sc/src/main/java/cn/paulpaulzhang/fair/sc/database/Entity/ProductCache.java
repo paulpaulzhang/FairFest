@@ -21,22 +21,28 @@ public class ProductCache {
 
     private long time;
 
+    private String sname;  //商品名称
+
     private String headImg;  //商品image
 
-    private String overview; //商品名称 etc
+    private String overview; //商品信息
 
     private float price;  //商品价格
+
+    private int isSold;  //是否售出
 
     public ProductCache() {
     }
 
-    public ProductCache(long id, long uid, long time, String headImg, String overview, float price) {
+    public ProductCache(long id, long uid, long time, String sname, String headImg, String overview, float price, int isSold) {
         this.id = id;
         this.uid = uid;
         this.time = time;
+        this.sname = sname;
         this.headImg = headImg;
         this.overview = overview;
         this.price = price;
+        this.isSold = isSold;
     }
 
     public long getId() {
@@ -63,6 +69,14 @@ public class ProductCache {
         this.time = time;
     }
 
+    public String getSname() {
+        return sname;
+    }
+
+    public void setSname(String sname) {
+        this.sname = sname;
+    }
+
     public String getHeadImg() {
         return headImg;
     }
@@ -85,5 +99,13 @@ public class ProductCache {
 
     public void setPrice(float price) {
         this.price = price;
+    }
+
+    public int getIsSold() {
+        return isSold;
+    }
+
+    public void setIsSold(int isSold) {
+        this.isSold = isSold;
     }
 }

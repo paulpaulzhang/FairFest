@@ -387,12 +387,14 @@ public final class JsonParseUtil {
         for (int i = 0; i < array.size(); i++) {
             JSONObject product = array.getJSONObject(i);
             long sid = product.getLongValue("sid");
+            String sname = product.getString("sname");
             String headImg = product.getString("headImg");
             String overview = product.getString("overview");
             float price = product.getFloatValue("price");
             long uid = product.getLongValue("uid");
             long time = product.getLongValue("time");
-            productCaches.add(new ProductCache(sid, uid, time, headImg, overview, price));
+            int isSold = product.getIntValue("issold");
+            productCaches.add(new ProductCache(sid, uid, time, sname, headImg, overview, price, isSold));
         }
         if (type == Constant.REFRESH_DATA) {
             productCacheBox.removeAll();

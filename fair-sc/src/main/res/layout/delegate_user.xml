@@ -334,7 +334,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_my_order"
+                    android:id="@+id/cl_my_free"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:background="?attr/selectableItemBackground"
@@ -354,7 +354,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:text="@string/order"
+                        android:text="@string/my_free"
                         android:textColor="@android:color/black"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="@id/imageView3"
@@ -370,16 +370,8 @@
                         app:layout_constraintTop_toTopOf="@id/imageView3" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
-                    android:background="@color/divider"
-                    android:contentDescription="@string/divider" />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_my_record"
+                    android:id="@+id/cl_sold"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:background="?attr/selectableItemBackground"
@@ -387,10 +379,10 @@
                     android:paddingEnd="10dp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/imageView4"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/ic_browse_record"
+                        android:src="@drawable/ic_sold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -399,21 +391,23 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
-                        android:text="@string/browse_record"
+                        android:text="@string/publish_free"
                         android:textColor="@android:color/black"
                         android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="@id/imageView5"
-                        app:layout_constraintStart_toEndOf="@id/imageView5"
-                        app:layout_constraintTop_toTopOf="@id/imageView5" />
+                        app:layout_constraintBottom_toBottomOf="@id/imageView4"
+                        app:layout_constraintStart_toEndOf="@id/imageView4"
+                        app:layout_constraintTop_toTopOf="@id/imageView4" />
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_more"
-                        app:layout_constraintBottom_toBottomOf="@id/imageView5"
+                        app:layout_constraintBottom_toBottomOf="@id/imageView4"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/imageView5" />
+                        app:layout_constraintTop_toTopOf="@id/imageView4" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             </LinearLayout>
 
         </LinearLayout>

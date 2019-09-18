@@ -61,6 +61,11 @@
         <activity android:name=".main.interest.activity.TeamActivity" />
         <activity android:name=".main.interest.activity.AnnouncementActivity" />
         <activity android:name=".main.market.activity.PublishActivity" />
+        <activity android:name=".main.user.activity.UserDynamicActivity" />
+        <activity android:name=".main.user.activity.PayActivity" />
+        <activity android:name=".main.user.activity.FansActivity" />
+        <activity android:name=".main.user.activity.GoodsManageActivity" />
+        <activity android:name=".main.user.activity.ShoppingCartActivity" />
     </application>
 
 

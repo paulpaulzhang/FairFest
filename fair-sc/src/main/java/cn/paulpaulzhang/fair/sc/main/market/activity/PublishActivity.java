@@ -1,12 +1,10 @@
 package cn.paulpaulzhang.fair.sc.main.market.activity;
 
 import android.Manifest;
-import android.app.Notification;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,8 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.Toolbar;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
@@ -29,7 +25,6 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,15 +36,12 @@ import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
-import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
-import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
@@ -74,6 +66,9 @@ public class PublishActivity extends FairActivity {
     @BindView(R2.id.et_overview)
     AppCompatEditText mOverview;
 
+    @BindView(R2.id.et_name)
+    AppCompatEditText mName;
+
     @BindView(R2.id.et_price)
     AppCompatEditText mPrice;
 
@@ -89,14 +84,15 @@ public class PublishActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        initToolbar(mToolbar, "发布商品");
+        initToolbar(mToolbar, getString(R.string.my_free));
         ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
 
         fab.setOnClickListener(v -> {
             String overview = Objects.requireNonNull(mOverview.getText()).toString().trim();
             String price = Objects.requireNonNull(mPrice.getText()).toString().trim();
+            String name = Objects.requireNonNull(mName.getText()).toString().trim();
 
-            if (overview.isEmpty() || price.isEmpty()) {
+            if (overview.isEmpty() || price.isEmpty() || name.isEmpty()) {
                 Toasty.info(this, "商品信息不能为空", Toasty.LENGTH_SHORT).show();
                 return;
             }
@@ -121,6 +117,7 @@ public class PublishActivity extends FairActivity {
                             .url(Api.ADD_STORE)
                             .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                             .params("headImg", paths.get(0))
+                            .params("sname", name)
                             .params("overview", overview)
                             .params("price", Float.valueOf(price))
                             .success(response -> {
