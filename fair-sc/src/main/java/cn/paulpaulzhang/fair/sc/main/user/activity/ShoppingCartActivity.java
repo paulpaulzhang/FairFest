@@ -55,7 +55,7 @@ public class ShoppingCartActivity extends FairActivity {
 
     @Override
     public int setLayout() {
-        return R.layout.activity_goods_manage;
+        return R.layout.activity_shopping_cart;
     }
 
     @Override

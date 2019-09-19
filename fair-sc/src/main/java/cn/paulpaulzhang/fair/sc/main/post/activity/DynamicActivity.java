@@ -12,11 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityOptionsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,7 +48,6 @@ import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
@@ -63,16 +60,13 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
-import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
-import cn.paulpaulzhang.fair.sc.main.post.delegate.LikeDelegate;
-import cn.paulpaulzhang.fair.sc.main.post.delegate.ShareDelegate;
-import cn.paulpaulzhang.fair.sc.main.post.model.Image;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
@@ -384,7 +378,7 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
         mImgShow.setOnClickListener(v -> {
             if (imgFile != null) {
-                Intent intent = new Intent(DynamicActivity.this, PhotoPreviewActivity.class);
+                Intent intent = new Intent(DynamicActivity.this, PhotoActivity.class);
                 intent.putExtra("path", imgFile.getPath());
                 //noinspection unchecked
                 startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());

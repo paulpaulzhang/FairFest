@@ -58,6 +58,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.main.chat.MessageActivity;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;

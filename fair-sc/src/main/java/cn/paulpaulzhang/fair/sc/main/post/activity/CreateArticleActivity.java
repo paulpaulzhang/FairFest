@@ -56,6 +56,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.post.model.Image;
@@ -148,7 +149,7 @@ public class CreateArticleActivity extends FairActivity implements IMentionTopic
 
         mAdapter.setFooterViewAsFlow(true);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(CreateArticleActivity.this, PhotoPreviewActivity.class);
+            Intent intent = new Intent(CreateArticleActivity.this, PhotoActivity.class);
             Image item = (Image) adapter.getItem(position);
             if (item != null) {
                 intent.putExtra("path", item.getFile().getPath());

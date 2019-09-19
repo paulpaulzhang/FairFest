@@ -1,6 +1,5 @@
 package cn.paulpaulzhang.fair.sc.main.chat;
 
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -41,7 +41,7 @@ import es.dmoral.toasty.Toasty;
  * 创建人: zlm31
  * 描述:
  */
-public class PhotoActivity extends FairActivity {
+public class ChatPhotoActivity extends FairActivity {
 
     @BindView(R2.id.photo_view)
     PhotoView mPhotoView;
@@ -51,7 +51,7 @@ public class PhotoActivity extends FairActivity {
 
     @Override
     public int setLayout() {
-        return R.layout.activity_photo;
+        return R.layout.activity_photo_chat;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -83,12 +83,12 @@ public class PhotoActivity extends FairActivity {
 
         mButton.setOnClickListener(v -> {
             mButton.setVisibility(View.GONE);
-            FairLoader.showLoading(PhotoActivity.this);
+            FairLoader.showLoading(ChatPhotoActivity.this);
             content.downloadOriginImage(message, new DownloadCompletionCallback() {
                 @Override
                 public void onComplete(int i, String s, File file) {
                     FairLoader.stopLoading();
-                    Glide.with(PhotoActivity.this).load(file.getPath()).into(mPhotoView);
+                    Glide.with(ChatPhotoActivity.this).load(file.getPath()).into(mPhotoView);
                 }
             });
 
@@ -97,7 +97,7 @@ public class PhotoActivity extends FairActivity {
         mPhotoView.setOnClickListener(v -> finishAfterTransition());
 
         mPhotoView.setOnLongClickListener(view -> {
-            new MaterialAlertDialogBuilder(this)
+            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setTitle("保存图片")
                     .setMessage("点击确认保存图片到本地")
                     .setPositiveButton("确认", (dialogInterface, i14) -> {
@@ -107,15 +107,17 @@ public class PhotoActivity extends FairActivity {
                                 File file = FileUtil.saveBitmap(bitmap, "FairSchool", 100);
                                 if (file != null) {
                                     dialogInterface.dismiss();
-                                    Toasty.success(PhotoActivity.this, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
+                                    Toasty.success(ChatPhotoActivity.this, file.getName() + "已保存", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toasty.error(PhotoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                                    Toasty.error(ChatPhotoActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     })
                     .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
                     .show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.colorAccent));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.font_default));
             return true;
         });
     }

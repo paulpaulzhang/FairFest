@@ -1,4 +1,4 @@
-package cn.paulpaulzhang.fair.sc.main.user.activity;
+package cn.paulpaulzhang.fair.sc.main.common;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -21,15 +22,9 @@ import com.gyf.immersionbar.ImmersionBar;
 import java.io.File;
 
 import butterknife.BindView;
-import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.android.api.callback.DownloadCompletionCallback;
-import cn.jpush.im.android.api.content.ImageContent;
-import cn.jpush.im.android.api.model.Conversation;
-import cn.jpush.im.android.api.model.Message;
 import cn.paulpaulzhang.fair.activities.FairActivity;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import es.dmoral.toasty.Toasty;
@@ -44,9 +39,6 @@ public class PhotoActivity extends FairActivity {
 
     @BindView(R2.id.photo_view)
     PhotoView mPhotoView;
-
-    @BindView(R2.id.button)
-    MaterialButton mButton;
 
     @Override
     public int setLayout() {
@@ -68,12 +60,10 @@ public class PhotoActivity extends FairActivity {
             Glide.with(this).load(path).into(mPhotoView);
         }
 
-        mButton.setVisibility(View.GONE);
-
-        mPhotoView.setOnClickListener(v -> finish());
+        mPhotoView.setOnClickListener(v -> finishAfterTransition());
 
         mPhotoView.setOnLongClickListener(view -> {
-            new MaterialAlertDialogBuilder(this)
+            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
                     .setTitle("保存图片")
                     .setMessage("点击确认保存图片到本地")
                     .setPositiveButton("确认", (dialogInterface, i14) -> {
@@ -92,6 +82,8 @@ public class PhotoActivity extends FairActivity {
                     })
                     .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
                     .show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.colorAccent));
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(R.color.font_default));
             return true;
         });
     }

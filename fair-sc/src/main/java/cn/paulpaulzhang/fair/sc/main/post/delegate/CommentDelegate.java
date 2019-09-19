@@ -14,8 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,12 +26,10 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.PostActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Comment;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.CommentAdapter;
-import cn.paulpaulzhang.fair.sc.main.post.model.Like;
-import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 
@@ -97,7 +93,7 @@ public class CommentDelegate extends FairDelegate {
             Comment item = (Comment) adapter.getItem(position);
             if (item != null) {
                 if (view == adapter.getViewByPosition(mRecyclerView, position, R.id.dv_img)) {
-                    Intent intent = new Intent(getContext(), PhotoPreviewActivity.class);
+                    Intent intent = new Intent(getContext(), PhotoActivity.class);
                     intent.putExtra("path", item.getImgUrl());
                     //noinspection unchecked
                     startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(Objects.requireNonNull(getActivity())).toBundle());

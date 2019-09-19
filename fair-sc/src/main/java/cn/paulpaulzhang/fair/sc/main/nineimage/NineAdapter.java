@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.paulpaulzhang.fair.app.Fair;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
 import cn.paulpaulzhang.fair.util.image.ImageUtil;
@@ -96,7 +98,7 @@ public class NineAdapter extends BaseAdapter {
                         .setOnClickListener((fragmentActivity, imageView, i1, s) -> MNImageBrowser.finishImageBrowser())
                         .setOnLongClickListener((fragmentActivity, imageView, i12, s) -> {
                             fragmentActivity.setTheme(R.style.DialogTheme);
-                            new MaterialAlertDialogBuilder(fragmentActivity)
+                            AlertDialog dialog = new MaterialAlertDialogBuilder(fragmentActivity)
                                     .setTitle("保存图片")
                                     .setMessage("点击确认保存图片到本地")
                                     .setPositiveButton("确认", (dialogInterface, i14) -> {
@@ -115,6 +117,8 @@ public class NineAdapter extends BaseAdapter {
                                     })
                                     .setNegativeButton("取消", (dialogInterface, i13) -> dialogInterface.cancel())
                                     .show();
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Fair.getApplicationContext().getColor(R.color.colorAccent));
+                            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Fair.getApplicationContext().getColor(R.color.font_default));
                         })
                         .setFullScreenMode(false)
                         .setActivityOpenAnime(R.anim.activity_in)

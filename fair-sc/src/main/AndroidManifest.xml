@@ -45,13 +45,12 @@
             android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity"
             android:label="@string/post_article"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity" />
         <activity
             android:name=".main.chat.MessageActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".main.chat.PhotoActivity" />
+        <activity android:name=".main.chat.ChatPhotoActivity" />
         <activity android:name=".main.user.activity.UserCenterActivity" />
-        <activity android:name=".main.user.activity.PhotoActivity" />
+        <activity android:name=".main.common.PhotoActivity" />
         <activity
             android:name=".main.user.activity.SettingActivity"
             android:label="@string/setting" />

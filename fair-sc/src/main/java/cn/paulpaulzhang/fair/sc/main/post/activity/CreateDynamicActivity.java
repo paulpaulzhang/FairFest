@@ -55,6 +55,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
@@ -145,7 +146,7 @@ public class CreateDynamicActivity extends FairActivity implements IMentionTopic
 
         mAdapter.setFooterViewAsFlow(true);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
-            Intent intent = new Intent(CreateDynamicActivity.this, PhotoPreviewActivity.class);
+            Intent intent = new Intent(CreateDynamicActivity.this, PhotoActivity.class);
             Image item = (Image) adapter.getItem(position);
             if (item != null) {
                 intent.putExtra("path", item.getFile().getPath());

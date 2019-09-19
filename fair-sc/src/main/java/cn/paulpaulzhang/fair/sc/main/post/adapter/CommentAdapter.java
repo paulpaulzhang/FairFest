@@ -1,7 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.post.adapter;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import java.util.List;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
-import cn.paulpaulzhang.fair.sc.main.post.activity.PhotoPreviewActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Comment;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;

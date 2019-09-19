@@ -63,13 +63,13 @@ import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
+import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
-import cn.paulpaulzhang.fair.sc.main.post.model.Image;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
@@ -416,7 +416,7 @@ public class ArticleActivity extends PostActivity implements IMentionTopicListen
 
         mImgShow.setOnClickListener(v -> {
             if (imgFile != null) {
-                Intent intent = new Intent(ArticleActivity.this, PhotoPreviewActivity.class);
+                Intent intent = new Intent(ArticleActivity.this, PhotoActivity.class);
                 intent.putExtra("path", imgFile.getPath());
                 //noinspection unchecked
                 startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());

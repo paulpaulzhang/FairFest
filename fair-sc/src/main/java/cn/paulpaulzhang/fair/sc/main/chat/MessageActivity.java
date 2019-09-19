@@ -60,7 +60,6 @@ import cn.paulpaulzhang.fair.sc.main.chat.model.Message;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
-import cn.paulpaulzhang.fair.util.log.FairLogger;
 import es.dmoral.toasty.Toasty;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -235,7 +234,7 @@ public class MessageActivity extends FairActivity implements
     @Override
     public void onMessageClick(Message message) {
         if (message.getImageUrl() != null) {
-            Intent intent = new Intent(this, PhotoActivity.class);
+            Intent intent = new Intent(this, ChatPhotoActivity.class);
             UserInfo userInfo = (UserInfo) message.getMessage().getTargetInfo();
             String username = userInfo.getUserName();
             String appkey = userInfo.getAppKey();
