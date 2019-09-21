@@ -1,8 +1,10 @@
 package cn.paulpaulzhang.fair.sc.main.interest.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.gyf.immersionbar.ImmersionBar;
 
@@ -25,39 +28,40 @@ import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.interest.adapter.AnnouncementAdapter;
-import cn.paulpaulzhang.fair.sc.main.interest.model.Announcement;
+import cn.paulpaulzhang.fair.sc.main.interest.adapter.BreakingNewsAdapter;
+import cn.paulpaulzhang.fair.sc.main.interest.model.BreakingNews;
+import cn.paulpaulzhang.fair.sc.main.web.WebActivity;
 import es.dmoral.toasty.Toasty;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main.interest.activity
- * 创建时间：9/3/19
+ * 创建时间：8/27/19
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class AnnouncementActivity extends FairActivity {
+public class BreakingNewsActivity extends FairActivity {
 
-    @BindView(R2.id.rv_announcement)
+    @BindView(R2.id.rv_big_event)
     RecyclerView mRecyclerView;
 
-    @BindView(R2.id.srl_announcement)
+    @BindView(R2.id.srl_big_event)
     SwipeRefreshLayout mSwipeRefresh;
 
-    @BindView(R2.id.toolbar)
+    @BindView(R2.id.tb_big_event)
     MaterialToolbar mToolbar;
 
-    private AnnouncementAdapter mAdapter;
+    private BreakingNewsAdapter mAdapter;
 
     @Override
     public int setLayout() {
-        return R.layout.activity_announcement;
+        return R.layout.activity_big_event;
     }
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
         ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
 
-        initToolbar(mToolbar, getString(R.string.announcement));
+        initToolbar(mToolbar, getString(R.string.big_event));
 
         initSwipeRefresh();
         initRecyclerView();
@@ -67,10 +71,22 @@ public class AnnouncementActivity extends FairActivity {
     }
 
     private void initRecyclerView() {
-        mAdapter = new AnnouncementAdapter(R.layout.item_announcement, new ArrayList<>());
+        mAdapter = new BreakingNewsAdapter(R.layout.item_event, new ArrayList<>());
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mAdapter);
+
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            BreakingNews news = (BreakingNews) adapter.getItem(position);
+            if (news != null) {
+                if (news.getUrl() == null || news.getUrl().isEmpty()) {
+                    return;
+                }
+                Intent intent = new Intent(this, WebActivity.class);
+                intent.putExtra("url", news.getUrl());
+                startActivity(intent);
+            }
+        });
     }
 
     private void initSwipeRefresh() {
@@ -81,20 +97,21 @@ public class AnnouncementActivity extends FairActivity {
 
     private void loadData() {
         RestClient.builder()
-                .url(Api.GET_ANNOUNCEMENT_LIST)
+                .url(Api.GET_BREAKING_NEWS_LIST)
                 .success(response -> {
                     String result = JSON.parseObject(response).getString("result");
                     if (TextUtils.equals(result, "ok")) {
-                        List<Announcement> announcements = new ArrayList<>();
+                        List<BreakingNews> breakingNews = new ArrayList<>();
                         JSONArray array = JSON.parseObject(response).getJSONArray("list");
                         for (int i = 0; i < array.size(); i++) {
                             JSONObject object = array.getJSONObject(i);
-                            long aid = object.getLongValue("aid");
-                            String text = object.getString("acontent");
+                            long bid = object.getLongValue("bid");
+                            String text = object.getString("content");
+                            String url = object.getString("url");
                             long time = object.getLongValue("time");
-                            announcements.add(new Announcement(aid, text, time));
+                            breakingNews.add(new BreakingNews(bid, text, url, time));
                         }
-                        mAdapter.setNewData(announcements);
+                        mAdapter.setNewData(breakingNews);
                     } else {
                         Toasty.error(this, "加载失败 ", Toasty.LENGTH_SHORT).show();
                     }

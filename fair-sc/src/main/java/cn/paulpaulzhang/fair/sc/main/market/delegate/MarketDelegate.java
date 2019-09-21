@@ -38,6 +38,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.interest.delegate.AbstractDelegate;
+import cn.paulpaulzhang.fair.sc.main.market.activity.GoodsDetailsActivity;
 import cn.paulpaulzhang.fair.sc.main.market.activity.PublishActivity;
 import cn.paulpaulzhang.fair.sc.main.market.adapter.ProductAdapter;
 import cn.paulpaulzhang.fair.sc.main.market.model.Product;
@@ -117,7 +118,10 @@ public class MarketDelegate extends AbstractDelegate {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Product item = (Product) adapter.getItem(position);
             if (item != null) {
-                // TODO
+                Intent intent = new Intent(getContext(), GoodsDetailsActivity.class);
+                intent.putExtra("sid", item.getProductCache().getId());
+                intent.putExtra("uid", item.getProductCache().getUid());
+                startActivity(intent);
             }
         });
 

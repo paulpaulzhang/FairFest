@@ -65,13 +65,39 @@ public class GoodsManageAdapter extends BaseQuickAdapter<Goods, BaseViewHolder> 
 
         mPicture.setImageURI(Uri.parse(item.getHeadImg()));
 
-        mShelf.setOnClickListener(v -> {
+        mShelf.setOnClickListener(v -> RestClient.builder()
+                .url(Api.SET_STORE_STATUS)
+                .params("sid", item.getSid())
+                .params("status", 0)
+                .success(response -> {
+                    String result = JSON.parseObject(response).getString("result");
+                    if (TextUtils.equals(result, "ok")) {
+                        mStatus.setText("售卖中");
+                        Toasty.success(mContext, "已上架", Toasty.LENGTH_SHORT).show();
+                    } else {
+                        Toasty.error(mContext, "上架失败", Toasty.LENGTH_SHORT).show();
+                    }
+                })
+                .error((code, msg) -> Toasty.error(mContext, "上架失败 " + code, Toasty.LENGTH_SHORT).show())
+                .build()
+                .post());
 
-        });
-
-        mObtained.setOnClickListener(v -> {
-
-        });
+        mObtained.setOnClickListener(v -> RestClient.builder()
+                .url(Api.SET_STORE_STATUS)
+                .params("sid", item.getSid())
+                .params("status", 2)
+                .success(response -> {
+                    String result = JSON.parseObject(response).getString("result");
+                    if (TextUtils.equals(result, "ok")) {
+                        mStatus.setText("已下架");
+                        Toasty.success(mContext, "已下架", Toasty.LENGTH_SHORT).show();
+                    } else {
+                        Toasty.error(mContext, "下架失败", Toasty.LENGTH_SHORT).show();
+                    }
+                })
+                .error((code, msg) -> Toasty.error(mContext, "下架失败 " + code, Toasty.LENGTH_SHORT).show())
+                .build()
+                .post());
 
         mDelete.setOnClickListener(v -> {
             AlertDialog dialog = new MaterialAlertDialogBuilder(mContext)

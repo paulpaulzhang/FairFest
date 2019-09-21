@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.user.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -28,7 +29,7 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.main.user.adapter.GoodsManageAdapter;
+import cn.paulpaulzhang.fair.sc.main.market.activity.GoodsDetailsActivity;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.ShoppingCartAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.model.Goods;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -60,7 +61,7 @@ public class ShoppingCartActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        initToolbar(mToolbar, "想买");
+        initToolbar(mToolbar, getString(R.string.shopping_cart));
         ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
 
 
@@ -85,9 +86,10 @@ public class ShoppingCartActivity extends FairActivity {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Goods item = (Goods) adapter.getItem(position);
             if (item != null) {
-//                Intent intent = new Intent(this, UserCenterActivity.class);
-//                intent.putExtra("sid", item.getSid());
-//                startActivity(intent);
+                Intent intent = new Intent(this, GoodsDetailsActivity.class);
+                intent.putExtra("sid", item.getSid());
+                intent.putExtra("uid", item.getUid());
+                startActivity(intent);
             }
         });
     }

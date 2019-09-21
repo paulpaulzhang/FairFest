@@ -1,112 +1,115 @@
 <resources>
-    <string name="app_name">校园派</string>
+    <string name="app_name" translatable="false">校园派</string>
 
-    <string name="phone">手机号</string>
-    <string name="code">验证码</string>
-    <string name="get_code">获取验证码</string>
-    <string name="quick_sign_up">快速注册</string>
-    <string name="already_have_account">已有账号？</string>
-    <string name="sign_in">登录</string>
-    <string name="error_phone_number">手机号码不正确</string>
-    <string name="error_code">验证码不正确</string>
-    <string name="forget_psd">忘记密码？</string>
-    <string name="setting">设置</string>
-    <string name="cart">购物车</string>
-    <string name="order">订单</string>
-    <string name="team">组队</string>
-    <string name="map">地图</string>
-    <string name="table">课程表</string>
-    <string name="study">学习</string>
-    <string name="interest">兴趣</string>
-    <string name="market">市场</string>
-    <string name="chat">聊天</string>
-    <string name="follow">关注</string>
-    <string name="discovery">发现</string>
-    <string name="topic">话题</string>
-    <string name="from">来自</string>
-    <string name="more">查看更多</string>
-    <string name="register">注册</string>
-    <string name="discuss">讨论</string>
-    <string name="you_may_follow_student">你可能会关注的同学</string>
-    <string name="guess_you_like">猜你喜欢</string>
-    <string name="dynamic">动态</string>
-    <string name="article">文章</string>
-    <string name="write_comment">写评论…</string>
-    <string name="comment">评论</string>
-    <string name="say_something">说些什么…</string>
-    <string name="share">分享</string>
-    <string name="like">赞</string>
-    <string name="mine">我</string>
-    <string name="message">消息</string>
-    <string name="send_message">发消息</string>
-    <string name="look_original_picture">查看原图</string>
-    <string name="delete_this_message">删除此消息</string>
-    <string name="copy_message_content">复制消息内容</string>
-    <string name="delete_this_chat">删除此会话</string>
-    <string name="clear_dialog_list">清空消息列表</string>
-    <string name="title">标题</string>
-    <string name="content">内容</string>
-    <string name="write_dynamic">发动态</string>
-    <string name="write_article">写文章</string>
-    <string name="shopping_cart">购物车</string>
-    <string name="post">发表</string>
-    <string name="course_table">课程表</string>
-    <string name="school_help">校园帮</string>
-    <string name="announcement">公告</string>
-    <string name="fansCount">粉丝</string>
-    <string name="my_collection">我的收藏</string>
-    <string name="my_like">我的赞</string>
-    <string name="my_courses_table">我的课表</string>
-    <string name="browse_record">浏览记录</string>
-    <string name="want_buy">想买</string>
-    <string name="divider">divider</string>
-    <string name="_0">0</string>
-    <string name="post_dynamic">发表动态</string>
-    <string name="post_article">发表文章</string>
-    <string name="concern_topic">关注的话题</string>
-    <string name="concern_user">关注的用户</string>
-    <string name="edit">编辑</string>
-    <string name="pay">关注</string>
-    <string name="fans">粉丝</string>
-    <string name="refresh">刷新</string>
-    <string name="about">关于</string>
-    <string name="change_bg">更换背景图</string>
-    <string name="personal_info">个人信息</string>
-    <string name="profile">简介</string>
-    <string name="level">等级</string>
-    <string name="age">年龄</string>
-    <string name="gender">性别</string>
-    <string name="school">学校</string>
-    <string name="college">专业</string>
-    <string name="log_out">退出登录</string>
-    <string name="big_event">大事件</string>
-    <string name="rmb">￥</string>
-    <string name="avatar">头像</string>
-    <string name="personal_page_bg">个人主页背景</string>
-    <string name="username">用户名</string>
-    <string name="birthday">生日</string>
-    <string name="constellation">星座</string>
-    <string name="sid">学号</string>
-    <string name="introduction">签名</string>
-    <string name="change_introduction">修改签名</string>
-    <string name="cancel">取消</string>
-    <string name="confirm">确认</string>
-    <string name="set_sid_only_once">学号设置后不可修改，谨慎输入</string>
-    <string name="edit_username">修改用户名</string>
-    <string name="unset">未设置</string>
-    <string name="male">男</string>
-    <string name="female">女</string>
-    <string name="change_birthday">更改生日</string>
-    <string name="select_date">选择日期</string>
-    <string name="touch_search">点击搜索</string>
-    <string name="goods_info">宝贝信息</string>
-    <string name="price">价格</string>
-    <string name="goods_picture">宝贝预览图</string>
-    <string name="publish_free">出售宝贝</string>
-    <string name="my_free">宝贝管理</string>
-    <string name="shelf">上架</string>
-    <string name="obtained">下架</string>
-    <string name="delete">删除</string>
-    <string name="goods_name">宝贝名称</string>
-    <string name="buy">购买</string>
+    <string name="phone" translatable="false">手机号</string>
+    <string name="code" translatable="false">验证码</string>
+    <string name="get_code" translatable="false">获取验证码</string>
+    <string name="quick_sign_up" translatable="false">快速注册</string>
+    <string name="already_have_account" translatable="false">已有账号？</string>
+    <string name="sign_in" translatable="false">登录</string>
+    <string name="error_phone_number" translatable="false">手机号码不正确</string>
+    <string name="error_code" translatable="false">验证码不正确</string>
+    <string name="forget_psd" translatable="false">忘记密码？</string>
+    <string name="setting" translatable="false">设置</string>
+    <string name="cart" translatable="false">购物车</string>
+    <string name="order" translatable="false">订单</string>
+    <string name="team" translatable="false">组队</string>
+    <string name="map" translatable="false">地图</string>
+    <string name="table" translatable="false">课程表</string>
+    <string name="study" translatable="false">学习</string>
+    <string name="interest" translatable="false">兴趣</string>
+    <string name="market" translatable="false">市场</string>
+    <string name="chat" translatable="false">聊天</string>
+    <string name="follow" translatable="false">关注</string>
+    <string name="discovery" translatable="false">发现</string>
+    <string name="topic" translatable="false">话题</string>
+    <string name="from" translatable="false">来自</string>
+    <string name="more" translatable="false">查看更多</string>
+    <string name="register" translatable="false">注册</string>
+    <string name="discuss" translatable="false">讨论</string>
+    <string name="you_may_follow_student" translatable="false">你可能会关注的同学</string>
+    <string name="guess_you_like" translatable="false">猜你喜欢</string>
+    <string name="dynamic" translatable="false">动态</string>
+    <string name="article" translatable="false">文章</string>
+    <string name="write_comment" translatable="false">写评论…</string>
+    <string name="comment" translatable="false">评论</string>
+    <string name="say_something" translatable="false">说些什么…</string>
+    <string name="share" translatable="false">分享</string>
+    <string name="like" translatable="false">赞</string>
+    <string name="mine" translatable="false">我</string>
+    <string name="message" translatable="false">消息</string>
+    <string name="send_message" translatable="false">发消息</string>
+    <string name="look_original_picture" translatable="false">查看原图</string>
+    <string name="delete_this_message" translatable="false">删除此消息</string>
+    <string name="copy_message_content" translatable="false">复制消息内容</string>
+    <string name="delete_this_chat" translatable="false">删除此会话</string>
+    <string name="clear_dialog_list" translatable="false">清空消息列表</string>
+    <string name="title" translatable="false">标题</string>
+    <string name="content" translatable="false">内容</string>
+    <string name="write_dynamic" translatable="false">发动态</string>
+    <string name="write_article" translatable="false">写文章</string>
+    <string name="post" translatable="false">发表</string>
+    <string name="course_table" translatable="false">课程表</string>
+    <string name="school_help" translatable="false">校园帮</string>
+    <string name="announcement" translatable="false">公告</string>
+    <string name="fansCount" translatable="false">粉丝</string>
+    <string name="my_collection" translatable="false">我的收藏</string>
+    <string name="my_like" translatable="false">我的赞</string>
+    <string name="my_courses_table" translatable="false">我的课表</string>
+    <string name="browse_record" translatable="false">浏览记录</string>
+    <string name="shopping_cart" translatable="false">宝贝框</string>
+    <string name="divider" translatable="false">divider</string>
+    <string name="_0" translatable="false">0</string>
+    <string name="post_dynamic" translatable="false">发表动态</string>
+    <string name="post_article" translatable="false">发表文章</string>
+    <string name="concern_topic" translatable="false">关注的话题</string>
+    <string name="concern_user" translatable="false">关注的用户</string>
+    <string name="edit" translatable="false">编辑</string>
+    <string name="pay" translatable="false">关注</string>
+    <string name="fans" translatable="false">粉丝</string>
+    <string name="refresh" translatable="false">刷新</string>
+    <string name="about" translatable="false">关于</string>
+    <string name="change_bg" translatable="false">更换背景图</string>
+    <string name="personal_info" translatable="false">个人信息</string>
+    <string name="profile" translatable="false">简介</string>
+    <string name="level" translatable="false">等级</string>
+    <string name="age" translatable="false">年龄</string>
+    <string name="gender" translatable="false">性别</string>
+    <string name="school" translatable="false">学校</string>
+    <string name="college" translatable="false">专业</string>
+    <string name="log_out" translatable="false">退出登录</string>
+    <string name="big_event" translatable="false">大事件</string>
+    <string name="rmb" translatable="false">￥</string>
+    <string name="avatar" translatable="false">头像</string>
+    <string name="personal_page_bg" translatable="false">个人主页背景</string>
+    <string name="username" translatable="false">用户名</string>
+    <string name="birthday" translatable="false">生日</string>
+    <string name="constellation" translatable="false">星座</string>
+    <string name="sid" translatable="false">学号</string>
+    <string name="introduction" translatable="false">签名</string>
+    <string name="change_introduction" translatable="false">修改签名</string>
+    <string name="cancel" translatable="false">取消</string>
+    <string name="confirm" translatable="false">确认</string>
+    <string name="set_sid_only_once" translatable="false">学号设置后不可修改，谨慎输入</string>
+    <string name="edit_username" translatable="false">修改用户名</string>
+    <string name="unset" translatable="false">未设置</string>
+    <string name="male" translatable="false">男</string>
+    <string name="female" translatable="false">女</string>
+    <string name="change_birthday" translatable="false">更改生日</string>
+    <string name="select_date" translatable="false">选择日期</string>
+    <string name="touch_search" translatable="false">点击搜索</string>
+    <string name="goods_info" translatable="false">宝贝信息</string>
+    <string name="price" translatable="false">价格</string>
+    <string name="goods_picture" translatable="false">宝贝预览图</string>
+    <string name="publish_free" translatable="false">出售宝贝</string>
+    <string name="my_free" translatable="false">宝贝管理</string>
+    <string name="shelf" translatable="false">上架</string>
+    <string name="obtained" translatable="false">下架</string>
+    <string name="delete" translatable="false">删除</string>
+    <string name="goods_name" translatable="false">宝贝名称</string>
+    <string name="buy" translatable="false">购买</string>
+    <string name="contact_the_seller_to_buy" translatable="false">联系卖家购买</string>
+    <string name="add_to_shopping_cart" translatable="false">加入宝贝框</string>
+    <string name="delete_goods">删除该宝贝</string>
+    <string name="goods_manage">宝贝管理</string>
 </resources>

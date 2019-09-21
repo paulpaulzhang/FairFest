@@ -29,10 +29,12 @@ import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.net.callback.ISuccess;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.main.market.activity.GoodsDetailsActivity;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.GoodsManageAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.adapter.UserAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.model.Goods;
 import cn.paulpaulzhang.fair.sc.main.user.model.User;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 
@@ -62,7 +64,7 @@ public class GoodsManageActivity extends FairActivity {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        initToolbar(mToolbar, "宝贝管理");
+        initToolbar(mToolbar, getString(R.string.goods_manage));
         ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
 
 
@@ -87,9 +89,10 @@ public class GoodsManageActivity extends FairActivity {
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             Goods item = (Goods) adapter.getItem(position);
             if (item != null) {
-//                Intent intent = new Intent(this, UserCenterActivity.class);
-//                intent.putExtra("sid", item.getSid());
-//                startActivity(intent);
+                Intent intent = new Intent(this, GoodsDetailsActivity.class);
+                intent.putExtra("sid", item.getSid());
+                intent.putExtra("uid", item.getUid());
+                startActivity(intent);
             }
         });
     }
@@ -98,6 +101,7 @@ public class GoodsManageActivity extends FairActivity {
 
         if (type == Constant.REFRESH_DATA) {
             requestData(response -> {
+                FairLogger.json("JSON", response);
                 String result = JSON.parseObject(response).getString("result");
                 if (!TextUtils.equals(result, "ok")) {
                     mSwipeRefresh.setRefreshing(false);
@@ -115,7 +119,7 @@ public class GoodsManageActivity extends FairActivity {
                     float price = object.getFloatValue("price");
                     long time = object.getLongValue("time");
                     int isSold = object.getIntValue("issold");
-                    long uid = object.getLongValue("uid");
+                    long uid = FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name());
                     Goods goods = new Goods(sid, sname, headImg, overview, price, time, isSold, uid);
                     items.add(goods);
                 }

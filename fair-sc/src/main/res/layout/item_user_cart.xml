@@ -8,13 +8,16 @@
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="6dp"
     android:background="@android:color/white"
-    android:padding="5dp"
     app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="@dimen/card_elevation">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="10dp"
+        android:paddingBottom="5dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_name"
@@ -24,6 +27,8 @@
             android:maxLines="1"
             android:textColor="@android:color/black"
             android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -31,7 +36,7 @@
             android:id="@+id/tv_icon"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="3dp"
             android:gravity="bottom"
             android:text="@string/rmb"
@@ -93,13 +98,13 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/buy"
-            android:textColor="@color/font_default"
+            android:textColor="@color/colorAccent"
             app:cornerRadius="200dp"
             app:elevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_status"
             app:rippleColor="@android:color/white"
-            app:strokeColor="@color/font_default" />
+            app:strokeColor="@color/colorAccent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_delete"
@@ -115,7 +120,7 @@
             app:layout_constraintEnd_toStartOf="@id/btn_buy"
             app:layout_constraintTop_toTopOf="@id/btn_buy"
             app:rippleColor="@android:color/white"
-            app:strokeColor="@color/font_default" />
+            app:strokeColor="@android:color/holo_red_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

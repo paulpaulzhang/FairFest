@@ -105,7 +105,27 @@ public class Api {
 
     public static final String DELETE_STORE = "matchstickmen/deleteStore.action";
 
-    public static final String GET_POST_BY_UID_THUMBSUP = "matchstickmen/getPostByUidThumbsup";
+    public static final String CANCEL_WANT_TO_BUY_STORE = "matchstickmen/delwantToBuyStore.action";
+
+    public static final String SET_STORE_STATUS = "matchstickmen/setStoreIsSold.action";
+
+    public static final String ADD_TO_SHOPPING_CART = "matchstickmen/wantToBuyStore.action";
+
+    public static final String GET_STORE_INFO = "matchstickmen/getStoreMessage.action";
+
+    public static final String GET_POST_BY_UID_THUMBSUP = "matchstickmen/getPostByUidThumbsup.action";
+
+    public static final String GET_POST_BY_UID_COLLECT = "matchstickmen/getPostByUidCollect.action";
+
+    public static final String COLLECT_POST = "matchstickmen/collectPost.action";
+
+    public static final String DELETE_COLLECT_POST = "matchstickmen/delcollectPost.action";
+
+    public static final String IS_COLLECT = "matchstickmen/isCollect.action";
+
+    public static final String GET_ANNOUNCEMENT_LIST = "matchstickmen/getAnnouncementList.action";
+
+    public static final String GET_BREAKING_NEWS_LIST = "matchstickmen/getBreakingNewsList.action";
 
 
 }

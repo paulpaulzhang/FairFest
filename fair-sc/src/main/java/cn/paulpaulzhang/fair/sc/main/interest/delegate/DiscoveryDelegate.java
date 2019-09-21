@@ -34,7 +34,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.AnnouncementActivity;
-import cn.paulpaulzhang.fair.sc.main.interest.activity.BigEventActivity;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.BreakingNewsActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TeamActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.DiscoveryAdapter;
@@ -133,7 +133,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 .startTurning(5000)
                 .setOnItemClickListener(position -> Toast.makeText(getContext(), position + "", Toast.LENGTH_SHORT).show());
 
-        view.findViewById(R.id.ll_big_event).setOnClickListener(v -> startActivity(new Intent(getContext(), BigEventActivity.class)));
+        view.findViewById(R.id.ll_big_event).setOnClickListener(v -> startActivity(new Intent(getContext(), BreakingNewsActivity.class)));
         view.findViewById(R.id.ll_announcement).setOnClickListener(v -> startActivity(new Intent(getContext(), AnnouncementActivity.class)));
         view.findViewById(R.id.ll_team).setOnClickListener(v -> startActivity(new Intent(getContext(), TeamActivity.class)));
         view.findViewById(R.id.ll_help).setOnClickListener(v -> {

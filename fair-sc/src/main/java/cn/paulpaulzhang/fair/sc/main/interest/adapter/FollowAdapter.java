@@ -33,6 +33,7 @@ import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.sc.main.web.WebActivity;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
@@ -166,8 +167,9 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             mDynamicContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
-                    Toast.makeText(mContext, "你点击了链接 内容是：" + c, Toast.LENGTH_SHORT).show();
-                } else if (t.equals(LinkType.MENTION_TYPE)) {
+                    Intent intent = new Intent(mContext, WebActivity.class);
+                    intent.putExtra("url", c);
+                    mContext.startActivity(intent);                } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
                     Intent intent = new Intent(mContext, TopicDetailActivity.class);
@@ -292,8 +294,9 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
             mArticleContent.setLinkClickListener((t, c, selfContent) -> {
                 //根据类型去判断  t:type   c:content
                 if (t.equals(LinkType.LINK_TYPE)) {
-                    Toast.makeText(mContext, "你点击了链接 内容是：" + c, Toast.LENGTH_SHORT).show();
-                } else if (t.equals(LinkType.MENTION_TYPE)) {
+                    Intent intent = new Intent(mContext, WebActivity.class);
+                    intent.putExtra("url", c);
+                    mContext.startActivity(intent);                } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
                     Intent intent = new Intent(mContext, TopicDetailActivity.class);

@@ -54,7 +54,7 @@
         <activity
             android:name=".main.user.activity.SettingActivity"
             android:label="@string/setting" />
-        <activity android:name=".main.interest.activity.BigEventActivity" />
+        <activity android:name=".main.interest.activity.BreakingNewsActivity" />
         <activity android:name=".main.search.SearchActivity" />
         <activity android:name=".main.user.activity.EditActivity" />
         <activity android:name=".main.interest.activity.TeamActivity" />
@@ -65,6 +65,8 @@
         <activity android:name=".main.user.activity.FansActivity" />
         <activity android:name=".main.user.activity.GoodsManageActivity" />
         <activity android:name=".main.user.activity.ShoppingCartActivity" />
+        <activity android:name=".main.market.activity.GoodsDetailsActivity" />
+        <activity android:name=".main.web.WebActivity" />
     </application>
 
 

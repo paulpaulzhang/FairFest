@@ -14,6 +14,10 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -31,7 +35,7 @@
             android:id="@+id/tv_icon"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="3dp"
             android:gravity="bottom"
             android:text="@string/rmb"
@@ -79,7 +83,7 @@
             android:id="@+id/dv_picture"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="@id/tv_name"
             app:layout_constraintTop_toBottomOf="@id/tv_name"
@@ -93,13 +97,13 @@
             android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/shelf"
-            android:textColor="@color/font_default"
+            android:textColor="@color/colorAccent"
             app:cornerRadius="200dp"
             app:elevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_status"
             app:rippleColor="@android:color/white"
-            app:strokeColor="@color/font_default" />
+            app:strokeColor="@color/colorAccent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_obtained"
@@ -131,7 +135,7 @@
             app:layout_constraintEnd_toStartOf="@id/btn_obtained"
             app:layout_constraintTop_toTopOf="@id/btn_shelf"
             app:rippleColor="@android:color/white"
-            app:strokeColor="@color/font_default" />
+            app:strokeColor="@android:color/holo_red_light" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

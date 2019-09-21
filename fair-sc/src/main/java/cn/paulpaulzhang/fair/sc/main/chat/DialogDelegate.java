@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -94,7 +95,7 @@ public class DialogDelegate extends FairDelegate
         mToolbar.inflateMenu(R.menu.dialog_menu);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.clear_all) {
-                new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
+               AlertDialog dialog = new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
                         .setTitle("确认删除")
                         .setMessage("请确认是否清空会话列表, 该操作会清空所有会话聊天记录并不可恢复")
                         .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
@@ -108,6 +109,9 @@ public class DialogDelegate extends FairDelegate
                             mDialogListAdapter.clear();
                         }))
                         .show();
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getContext().getColor(android.R.color.holo_red_light));
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getContext().getColor(R.color.font_default));
             }
             return true;
         });

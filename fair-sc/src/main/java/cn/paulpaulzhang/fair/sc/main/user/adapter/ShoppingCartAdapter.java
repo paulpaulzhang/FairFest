@@ -17,9 +17,11 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.List;
 
 import cn.paulpaulzhang.fair.constant.Api;
+import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.user.model.Goods;
+import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 
 /**
@@ -51,7 +53,9 @@ public class ShoppingCartAdapter extends BaseQuickAdapter<Goods, BaseViewHolder>
             mStatus.setText("已售出");
         } else if (status == 2) {
             mStatus.setText("已下架");
+            mBuy.setEnabled(false);
         }
+
 
         mPicture.setImageURI(Uri.parse(item.getHeadImg()));
 
@@ -62,20 +66,21 @@ public class ShoppingCartAdapter extends BaseQuickAdapter<Goods, BaseViewHolder>
         mDelete.setOnClickListener(v -> {
             AlertDialog dialog = new MaterialAlertDialogBuilder(mContext)
                     .setTitle("操作确认")
-                    .setMessage("点击确认删除该宝贝")
+                    .setMessage("点击确认移出该宝贝")
                     .setPositiveButton("确认", (dialogInterface, i) -> {
                         RestClient.builder()
-                                .url(Api.DELETE_STORE)
+                                .url(Api.CANCEL_WANT_TO_BUY_STORE)
+                                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                                 .params("sid", item.getSid())
                                 .success(response -> {
                                     String result = JSON.parseObject(response).getString("result");
                                     if (TextUtils.equals(result, "ok")) {
                                         remove(helper.getLayoutPosition());
                                     } else {
-                                        Toasty.error(mContext, "删除失败", Toasty.LENGTH_SHORT).show();
+                                        Toasty.error(mContext, "移出失败", Toasty.LENGTH_SHORT).show();
                                     }
                                 })
-                                .error((code, msg) -> Toasty.error(mContext, "删除失败 " + code, Toasty.LENGTH_SHORT).show())
+                                .error((code, msg) -> Toasty.error(mContext, "移出失败 " + code, Toasty.LENGTH_SHORT).show())
                                 .build()
                                 .post();
                         dialogInterface.dismiss();
