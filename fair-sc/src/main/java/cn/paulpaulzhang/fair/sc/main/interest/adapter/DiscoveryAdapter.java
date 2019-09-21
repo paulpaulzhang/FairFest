@@ -16,6 +16,8 @@ import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.ctetin.expandabletextviewlibrary.app.StatusType;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +67,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, Discovery item) {
+    protected void convert(@NotNull BaseViewHolder helper, Discovery item) {
         if (item.getItemType() == Discovery.DYNAMIC) {
             DiscoveryPostCache postCache = item.getPostCache();
             long id = postCache.getId();
@@ -81,23 +83,29 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
 
             GridView mDynamicImg = helper.getView(R.id.gv_images_dynamic);
             LinearLayout mLike = helper.getView(R.id.ll_like_dynamic);
-            LinearLayout mComment = helper.getView(R.id.ll_comment_dynamic);
-            LinearLayout mShare = helper.getView(R.id.ll_share_dynamic);
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_dynamic);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_dynamic);
 
             Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
             DiscoveryUserCache userCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_dynamic, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
-            Glide.with(mContext).load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
+            helper.addOnClickListener(R.id.ll_comment_dynamic)
+                    .addOnClickListener(R.id.ll_share_dynamic);
 
-            mAvatar.setOnClickListener(v -> {
-                Intent intent = new Intent(mContext, UserCenterActivity.class);
-                intent.putExtra("uid", userCache.getId());
-                mContext.startActivity(intent);
-            });
+            if (userCache != null) {
+                helper.setText(R.id.tv_username_dynamic, userCache.getUsername() == null ?
+                        String.valueOf(userCache.getId()) : userCache.getUsername());
+                Glide.with(mContext)
+                        .load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar())
+                        .centerCrop()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(mAvatar);
+                mAvatar.setOnClickListener(v -> {
+                    Intent intent = new Intent(mContext, UserCenterActivity.class);
+                    intent.putExtra("uid", userCache.getId());
+                    mContext.startActivity(intent);
+                });
+            }
 
             if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_dynamic, R.drawable.ic_liked);
@@ -107,7 +115,6 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
                 mLikeCount.setTextColor(mContext.getColor(R.color.font_default));
             }
             mLike.setOnClickListener(v -> {
-
                 if (item.isLike()) {
                     int count = Integer.parseInt(mLikeCount.getText().toString().trim()) - 1;
                     RestClient.builder()
@@ -142,8 +149,6 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
                 }
             });
 
-            mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
-            mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_dynamic, device)
                     .setText(R.id.tv_time_dynamic, DateUtil.getTime(new Date(time)));
 
@@ -207,23 +212,29 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
 
             GridView mArticleImg = helper.getView(R.id.gv_images_article);
             LinearLayout mLike = helper.getView(R.id.ll_like_article);
-            LinearLayout mComment = helper.getView(R.id.ll_comment_article);
-            LinearLayout mShare = helper.getView(R.id.ll_share_article);
             AppCompatTextView mLikeCount = helper.getView(R.id.tv_like_article);
             CircleImageView mAvatar = helper.getView(R.id.civ_user_article);
+
+            helper.addOnClickListener(R.id.ll_comment_article)
+                    .addOnClickListener(R.id.ll_share_article);
 
             Box<DiscoveryUserCache> userBox = ObjectBox.get().boxFor(DiscoveryUserCache.class);
             DiscoveryUserCache userCache = userBox.get(uid);
 
-            helper.setText(R.id.tv_username_article, userCache.getUsername() == null ?
-                    String.valueOf(userCache.getId()).substring(8) : userCache.getUsername());
-            Glide.with(mContext).load(userCache.getAvatar()).centerCrop().placeholder(R.mipmap.ic_launcher).into(mAvatar);
-
-            mAvatar.setOnClickListener(v -> {
-                Intent intent = new Intent(mContext, UserCenterActivity.class);
-                intent.putExtra("uid", userCache.getId());
-                mContext.startActivity(intent);
-            });
+            if (userCache != null) {
+                helper.setText(R.id.tv_username_article, userCache.getUsername() == null ?
+                        String.valueOf(userCache.getId()) : userCache.getUsername());
+                Glide.with(mContext)
+                        .load(userCache.getAvatar() == null ? Constant.DEFAULT_AVATAR : userCache.getAvatar())
+                        .centerCrop()
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(mAvatar);
+                mAvatar.setOnClickListener(v -> {
+                    Intent intent = new Intent(mContext, UserCenterActivity.class);
+                    intent.putExtra("uid", userCache.getId());
+                    mContext.startActivity(intent);
+                });
+            }
 
             if (item.isLike()) {
                 helper.setImageResource(R.id.iv_like_article, R.drawable.ic_liked);
@@ -267,8 +278,6 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
                 }
             });
 
-            mComment.setOnClickListener(v -> Toast.makeText(mContext, "评论", Toast.LENGTH_SHORT).show());
-            mShare.setOnClickListener(v -> Toast.makeText(mContext, "分享", Toast.LENGTH_SHORT).show());
             helper.setText(R.id.tv_device_article, device)
                     .setText(R.id.tv_time_article, DateUtil.getTime(time))
                     .setText(R.id.tv_title_article, title);

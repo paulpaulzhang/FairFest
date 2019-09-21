@@ -79,7 +79,7 @@ public class PublishActivity extends FairActivity {
 
     @Override
     public int setLayout() {
-        return R.layout.publish_activity;
+        return R.layout.activity_publish;
     }
 
     @Override

@@ -44,38 +44,40 @@ import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.sc.main.user.adapter.ShoppingCartAdapter;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main.user.activity
- * 创建时间：9/18/19
+ * 创建时间：9/21/19
  * 创建人： paulpaulzhang
  * 描述：
  */
-public class UserDynamicActivity extends FairActivity {
+public class CollectActivity extends FairActivity {
 
     @BindView(R2.id.toolbar)
     MaterialToolbar mToolbar;
 
-    @BindView(R2.id.srl_dynamic)
+    @BindView(R2.id.srl_collect)
     SwipeRefreshLayout mSwipeRefresh;
 
-    @BindView(R2.id.rv_dynamic)
+    @BindView(R2.id.rv_collect)
     RecyclerView mRecyclerView;
 
-    private long uid;
     private PostAdapter mAdapter;
+    private long uid;
 
     @Override
     public int setLayout() {
-        return R.layout.activity_user_dynamic;
+        return R.layout.activity_collect;
     }
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        initToolbar(mToolbar, getString(R.string.my_dynamic));
+        initToolbar(mToolbar, getString(R.string.my_collection));
         ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
 
         uid = FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name());
@@ -131,12 +133,14 @@ public class UserDynamicActivity extends FairActivity {
             if (item != null) {
                 long pid = item.getPostCache().getId();
                 AlertDialog dialog = new MaterialAlertDialogBuilder(Objects.requireNonNull(this))
-                        .setTitle("删除确认")
-                        .setMessage("点击确认将删除此动态，该操作不可撤销")
+                        .setTitle("取消收藏")
+                        .setMessage("点击确认移出我的收藏")
                         .setPositiveButton("确认", (dialogInterface, i) -> RestClient.builder()
-                                .url(Api.DELETE_POST)
+                                .url(Api.CANCEL_COLLECT_POST)
+                                .params("uid", uid)
                                 .params("pid", pid)
                                 .success(response -> {
+                                    FairLogger.json("JSON", response);
                                     String result = JSON.parseObject(response).getString("result");
                                     if (TextUtils.equals(result, "ok")) {
                                         Box<PostCache> box = ObjectBox.get().boxFor(PostCache.class);
@@ -144,7 +148,7 @@ public class UserDynamicActivity extends FairActivity {
                                         adapter.remove(position);
                                     }
                                 })
-                                .error((code, msg) -> Toasty.error(this, "删除失败", Toasty.LENGTH_SHORT).show())
+                                .error((code, msg) -> Toasty.error(this, "移出失败", Toasty.LENGTH_SHORT).show())
                                 .build()
                                 .post())
                         .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
@@ -247,11 +251,10 @@ public class UserDynamicActivity extends FairActivity {
     private void requestData(int page, int type, ISuccess success) {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
-                    .url(Api.GET_POST_BY_UID)
+                    .url(Api.GET_POST_BY_UID_COLLECT)
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
-                    .params("localUid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .success(success)
                     .error((code, msg) -> {
                         Toasty.error(Objects.requireNonNull(this), "加载失败" + code, Toasty.LENGTH_SHORT).show();
@@ -261,11 +264,10 @@ public class UserDynamicActivity extends FairActivity {
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {
             RestClient.builder()
-                    .url(Api.GET_POST_BY_UID)
+                    .url(Api.GET_POST_BY_UID_COLLECT)
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .params("uid", uid)
-                    .params("localUid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .success(success)
                     .error((code, msg) -> Toasty.error(Objects.requireNonNull(this), "加载失败" + code, Toasty.LENGTH_SHORT).show())
                     .build()

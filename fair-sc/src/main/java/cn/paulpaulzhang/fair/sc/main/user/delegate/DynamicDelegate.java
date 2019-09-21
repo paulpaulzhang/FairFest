@@ -7,12 +7,14 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.zhihu.matisse.Matisse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,7 @@ import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.common.PostAdapter;
+import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
@@ -42,6 +45,8 @@ import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.user.delegate
@@ -106,35 +111,43 @@ public class DynamicDelegate extends FairDelegate {
             }
         });
 
-        mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             PostItem item = (PostItem) adapter.getItem(position);
-            if (item != null) {
-                long pid = item.getPostCache().getId();
-                AlertDialog dialog = new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))
-                        .setTitle("删除确认")
-                        .setMessage("点击确认将删除此动态，该操作不可撤销")
-                        .setPositiveButton("确认", (dialogInterface, i) -> RestClient.builder()
-                                .url(Api.DELETE_POST)
-                                .params("pid", pid)
-                                .success(response -> {
-                                    String result = JSON.parseObject(response).getString("result");
-                                    if (TextUtils.equals(result, "ok")) {
-                                        Box<PostCache> box = ObjectBox.get().boxFor(PostCache.class);
-                                        box.remove(pid);
-                                        adapter.remove(position);
-                                    }
-                                })
-                                .error((code, msg) -> Toasty.error(getContext(), "删除失败", Toasty.LENGTH_SHORT).show())
-                                .build()
-                                .post())
-                        .setNegativeButton("取消", (dialogInterface, i) -> dialogInterface.dismiss())
-                        .show();
-
-                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Objects.requireNonNull(getContext()).getColor(android.R.color.holo_red_light));
-                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getContext().getColor(R.color.font_default));
+            if (item == null) {
+                return;
             }
-            return true;
+            if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
+                if (item.getPostCache().getCommentCount() == 0) {
+                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                } else {
+                    if (item.getItemType() == PostItem.DYNAMIC) {
+                        Intent intent = new Intent(getContext(), DynamicActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getContext(), ArticleActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    }
+                }
+            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
+
+            }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            PostCommentUtil.INSTANCE().compressPhoto(Matisse.obtainResult(data).get(0), getContext(), (AppCompatActivity) Objects.requireNonNull(getActivity()));
+        }
     }
 
     private int page = 1;

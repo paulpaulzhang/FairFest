@@ -27,8 +27,10 @@ import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.main.market.activity.PublishActivity;
 import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.CollectActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.FansActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.GoodsManageActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.LikeActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.PayActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.SettingActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.ShoppingCartActivity;
@@ -158,12 +160,12 @@ public class UserDelegate extends FairDelegate {
 
     @OnClick(R2.id.cl_my_collection)
     void collection() {
-
+        startActivity(new Intent(getContext(), CollectActivity.class));
     }
 
     @OnClick(R2.id.cl_my_like)
     void like() {
-
+        startActivity(new Intent(getContext(), LikeActivity.class));
     }
 
     @OnClick(R2.id.cl_my_want_buy)

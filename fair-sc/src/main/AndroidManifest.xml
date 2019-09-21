@@ -67,6 +67,8 @@
         <activity android:name=".main.user.activity.ShoppingCartActivity" />
         <activity android:name=".main.market.activity.GoodsDetailsActivity" />
         <activity android:name=".main.web.WebActivity" />
+        <activity android:name=".main.user.activity.CollectActivity" />
+        <activity android:name=".main.user.activity.LikeActivity" />
     </application>
 
 

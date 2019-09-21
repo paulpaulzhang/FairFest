@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
+import com.zhihu.matisse.Matisse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
+import cn.paulpaulzhang.fair.sc.main.common.PostItem;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.FollowAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
@@ -36,6 +40,8 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main.interest
@@ -104,6 +110,36 @@ public class FollowDelegate extends AbstractDelegate {
 
             }
         });
+
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Follow item = (Follow) adapter.getItem(position);
+            if (item == null) {
+                return;
+            }
+            if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
+                if (item.getPostCache().getCommentCount() == 0) {
+                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                } else {
+                    if (item.getItemType() == PostItem.DYNAMIC) {
+                        Intent intent = new Intent(getContext(), DynamicActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getContext(), ArticleActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    }
+                }
+            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
+
+            }
+        });
     }
 
     private int page = 1;
@@ -146,6 +182,14 @@ public class FollowDelegate extends AbstractDelegate {
             } else {
                 mAdapter.loadMoreEnd(true);
             }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            PostCommentUtil.INSTANCE().compressPhoto(Matisse.obtainResult(data).get(0), getContext(), (AppCompatActivity) Objects.requireNonNull(getActivity()));
         }
     }
 

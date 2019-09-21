@@ -184,6 +184,7 @@ public class MarketDelegate extends AbstractDelegate {
         if (type == Constant.REFRESH_DATA) {
             RestClient.builder()
                     .url(Api.LIST_STORE_BY_PAGE)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .params("pageNo", 0)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .success(success)
@@ -196,6 +197,7 @@ public class MarketDelegate extends AbstractDelegate {
         } else {
             RestClient.builder()
                     .url(Api.LIST_STORE_BY_PAGE)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
                     .params("pageNo", page)
                     .params("pageSize", Constant.LOAD_MAX_SEVER)
                     .success(success)

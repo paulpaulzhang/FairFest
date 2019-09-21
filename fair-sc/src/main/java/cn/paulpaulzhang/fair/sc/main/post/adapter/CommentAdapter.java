@@ -49,8 +49,13 @@ public class CommentAdapter extends BaseQuickAdapter<Comment, BaseViewHolder> {
             mImg.setImageURI(item.getImgUrl());
         }
 
-        helper.setText(R.id.tv_user, item.getUsername())
-                .setText(R.id.tv_time, DateUtil.getTime(item.getTime()))
+        if (item.getUsername() == null) {
+            helper.setText(R.id.tv_user, item.getUid() + "");
+        } else {
+            helper.setText(R.id.tv_user, item.getUsername());
+        }
+
+        helper.setText(R.id.tv_time, DateUtil.getTime(item.getTime()))
                 .addOnClickListener(R.id.dv_img);
 
         mUser.setOnClickListener(view -> {

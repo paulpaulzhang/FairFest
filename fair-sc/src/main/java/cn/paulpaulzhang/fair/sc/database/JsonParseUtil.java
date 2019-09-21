@@ -260,6 +260,11 @@ public final class JsonParseUtil {
     }
 
     public static void parseUser(String response) {
+        String result = JSON.parseObject(response).getString("result");
+        if (!TextUtils.equals(result, "ok")) {
+            return;
+        }
+
         JSONObject object = JSON.parseObject(response).getJSONObject("user");
 
         long id = object.getLongValue("uid");

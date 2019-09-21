@@ -7,11 +7,13 @@
     android:background="@color/background">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
+            android:id="@+id/collapsing_bar"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             app:contentScrim="@android:color/transparent"

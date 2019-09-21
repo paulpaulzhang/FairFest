@@ -31,6 +31,8 @@ import com.bumptech.glide.Glide;
 import com.ctetin.expandabletextviewlibrary.ExpandableTextView;
 import com.ctetin.expandabletextviewlibrary.app.LinkType;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
@@ -61,6 +63,7 @@ import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
 import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
 import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
+import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
@@ -68,6 +71,7 @@ import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.sc.main.web.WebActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
@@ -89,7 +93,7 @@ import top.zibin.luban.OnCompressListener;
  * 创建人: zlm31
  * 描述:
  */
-public class DynamicActivity extends PostActivity implements IMentionTopicListener {
+public class DynamicActivity extends PostActivity {
 
     @BindView(R2.id.tb_dynamic)
     MaterialToolbar mToolbar;
@@ -133,6 +137,12 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
     @BindView(R2.id.iv_share)
     AppCompatImageView mShare;
 
+    @BindView(R2.id.app_bar)
+    AppBarLayout mAppBar;
+
+    @BindView(R2.id.collapsing_bar)
+    CollapsingToolbarLayout mCollapsingBar;
+
 
     @Override
     public int setLayout() {
@@ -145,6 +155,7 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
         pid = intent.getLongExtra("pid", -1);
         uid = intent.getLongExtra("uid", -1);
         isLike = intent.getBooleanExtra("isLike", false);
+        boolean needFold = intent.getBooleanExtra("fold", false);
 
         ImmersionBar.with(this)
                 .fitsSystemWindows(true)
@@ -156,6 +167,10 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
         initTab();
         initHeader();
         initBottomMenu();
+        if (needFold) {
+            mAppBar.setExpanded(false);
+        }
+
     }
 
     @Override
@@ -184,7 +199,9 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
         mContent.setLinkClickListener((t, c, selfContent) -> {
             if (t.equals(LinkType.LINK_TYPE)) {
-                Toast.makeText(this, "你点击了链接 内容是：" + c, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, WebActivity.class);
+                intent.putExtra("url", c);
+                startActivity(intent);
             } else if (t.equals(LinkType.MENTION_TYPE)) {
                 Toast.makeText(this, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
             } else if (t.equals(LinkType.SELF)) {
@@ -218,6 +235,24 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
         } else {
             mLike.setImageResource(R.drawable.ic_like);
         }
+
+        RestClient.builder()
+                .url(Api.IS_COLLECT)
+                .params("uid", uid)
+                .params("pid", pid)
+                .success(response -> {
+                    String result = JSON.parseObject(response).getString("result");
+                    if (TextUtils.equals(result, "已收藏")) {
+                        isCollect = true;
+                        mCollect.setImageResource(R.drawable.ic_collected);
+                    } else {
+                        isCollect = false;
+                        mCollect.setImageResource(R.drawable.ic_collect);
+                    }
+                })
+                .error((code, msg) -> FairLogger.d(code))
+                .build()
+                .get();
     }
 
     private void requestData() {
@@ -279,7 +314,8 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
     @OnClick(R2.id.ll_edit)
     void openBottomDialog() {
-        initBottomDialog();
+        PostCommentUtil.INSTANCE().bottomDialog(pid, this, this, null);
+        ;
     }
 
     @OnClick(R2.id.btn_follow)
@@ -350,7 +386,32 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
     @OnClick(R2.id.iv_collect)
     void doCollect() {
-
+        if (!isCollect) {
+            RestClient.builder()
+                    .url(Api.COLLECT_POST)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pid", pid)
+                    .success(r -> {
+                        FairLogger.json("COLLECT", r);
+                        mCollect.setImageResource(R.drawable.ic_collected);
+                        isCollect = true;
+                    })
+                    .error((code, msg) -> Toasty.error(this, "收藏失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        } else {
+            RestClient.builder()
+                    .url(Api.CANCEL_COLLECT_POST)
+                    .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                    .params("pid", pid)
+                    .success(r -> {
+                        mCollect.setImageResource(R.drawable.ic_collect);
+                        isCollect = false;
+                    })
+                    .error((code, msg) -> Toasty.error(this, "取消失败 " + code, Toasty.LENGTH_SHORT).show())
+                    .build()
+                    .post();
+        }
     }
 
     @OnClick(R2.id.iv_share)
@@ -358,186 +419,12 @@ public class DynamicActivity extends PostActivity implements IMentionTopicListen
 
     }
 
-    private AppCompatImageView mImgShow;
-    private AppCompatImageView mDelete;
-    private File imgFile;
-
-    private void initBottomDialog() {
-        MaterialDialog dialog = new MaterialDialog(this, new BottomSheet(LayoutMode.WRAP_CONTENT));
-        DialogCustomViewExtKt.customView(dialog, R.layout.dialog_comment_bottom,
-                null, false, true, false, true);
-        LifecycleExtKt.lifecycleOwner(dialog, this);
-        dialog.cornerRadius(8f, null);
-        dialog.show();
-
-        View customerView = DialogCustomViewExtKt.getCustomView(dialog);
-        SpXEditText mComment = customerView.findViewById(R.id.et_edit);
-
-        mImgShow = customerView.findViewById(R.id.image_view);
-        mDelete = customerView.findViewById(R.id.iv_delete);
-
-        mImgShow.setOnClickListener(v -> {
-            if (imgFile != null) {
-                Intent intent = new Intent(DynamicActivity.this, PhotoActivity.class);
-                intent.putExtra("path", imgFile.getPath());
-                //noinspection unchecked
-                startActivity(intent, ActivityOptionsCompat.makeSceneTransitionAnimation(this).toBundle());
-            }
-        });
-
-        mDelete.setOnClickListener(v -> {
-            mImgShow.setVisibility(View.GONE);
-            imgFile = null;
-            mDelete.setVisibility(View.GONE);
-        });
-
-        customerView.findViewById(R.id.iv_mention).setOnClickListener(v -> {
-
-        });
-
-        customerView.findViewById(R.id.iv_img).setOnClickListener(v -> openAlbum());
-
-        customerView.findViewById(R.id.iv_topic).setOnClickListener(v -> {
-            Box<TopicCache> topicCacheBox = ObjectBox.get().boxFor(TopicCache.class);
-            List<Topic> topics = new ArrayList<>();
-            for (TopicCache cache : topicCacheBox.getAll()) {
-                topics.add(new Topic(cache));
-            }
-            MaterialDialog topicDialog = new MaterialDialog(this, new BottomSheet());
-            DialogCustomViewExtKt.customView(topicDialog, R.layout.dialog_topic_list,
-                    null, false, false, false, true);
-            View topicView = DialogCustomViewExtKt.getCustomView(topicDialog);
-            topicDialog.cornerRadius(8f, null);
-            RecyclerView recyclerView = topicView.findViewById(R.id.rv_topic_list);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            TopicAdapter mAdapter = new TopicAdapter(R.layout.item_topic, topics);
-            recyclerView.setAdapter(mAdapter);
-            mAdapter.setOnItemClickListener((adapter, view, position) -> {
-                Topic topic = (Topic) adapter.getItem(position);
-                if (topic != null) {
-                    String tname = topic.getTopicCache().getName();
-                    SpUtil.insertSpannableString(mComment.getEditableText(),
-                            new MentionTopic(tname, topic.getTopicCache().getId(), this).getSpannableString());
-                    topicIdList.add(topic.getTopicCache().getId());
-                }
-                topicDialog.dismiss();
-            });
-            topicDialog.show();
-        });
-
-        customerView.findViewById(R.id.iv_send).setOnClickListener(v -> {
-            if (Objects.requireNonNull(mComment.getText()).toString().isEmpty() && imgFile == null) {
-                return;
-            }
-            UploadUtil util = UploadUtil.INSTANCE();
-            List<File> files = new ArrayList<>();
-            if (imgFile != null) {
-                files.add(imgFile);
-            }
-            FairLoader.showLoading(DynamicActivity.this);
-            util.uploadFile(DynamicActivity.this, files, new IUploadFileListener() {
-                @Override
-                public void onSuccess(List<String> paths) {
-                    RestClient.builder()
-                            .url(Api.ADD_COMMENT)
-                            .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
-                            .params("pid", pid)
-                            .params("content", mComment.getText().toString())
-                            .params("imagesUrl", paths.size() == 0 ? "" : paths.get(0))
-                            .success(response -> {
-                                FairLoader.stopLoading();
-                                FairLogger.d("IMG" + (paths.size() == 0 ? "" : paths.get(0)));
-                                String result = JSON.parseObject(response).getString("result");
-                                if (!TextUtils.equals(result, "ok")) {
-                                    Toasty.error(DynamicActivity.this, "发表失败", Toasty.LENGTH_SHORT).show();
-                                } else {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .error((code, msg) -> {
-                                Toasty.error(DynamicActivity.this, "发表失败 " + code, Toasty.LENGTH_SHORT).show();
-                                FairLoader.stopLoading();
-                            })
-                            .build()
-                            .post();
-                }
-
-                @Override
-                public void onError() {
-                    FairLoader.stopLoading();
-                    Toasty.error(DynamicActivity.this, "发表失败 ", Toasty.LENGTH_SHORT).show();
-                }
-            });
-
-        });
-        new Handler().postDelayed(() -> KeyBoardUtil.showKeyboard(mComment), 10);
-    }
-
-    @Override
-    public void removeTag(long id) {
-        for (int i = 0; i < topicIdList.size(); i++) {
-            if (topicIdList.get(i) == id) {
-                topicIdList.remove(i);
-                return;
-            }
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
-            compressPhoto(Matisse.obtainResult(data).get(0));
+            PostCommentUtil.INSTANCE().compressPhoto(Matisse.obtainResult(data).get(0), this, this);
         }
     }
-
-    private void openAlbum() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)) {
-            Matisse.from(this)
-                    .choose(MimeType.ofImage())
-                    .maxSelectable(1)
-                    .countable(true)
-                    .capture(true)
-                    .captureStrategy(new CaptureStrategy(true, "cn.paulpaulzhang.fairfest.fileprovider"))
-                    .gridExpectedSize(getResources()
-                            .getDimensionPixelSize(R.dimen.grid_expected_size))
-                    .restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                    .thumbnailScale(0.85f)
-                    .theme(R.style.Matisse_Zhihu_Custom)
-                    .imageEngine(new Glide4Engine())
-                    .forResult(Constant.REQUEST_CODE_CHOOSE);
-        } else {
-            EasyPermissions.requestPermissions(this, "打开图库需要存储读取权限", 1001,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
-        }
-    }
-
-    private void compressPhoto(Uri uri) {
-        Luban.with(this)
-                .load(uri)
-                .ignoreBy(0)
-                .setTargetDir(Objects.requireNonNull(getExternalCacheDir()).getAbsolutePath())
-                .filter(path -> !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif")))
-                .setCompressListener(new OnCompressListener() {
-                    @Override
-                    public void onStart() {
-                    }
-
-                    @Override
-                    public void onSuccess(File file) {
-                        imgFile = file;
-                        mImgShow.setVisibility(View.VISIBLE);
-                        Glide.with(DynamicActivity.this).load(file).into(mImgShow);
-                        mDelete.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.error(DynamicActivity.this, "加载失败", Toasty.LENGTH_SHORT).show();
-                    }
-                }).launch();
-    }
-
 
 }

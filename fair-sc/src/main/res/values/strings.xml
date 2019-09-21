@@ -53,7 +53,6 @@
     <string name="school_help" translatable="false">校园帮</string>
     <string name="announcement" translatable="false">公告</string>
     <string name="fansCount" translatable="false">粉丝</string>
-    <string name="my_collection" translatable="false">我的收藏</string>
     <string name="my_like" translatable="false">我的赞</string>
     <string name="my_courses_table" translatable="false">我的课表</string>
     <string name="browse_record" translatable="false">浏览记录</string>
@@ -110,6 +109,9 @@
     <string name="buy" translatable="false">购买</string>
     <string name="contact_the_seller_to_buy" translatable="false">联系卖家购买</string>
     <string name="add_to_shopping_cart" translatable="false">加入宝贝框</string>
-    <string name="delete_goods">删除该宝贝</string>
-    <string name="goods_manage">宝贝管理</string>
+    <string name="delete_goods" translatable="false">删除该宝贝</string>
+    <string name="goods_manage" translatable="false">宝贝管理</string>
+    <string name="publish_" translatable="false">发布于</string>
+    <string name="my_collection" translatable="false">我的收藏</string>
+    <string name="my_dynamic" translatable="false">我的动态</string>
 </resources>

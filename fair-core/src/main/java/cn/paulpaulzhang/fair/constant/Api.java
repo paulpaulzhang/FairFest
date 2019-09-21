@@ -113,13 +113,15 @@ public class Api {
 
     public static final String GET_STORE_INFO = "matchstickmen/getStoreMessage.action";
 
+    public static final String IS_IN_SHOPPING_CART = "matchstickmen/uidIsLikeBuySid.action";
+
     public static final String GET_POST_BY_UID_THUMBSUP = "matchstickmen/getPostByUidThumbsup.action";
 
     public static final String GET_POST_BY_UID_COLLECT = "matchstickmen/getPostByUidCollect.action";
 
     public static final String COLLECT_POST = "matchstickmen/collectPost.action";
 
-    public static final String DELETE_COLLECT_POST = "matchstickmen/delcollectPost.action";
+    public static final String CANCEL_COLLECT_POST = "matchstickmen/delcollectPost.action";
 
     public static final String IS_COLLECT = "matchstickmen/isCollect.action";
 

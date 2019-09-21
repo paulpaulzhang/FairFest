@@ -92,7 +92,7 @@ public class CommentDelegate extends FairDelegate {
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Comment item = (Comment) adapter.getItem(position);
             if (item != null) {
-                if (view == adapter.getViewByPosition(mRecyclerView, position, R.id.dv_img)) {
+                if (view.getId() == R.id.dv_img) {
                     Intent intent = new Intent(getContext(), PhotoActivity.class);
                     intent.putExtra("path", item.getImgUrl());
                     //noinspection unchecked
@@ -105,7 +105,6 @@ public class CommentDelegate extends FairDelegate {
 
     private void loadData() {
         requestData(response -> {
-            FairLogger.json("JSON", response);
             String result = JSON.parseObject(response).getString("result");
             if (TextUtils.equals(result, "ok")) {
                 List<Comment> comments = new ArrayList<>();

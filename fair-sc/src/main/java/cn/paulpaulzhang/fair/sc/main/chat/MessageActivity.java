@@ -104,6 +104,7 @@ public class MessageActivity extends FairActivity implements
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");  //发送方 id
         username = intent.getStringExtra("username"); //接收方 id
+        String info = intent.getStringExtra("info");
 
         JMessageClient.registerEventReceiver(this);
         JMessageClient.enterSingleConversation(username);
@@ -127,6 +128,10 @@ public class MessageActivity extends FairActivity implements
                 .keyboardEnable(true, WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE
                         | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)  //软键盘自动弹出
                 .init();
+
+        if (info != null && !info.isEmpty()) {
+            onSubmit(info);
+        }
     }
 
     private void initAdapter(String uid) {

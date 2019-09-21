@@ -59,13 +59,14 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_info"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="10dp"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="4"
-            android:textSize="16sp"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@id/dv_picture"
             app:layout_constraintTop_toTopOf="@id/dv_picture" />
 

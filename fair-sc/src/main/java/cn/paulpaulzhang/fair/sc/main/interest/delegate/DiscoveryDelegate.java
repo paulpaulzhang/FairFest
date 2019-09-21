@@ -6,12 +6,14 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
+import com.zhihu.matisse.Matisse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,8 @@ import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
+import cn.paulpaulzhang.fair.sc.main.common.PostItem;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.AnnouncementActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.BreakingNewsActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TeamActivity;
@@ -45,6 +49,8 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main.interest
@@ -114,10 +120,41 @@ public class DiscoveryDelegate extends AbstractDelegate {
                     intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
                 }
+            }
+
+        });
+
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            Discovery item = (Discovery) adapter.getItem(position);
+            if (item == null) {
+                return;
+            }
+            if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
+                if (item.getPostCache().getCommentCount() == 0) {
+                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                } else {
+                    if (item.getItemType() == PostItem.DYNAMIC) {
+                        Intent intent = new Intent(getContext(), DynamicActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getContext(), ArticleActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    }
+                }
+            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
 
             }
         });
     }
+
 
     private void initHeader(View view) {
         List<String> data = new ArrayList<>();
@@ -239,6 +276,14 @@ public class DiscoveryDelegate extends AbstractDelegate {
                     })
                     .build()
                     .get();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            PostCommentUtil.INSTANCE().compressPhoto(Matisse.obtainResult(data).get(0), getContext(), (AppCompatActivity) Objects.requireNonNull(getActivity()));
         }
     }
 

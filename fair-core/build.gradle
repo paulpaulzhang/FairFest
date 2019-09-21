@@ -98,7 +98,7 @@ dependencies {
     api 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
 
     //RecyclerViewAdapter库
-    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.47'
 
     //ExpandableTextView
     api 'com.github.MZCretin:ExpandableTextView:v1.6.1'

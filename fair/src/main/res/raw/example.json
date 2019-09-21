@@ -1,113 +1,72 @@
 {
+  "result": "ok",
   "post": {
     "post1": {
-      "pid": 1299392556433440,
-      "uid": 1299290431422496,
+      "pid": 1304683163418656,
+      "uid": 1301759746113568,
       "type": 0,
       "title": "",
-      "content": " #表白墙# 哈哈",
+      "content": " #表白墙# 收藏测试3333",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1568806212621,
+      "device": "OPPO A77"
+    },
+    "post2": {
+      "pid": 1305178783350816,
+      "uid": 1301765748162592,
+      "type": 0,
+      "title": "",
+      "content": " #表白墙# cjl真可爱！",
+      "imagesUrl": {
+        "images": {}
+      },
+      "likeCount": 1,
+      "commentCount": 0,
+      "shareCount": 0,
+      "time": 1569042542575,
+      "device": "MI CC 9"
+    },
+    "post3": {
+      "pid": 1304838872760352,
+      "uid": 1304837497028640,
+      "type": 1,
+      "title": "谈恋爱啊",
+      "content": " #恋爱# 有人想谈恋爱吗二缺一",
       "imagesUrl": {
         "images": {}
       },
       "likeCount": 0,
       "commentCount": 0,
       "shareCount": 0,
-      "time": 1566283454500,
-      "device": "MI CC 9"
-    },
-    "post2": {
-      "pid": 1299374596423712,
-      "uid": 1298556797321248,
-      "type": 0,
-      "title": "",
-      "content": " #表白墙# ",
-      "imagesUrl": {
-        "images": {}
-      },
-      "likeCount": 1,
-      "commentCount": 0,
-      "shareCount": 0,
-      "time": 1566274890973,
-      "device": "MI CC 9"
-    },
-    "post3": {
-      "pid": 1299292507602976,
-      "uid": 1299290431422496,
-      "type": 0,
-      "title": "",
-      "content": " #表白墙# zlm~",
-      "imagesUrl": {
-        "images": {}
-      },
-      "likeCount": 1,
-      "commentCount": 0,
-      "shareCount": 0,
-      "time": 1566235747729,
-      "device": "MI CC 9"
-    },
-    "post4": {
-      "pid": 1299292463562784,
-      "uid": 1299290431422496,
-      "type": 0,
-      "title": "",
-      "content": " #表白墙#zlm",
-      "imagesUrl": {
-        "images": {}
-      },
-      "likeCount": 1,
-      "commentCount": 0,
-      "shareCount": 0,
-      "time": 1566235726256,
-      "device": "MI CC 9"
-    },
-    "post5": {
-      "pid": 1299292440494112,
-      "uid": 1298556797321248,
-      "type": 0,
-      "title": "",
-      "content": " #表白墙# ",
-      "imagesUrl": {
-        "images": {}
-      },
-      "likeCount": 1,
-      "commentCount": 0,
-      "shareCount": 0,
-      "time": 1566235715450,
-      "device": "MI CC 9"
+      "time": 1568880460126,
+      "device": "EML-AL00"
     }
   },
   "user": {
     "user1": {
-      "username": null,
-      "uid": 1299290431422496,
-      "avatar": null
+      "username": "bug小王子",
+      "uid": 1301765748162592,
+      "avatar": "http://www.matchstickmen.club/app/FairSchool_1301765748162592_20190902_220807."
     },
     "user2": {
-      "username": "paulpaulzhang",
-      "uid": 1298556797321248,
-      "avatar": null
+      "username": "bug小王子",
+      "uid": 1301765748162592,
+      "avatar": "http://www.matchstickmen.club/app/FairSchool_1301765748162592_20190902_220807."
     },
     "user3": {
-      "username": null,
-      "uid": 1299290431422496,
-      "avatar": null
-    },
-    "user4": {
-      "username": null,
-      "uid": 1299290431422496,
-      "avatar": null
-    },
-    "user5": {
-      "username": "paulpaulzhang",
-      "uid": 1298556797321248,
-      "avatar": null
+      "username": "bug小王子",
+      "uid": 1301765748162592,
+      "avatar": "http://www.matchstickmen.club/app/FairSchool_1301765748162592_20190902_220807."
     }
   },
   "isLike": {
-    "1299392556433440": false,
-    "1299374596423712": false,
-    "1299292507602976": false,
-    "1299292463562784": false,
-    "1299292440494112": false
+    "1304683163418656": true,
+    "1305178783350816": true,
+    "1304838872760352": false
   }
 }

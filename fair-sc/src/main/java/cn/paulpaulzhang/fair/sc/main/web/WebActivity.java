@@ -70,7 +70,7 @@ public class WebActivity extends FairActivity {
         settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
     }
 
-    private WebChromeClient mWebChromeClient = new WebChromeClient() {
+    private final WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());

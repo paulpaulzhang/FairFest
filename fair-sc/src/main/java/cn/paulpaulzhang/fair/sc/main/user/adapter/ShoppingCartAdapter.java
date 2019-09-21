@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.user.adapter;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
 
@@ -20,6 +21,7 @@ import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
+import cn.paulpaulzhang.fair.sc.main.chat.MessageActivity;
 import cn.paulpaulzhang.fair.sc.main.user.model.Goods;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
@@ -54,13 +56,20 @@ public class ShoppingCartAdapter extends BaseQuickAdapter<Goods, BaseViewHolder>
         } else if (status == 2) {
             mStatus.setText("已下架");
             mBuy.setEnabled(false);
+            mBuy.setStrokeColorResource(R.color.font_default);
+            mBuy.setTextColor(mContext.getColor(R.color.font_default));
         }
 
 
         mPicture.setImageURI(Uri.parse(item.getHeadImg()));
 
         mBuy.setOnClickListener(v -> {
-
+            String info = "您的宝贝 “" + item.getSname() + "” 我看上啦，请尽快回复!";
+            Intent intent = new Intent(mContext, MessageActivity.class);
+            intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()) + "");
+            intent.putExtra("username", item.getUid() + "");
+            intent.putExtra("info", info);
+            mContext.startActivity(intent);
         });
 
         mDelete.setOnClickListener(v -> {

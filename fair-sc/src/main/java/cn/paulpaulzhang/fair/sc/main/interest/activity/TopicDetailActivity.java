@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +22,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
+import com.zhihu.matisse.Matisse;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,7 +49,9 @@ import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostAdapter;
+import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
+import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
@@ -168,6 +172,44 @@ public class TopicDetailActivity extends FairActivity {
 
             }
         });
+
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            PostItem item = (PostItem) adapter.getItem(position);
+            if (item == null) {
+                return;
+            }
+            if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
+                if (item.getPostCache().getCommentCount() == 0) {
+                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), this, this, null);
+                } else {
+                    if (item.getItemType() == PostItem.DYNAMIC) {
+                        Intent intent = new Intent(this, DynamicActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(this, ArticleActivity.class);
+                        intent.putExtra("pid", item.getPostCache().getId());
+                        intent.putExtra("uid", item.getPostCache().getUid());
+                        intent.putExtra("fold", true);
+                        intent.putExtra("isLike", item.isLike());
+                        startActivity(intent);
+                    }
+                }
+            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constant.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK && data != null) {
+            PostCommentUtil.INSTANCE().compressPhoto(Matisse.obtainResult(data).get(0), this, this);
+        }
     }
 
     @OnClick(R2.id.fab_article_topic)
