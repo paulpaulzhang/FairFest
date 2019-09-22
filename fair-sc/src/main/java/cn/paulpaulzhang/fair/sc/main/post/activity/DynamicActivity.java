@@ -3,6 +3,7 @@ package cn.paulpaulzhang.fair.sc.main.post.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -75,7 +76,9 @@ import cn.paulpaulzhang.fair.sc.main.web.WebActivity;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
+import cn.paulpaulzhang.fair.util.file.FileUtil;
 import cn.paulpaulzhang.fair.util.image.Glide4Engine;
+import cn.paulpaulzhang.fair.util.image.ImageUtil;
 import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
@@ -416,7 +419,9 @@ public class DynamicActivity extends PostActivity {
 
     @OnClick(R2.id.iv_share)
     void doShare() {
-
+        Bitmap bitmap = ImageUtil.view2Bitmap(mAppBar);
+        FileUtil.saveBitmap(bitmap, "Fair School", 100);
+        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
     }
 
     @Override

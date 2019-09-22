@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -84,6 +86,17 @@ public class ImageUtil {
         PixelCopy.request(window,
                 new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight()),
                 dest, listener, new Handler(Looper.getMainLooper()));
+    }
+
+    public static Bitmap view2Bitmap(View view) {
+        int width = view.getWidth();
+        int height = view.getHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(Color.WHITE);
+        view.layout(0, 0, width, height);
+        view.draw(canvas);
+        return bitmap;
     }
 
 }
