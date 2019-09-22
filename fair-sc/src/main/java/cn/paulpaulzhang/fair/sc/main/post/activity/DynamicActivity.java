@@ -420,8 +420,14 @@ public class DynamicActivity extends PostActivity {
     @OnClick(R2.id.iv_share)
     void doShare() {
         Bitmap bitmap = ImageUtil.view2Bitmap(mAppBar);
-        FileUtil.saveBitmap(bitmap, "Fair School", 100);
-        Toast.makeText(this, "saved", Toast.LENGTH_SHORT).show();
+        File file = FileUtil.saveBitmap(bitmap, "Fair School", 100);
+        if (file != null) {
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("image/jpg");
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(file.getPath()));
+            startActivity(Intent.createChooser(intent, "分享"));
+        }
+
     }
 
     @Override

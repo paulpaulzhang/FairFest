@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jakewharton.butterknife'
-apply plugin: 'com.mob.sdk'
 
 
 android {
@@ -40,14 +39,6 @@ android {
         targetCompatibility = '1.8'
     }
 
-}
-
-MobSDK {
-    appKey "2c895fd3d67bb"
-    appSecret "e0f695927d8d63dd986970871366a6b5"
-    ShareSDK {
-
-    }
 }
 
 dependencies {

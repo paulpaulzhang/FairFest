@@ -129,5 +129,5 @@ public class Api {
 
     public static final String GET_BREAKING_NEWS_LIST = "matchstickmen/getBreakingNewsList.action";
 
-
+    public static final String SET_FEATURES = "matchstickmen/setFeatures.action";
 }
