@@ -29,6 +29,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
@@ -142,6 +143,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 
@@ -174,7 +176,8 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 if (t.equals(LinkType.LINK_TYPE)) {
                     Intent intent = new Intent(mContext, WebActivity.class);
                     intent.putExtra("url", c);
-                    mContext.startActivity(intent);                } else if (t.equals(LinkType.MENTION_TYPE)) {
+                    mContext.startActivity(intent);
+                } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
                     Intent intent = new Intent(mContext, TopicDetailActivity.class);
@@ -271,6 +274,7 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 
@@ -305,7 +309,8 @@ public class FollowAdapter extends BaseMultiItemQuickAdapter<Follow, BaseViewHol
                 if (t.equals(LinkType.LINK_TYPE)) {
                     Intent intent = new Intent(mContext, WebActivity.class);
                     intent.putExtra("url", c);
-                    mContext.startActivity(intent);                } else if (t.equals(LinkType.MENTION_TYPE)) {
+                    mContext.startActivity(intent);
+                } else if (t.equals(LinkType.MENTION_TYPE)) {
                     Toast.makeText(mContext, "你点击了@用户 内容是：" + c, Toast.LENGTH_SHORT).show();
                 } else if (t.equals(LinkType.SELF)) {
                     Intent intent = new Intent(mContext, TopicDetailActivity.class);

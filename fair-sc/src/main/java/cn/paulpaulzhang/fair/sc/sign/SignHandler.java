@@ -3,12 +3,17 @@ package cn.paulpaulzhang.fair.sc.sign;
 import android.text.TextUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+
+import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.options.RegisterOptionalUserInfo;
 import cn.jpush.im.api.BasicCallback;
 import cn.paulpaulzhang.fair.app.AccountManager;
+import cn.paulpaulzhang.fair.constant.Api;
 import cn.paulpaulzhang.fair.constant.UserConfigs;
+import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.ui.loader.FairLoader;
@@ -94,5 +99,6 @@ public class SignHandler {
             }
         });
         signInListener.onSignInSuccess();
+
     }
 }

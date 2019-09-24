@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.database;
 
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.ArraySet;
 
@@ -8,6 +9,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -405,5 +407,30 @@ public final class JsonParseUtil {
             productCacheBox.removeAll();
         }
         productCacheBox.put(productCaches);
+    }
+
+    public static Map<String, Object> parseFeatures(String features) {
+        if (features == null) {
+            return new HashMap<>();
+        }
+
+        Map<String, Object> map = JSON.parseObject(features).getInnerMap();
+
+        return map;
+    }
+
+    public static List<String> parseTopicName(String response) {
+        String result = JSON.parseObject(response).getString("result");
+        List<String> list = new ArrayList<>();
+        if (TextUtils.equals(result, "ok")) {
+            JSONArray array = JSON.parseObject(response).getJSONArray("topic");
+            if (array == null) {
+                return list;
+            }
+            for (int i = 0; i < array.size(); i++) {
+                list.add(array.getString(i));
+            }
+        }
+        return list;
     }
 }

@@ -2,18 +2,14 @@ package cn.paulpaulzhang.fair.sc.main.user.delegate;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.alibaba.fastjson.JSON;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.zhihu.matisse.Matisse;
 
 import java.util.ArrayList;
@@ -36,9 +32,11 @@ import cn.paulpaulzhang.fair.sc.database.Entity.PostCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostAdapter;
 import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
+import cn.paulpaulzhang.fair.sc.main.common.PostShareUtil;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
@@ -118,7 +116,8 @@ public class DynamicDelegate extends FairDelegate {
             }
             if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
                 if (item.getPostCache().getCommentCount() == 0) {
-                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    PostCommentUtil.INSTANCE().comment(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    FeaturesUtil.update(item.getPostCache().getId());
                 } else {
                     if (item.getItemType() == PostItem.DYNAMIC) {
                         Intent intent = new Intent(getContext(), DynamicActivity.class);
@@ -137,7 +136,16 @@ public class DynamicDelegate extends FairDelegate {
                     }
                 }
             } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
-
+                PostShareUtil
+                        .INSTANCE()
+                        .share((AppCompatActivity) getActivity(), getContext(), adapter.getViewByPosition(position, R.id.card_content), 400);
+                FeaturesUtil.update(item.getPostCache().getId());
+                RestClient.builder()
+                        .url(Api.SHARE_POST)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("pid", item.getPostCache().getId())
+                        .build()
+                        .post();
             }
         });
     }

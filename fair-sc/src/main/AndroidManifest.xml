@@ -3,6 +3,15 @@
     package="cn.paulpaulzhang.fair.sc">
 
     <application>
+
+        <service android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"/>
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="BmNmKYRS9wHxzN72Ry41ch3ogSkUo7kH" />
+
         <activity android:name="cn.paulpaulzhang.fair.sc.launcher.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +43,7 @@
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity"
-            android:theme="@style/TopicToolBarTheme" />
+            android:theme="@style/TopicToolBarTheme"/>
 
         <activity
             android:name="cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity"
@@ -69,6 +78,7 @@
         <activity android:name=".main.web.WebActivity" />
         <activity android:name=".main.user.activity.CollectActivity" />
         <activity android:name=".main.user.activity.LikeActivity" />
+        <activity android:name=".main.interest.activity.MapActivity" />
     </application>
 
 

@@ -3,6 +3,7 @@ package cn.paulpaulzhang.fairfest;
 import android.app.Activity;
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
@@ -48,6 +49,7 @@ public class FairApp extends Application {
         JMessageClient.init(this);
         JPushInterface.setDebugMode(true);
         JPushInterface.init(this);
+        SDKInitializer.initialize(this);
 
         CrashReport.initCrashReport(getApplicationContext(), "d8656ddeab", false);
     }

@@ -31,6 +31,7 @@ import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryUserCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
@@ -146,6 +147,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 
@@ -275,6 +277,7 @@ public class DiscoveryAdapter extends BaseMultiItemQuickAdapter<Discovery, BaseV
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 

@@ -1,273 +1,279 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<cn.paulpaulzhang.fair.ui.view.MySwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+    android:id="@+id/swipe"
+    android:layout_height="match_parent">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/ctl_article"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
-            app:contentScrim="@android:color/white"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:scrimAnimationDuration="100"
-            app:titleEnabled="false">
+            android:orientation="vertical">
 
-            <LinearLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/ctl_article"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/iv_title_bg"
-                        android:scaleType="centerCrop"
-                        android:layout_width="match_parent"
-                        android:layout_height="180dp" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start|bottom"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginBottom="20dp"
-                        android:textColor="@android:color/white"
-                        android:textSize="26sp" />
-                </FrameLayout>
-
+                android:background="@android:color/white"
+                app:collapsedTitleTextAppearance="@style/ToolbarTitleText"
+                app:contentScrim="@android:color/white"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:scrimAnimationDuration="100"
+                app:titleEnabled="false">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
                     android:orientation="vertical">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="20dp">
+                        android:layout_height="wrap_content">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/civ_user_article"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toLeftOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/iv_title_bg"
+                            android:scaleType="centerCrop"
+                            android:layout_width="match_parent"
+                            android:layout_height="180dp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_username_article"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/tv_title"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:textColor="@android:color/black"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            app:layout_constraintLeft_toRightOf="@id/civ_user_article"
-                            app:layout_constraintTop_toTopOf="parent"
-                            tools:ignore="RtlHardcoded" />
+                            android:layout_gravity="start|bottom"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:textColor="@android:color/white"
+                            android:textSize="26sp" />
+                    </FrameLayout>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_time_article"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:textSize="13sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toRightOf="@id/civ_user_article"
-                            tools:ignore="RtlHardcoded" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_from_article"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
-                            android:text="@string/from"
-                            android:textSize="13sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toRightOf="@id/tv_time_article"
-                            tools:ignore="RtlHardcoded" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/tv_device_article"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="2dp"
-                            android:textSize="13sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintLeft_toRightOf="@id/tv_from_article"
-                            tools:ignore="RtlHardcoded" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btn_follow"
-                            style="@style/MyMaterialButton.OutLine.Blue"
-                            android:layout_width="80dp"
-                            android:layout_height="40dp"
-                            android:layout_marginEnd="15dp"
-                            android:text="@string/follow"
-                            android:textColor="@color/colorAccent"
-                            android:textSize="12sp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <com.ctetin.expandabletextviewlibrary.ExpandableTextView
-                        android:id="@+id/tv_content_article"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:bufferType="spannable"
-                        android:lineSpacingExtra="5dp"
-                        android:minHeight="50dp"
-                        android:textColor="@android:color/black"
-                        android:textSize="18sp"
-                        app:ep_link_color="@color/colorAccent"
-                        app:ep_need_animation="true"
-                        app:ep_need_expand="false"
-                        app:ep_need_link="true"
-                        app:ep_need_mention="true"
-                        app:ep_need_self="true"
-                        app:ep_self_color="@color/colorAccent" />
-
-                    <cn.paulpaulzhang.fair.ui.view.MyGridView
-                        android:id="@+id/gv_images_article"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
-                        android:gravity="center"
-                        android:horizontalSpacing="5dp"
-                        android:numColumns="3"
-                        android:verticalSpacing="5dp" />
+                        android:orientation="vertical">
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="0.5dp"
-                        android:layout_marginTop="5dp"
-                        android:background="@color/divider" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="20dp">
+
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/civ_user_article"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toLeftOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_username_article"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                app:layout_constraintLeft_toRightOf="@id/civ_user_article"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:ignore="RtlHardcoded" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_time_article"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:textSize="13sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toRightOf="@id/civ_user_article"
+                                tools:ignore="RtlHardcoded" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_from_article"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:text="@string/from"
+                                android:textSize="13sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toRightOf="@id/tv_time_article"
+                                tools:ignore="RtlHardcoded" />
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/tv_device_article"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="2dp"
+                                android:textSize="13sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintLeft_toRightOf="@id/tv_from_article"
+                                tools:ignore="RtlHardcoded" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_follow"
+                                style="@style/MyMaterialButton.OutLine.Blue"
+                                android:layout_width="80dp"
+                                android:layout_height="40dp"
+                                android:layout_marginEnd="15dp"
+                                android:text="@string/follow"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="12sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintRight_toRightOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <com.ctetin.expandabletextviewlibrary.ExpandableTextView
+                            android:id="@+id/tv_content_article"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:bufferType="spannable"
+                            android:lineSpacingExtra="5dp"
+                            android:minHeight="50dp"
+                            android:textColor="@android:color/black"
+                            android:textSize="18sp"
+                            app:ep_link_color="@color/colorAccent"
+                            app:ep_need_animation="true"
+                            app:ep_need_expand="false"
+                            app:ep_need_link="true"
+                            app:ep_need_mention="true"
+                            app:ep_need_self="true"
+                            app:ep_self_color="@color/colorAccent" />
+
+                        <cn.paulpaulzhang.fair.ui.view.MyGridView
+                            android:id="@+id/gv_images_article"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center"
+                            android:horizontalSpacing="5dp"
+                            android:numColumns="3"
+                            android:verticalSpacing="5dp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@color/divider" />
+                    </LinearLayout>
                 </LinearLayout>
-            </LinearLayout>
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/tb_article"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/tb_article"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:theme="@style/MyToolbarTheme"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/OverFlowMenuTheme" />
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+            <com.flyco.tablayout.SlidingTabLayout
+                android:id="@+id/tab_article"
                 android:layout_width="match_parent"
-                android:layout_height="?android:attr/actionBarSize"
-                android:theme="@style/MyToolbarTheme"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/OverFlowMenuTheme" />
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-        <com.flyco.tablayout.SlidingTabLayout
-            android:id="@+id/tab_article"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:background="@android:color/white"
-            app:tl_indicator_color="@color/colorAccent"
-            app:tl_indicator_corner_radius="2dp"
-            app:tl_indicator_height="2.5dp"
-            app:tl_indicator_margin_bottom="5dp"
-            app:tl_indicator_width="12dp"
-            app:tl_textSelectColor="@color/colorAccent"
-            app:tl_textUnselectColor="@color/font_default"
-            app:tl_textsize="17sp" />
-    </com.google.android.material.appbar.AppBarLayout>
+                android:layout_height="45dp"
+                android:background="@android:color/white"
+                app:tl_indicator_color="@color/colorAccent"
+                app:tl_indicator_corner_radius="2dp"
+                app:tl_indicator_height="2.5dp"
+                app:tl_indicator_margin_bottom="5dp"
+                app:tl_indicator_width="12dp"
+                app:tl_textSelectColor="@color/colorAccent"
+                app:tl_textUnselectColor="@color/font_default"
+                app:tl_textsize="17sp" />
+        </com.google.android.material.appbar.AppBarLayout>
 
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/vp_article"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="45dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_gravity="bottom"
-        android:background="@android:color/white"
-        app:cardElevation="8dp">
-
-        <LinearLayout
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/vp_article"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="45dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/white"
+            app:cardElevation="8dp">
 
             <LinearLayout
-                android:id="@+id/ll_edit"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="?attr/selectableItemBackground"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <LinearLayout
+                    android:id="@+id/ll_edit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/ic_dynamic"
+                        tools:ignore="ContentDescription" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="@string/write_comment"
+                        android:textColor="@color/font_default"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_like"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:src="@drawable/ic_dynamic"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_like"
                     tools:ignore="ContentDescription" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/write_comment"
-                    android:textColor="@color/font_default"
-                    android:textSize="16sp" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_collect"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_collect"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/iv_share"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_share"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_like"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_like"
-                tools:ignore="ContentDescription" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_collect"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_collect"
-                tools:ignore="ContentDescription" />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_share"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="20dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_share"
-                tools:ignore="ContentDescription" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</cn.paulpaulzhang.fair.ui.view.MySwipeRefreshLayout>

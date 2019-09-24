@@ -43,6 +43,7 @@ import cn.paulpaulzhang.fair.sc.main.market.activity.PublishActivity;
 import cn.paulpaulzhang.fair.sc.main.market.adapter.ProductAdapter;
 import cn.paulpaulzhang.fair.sc.main.market.model.Product;
 import cn.paulpaulzhang.fair.sc.main.search.SearchActivity;
+import cn.paulpaulzhang.fair.sc.main.user.activity.ShoppingCartActivity;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -85,7 +86,7 @@ public class MarketDelegate extends AbstractDelegate {
         mToolbar.inflateMenu(R.menu.market_menu);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.want_buy) {
-                Toasty.info(Objects.requireNonNull(getContext()), "想买", Toasty.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), ShoppingCartActivity.class));
             } else if (item.getItemId() == R.id.publish) {
                 startActivity(new Intent(getContext(), PublishActivity.class));
             }

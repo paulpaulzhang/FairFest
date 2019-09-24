@@ -141,6 +141,7 @@ public class PostAdapter extends BaseMultiItemQuickAdapter<PostItem, BaseViewHol
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 
@@ -271,6 +272,7 @@ public class PostAdapter extends BaseMultiItemQuickAdapter<PostItem, BaseViewHol
                             .error((code, msg) -> Toasty.error(mContext, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                             .build()
                             .post();
+                    FeaturesUtil.update(item.getPostCache().getId());
                 }
             });
 

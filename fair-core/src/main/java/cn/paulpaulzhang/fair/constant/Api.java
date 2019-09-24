@@ -130,4 +130,12 @@ public class Api {
     public static final String GET_BREAKING_NEWS_LIST = "matchstickmen/getBreakingNewsList.action";
 
     public static final String SET_FEATURES = "matchstickmen/setFeatures.action";
+
+    public static final String GET_FEATURES = "matchstickmen/getFeatures.action";
+
+    public static final String GET_TOPICS_BY_PID = "matchstickmen/getTopicsByPid.action";
+
+    public static final String GET_SHARE_USERS = "matchstickmen/getSharePostUsersByPid.action";
+
+    public static final String SHARE_POST = "matchstickmen/createSharePost.action";
 }

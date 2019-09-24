@@ -26,12 +26,14 @@ import com.facebook.imagepipeline.postprocessors.BlurPostProcessor;
 import com.facebook.imagepipeline.postprocessors.IterativeBoxBlurPostProcessor;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.google.android.material.appbar.AppBarLayout;
 import com.zhihu.matisse.Matisse;
 import com.zhihu.matisse.MimeType;
 import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
 import java.io.File;
 
+import cn.paulpaulzhang.fair.R;
 import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.net.callback.IFailure;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
@@ -86,17 +88,6 @@ public class ImageUtil {
         PixelCopy.request(window,
                 new Rect(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight()),
                 dest, listener, new Handler(Looper.getMainLooper()));
-    }
-
-    public static Bitmap view2Bitmap(View view) {
-        int width = view.getWidth();
-        int height = view.getHeight();
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawColor(Color.WHITE);
-        view.layout(0, 0, width, height);
-        view.draw(canvas);
-        return bitmap;
     }
 
 }

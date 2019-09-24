@@ -4,12 +4,14 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 
+import com.alibaba.fastjson.JSON;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
@@ -28,6 +30,7 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
+import cn.paulpaulzhang.fair.sc.database.Entity.Features;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
@@ -70,6 +73,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 .fitsSystemWindows(true)
                 .statusBarDarkFont(true)
                 .init();
+        setUserFeatures();
     }
 
     private void judgeUserInfo() {
@@ -108,9 +112,29 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 .get();
     }
 
+    private void setUserFeatures() {
+        Box<Features> featuresBox = ObjectBox.get().boxFor(Features.class);
+        RestClient.builder()
+                .url(Api.GET_FEATURES)
+                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .success(response -> {
+                    String result = JSON.parseObject(response).getString("result");
+                    if (TextUtils.equals(result, "ok")) {
+                        String feature = JSON.parseObject(response).getString("features");
+                        featuresBox.removeAll();
+                        featuresBox.put(new Features(feature));
+                    }
+                })
+                .build().get();
+    }
+
     private void requestPermissions() {
-        EasyPermissions.requestPermissions(this, "应用需要存取图片", 1000,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+        EasyPermissions.requestPermissions(this, "应用需要一些必要权限", 1000,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
     }
 
     private void initBottomNavigation() {

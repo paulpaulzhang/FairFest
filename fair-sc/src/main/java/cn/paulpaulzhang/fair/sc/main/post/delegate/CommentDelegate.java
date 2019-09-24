@@ -44,8 +44,6 @@ public class CommentDelegate extends FairDelegate {
     @BindView(R2.id.rv_post)
     RecyclerView mRecyclerView;
 
-    @BindView(R2.id.srl_post)
-    SwipeRefreshLayout mSwipeRefresh;
 
     private CommentAdapter mAdapter;
     private long pid;
@@ -62,23 +60,8 @@ public class CommentDelegate extends FairDelegate {
             pid = activity.getPid();
         }
 
-        initSwipeRefresh();
         initRecyclerView();
-        loadData();
     }
-
-    private void initSwipeRefresh() {
-        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
-                android.R.color.holo_green_light);
-        mSwipeRefresh.setOnRefreshListener(() -> {
-            loadData();
-            PostActivity activity = (PostActivity) getActivity();
-            if (activity != null) {
-                activity.initHeader();
-            }
-        });
-    }
-
 
     private void initRecyclerView() {
         List<Comment> items = new ArrayList<>();
@@ -103,7 +86,7 @@ public class CommentDelegate extends FairDelegate {
         });
     }
 
-    private void loadData() {
+    public void loadData() {
         requestData(response -> {
             String result = JSON.parseObject(response).getString("result");
             if (TextUtils.equals(result, "ok")) {
@@ -120,7 +103,6 @@ public class CommentDelegate extends FairDelegate {
                     comments.add(new Comment(uid, avatar, username, content, img, time));
                 }
                 mAdapter.setNewData(comments);
-                mSwipeRefresh.setRefreshing(false);
             }
         });
     }

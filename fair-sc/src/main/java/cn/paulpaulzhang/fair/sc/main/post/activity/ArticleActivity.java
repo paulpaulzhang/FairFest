@@ -1,11 +1,7 @@
 package cn.paulpaulzhang.fair.sc.main.post.activity;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,17 +10,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.afollestad.materialdialogs.LayoutMode;
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.bottomsheets.BottomSheet;
-import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
-import com.afollestad.materialdialogs.lifecycle.LifecycleExtKt;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bumptech.glide.Glide;
@@ -36,17 +25,10 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.gyf.immersionbar.ImmersionBar;
-import com.sunhapper.x.spedit.SpUtil;
-import com.sunhapper.x.spedit.view.SpXEditText;
 import com.zhihu.matisse.Matisse;
-import com.zhihu.matisse.MimeType;
-import com.zhihu.matisse.internal.entity.CaptureStrategy;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,37 +38,27 @@ import cn.paulpaulzhang.fair.constant.UserConfigs;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Entity.TopicCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
-import cn.paulpaulzhang.fair.sc.database.ObjectBox;
-import cn.paulpaulzhang.fair.sc.file.IUploadFileListener;
-import cn.paulpaulzhang.fair.sc.file.UploadUtil;
 import cn.paulpaulzhang.fair.sc.listener.AppBarStateChangeListener;
-import cn.paulpaulzhang.fair.sc.listener.IMentionTopicListener;
-import cn.paulpaulzhang.fair.sc.main.common.PhotoActivity;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
-import cn.paulpaulzhang.fair.sc.main.data.MentionTopic;
+import cn.paulpaulzhang.fair.sc.main.common.PostShareUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
-import cn.paulpaulzhang.fair.sc.main.interest.adapter.TopicAdapter;
-import cn.paulpaulzhang.fair.sc.main.interest.model.Topic;
 import cn.paulpaulzhang.fair.sc.main.nineimage.NineAdapter;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.ViewPagerAdapter;
+import cn.paulpaulzhang.fair.sc.main.post.delegate.CommentDelegate;
+import cn.paulpaulzhang.fair.sc.main.post.delegate.LikeDelegate;
+import cn.paulpaulzhang.fair.sc.main.post.delegate.ShareDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
 import cn.paulpaulzhang.fair.sc.main.web.WebActivity;
-import cn.paulpaulzhang.fair.ui.loader.FairLoader;
 import cn.paulpaulzhang.fair.ui.view.MyGridView;
+import cn.paulpaulzhang.fair.ui.view.MySwipeRefreshLayout;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
-import cn.paulpaulzhang.fair.util.image.Glide4Engine;
-import cn.paulpaulzhang.fair.util.keyboard.KeyBoardUtil;
 import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
-import io.objectbox.Box;
-import pub.devrel.easypermissions.EasyPermissions;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 /**
  * 包名: cn.paulpaulzhang.fair.sc.main.post
@@ -150,6 +122,9 @@ public class ArticleActivity extends PostActivity {
     @BindView(R2.id.iv_title_bg)
     AppCompatImageView mTopBg;
 
+    @BindView(R2.id.swipe)
+    MySwipeRefreshLayout mSwipeRefresh;
+
     boolean needFold;
 
 
@@ -175,12 +150,15 @@ public class ArticleActivity extends PostActivity {
         initToolbar(mToolbar);
         initTab();
         initHeader();
+        initSwipeRefresh(mSwipeRefresh, mPagerAdapter, mAppBar);
+        mSwipeRefresh.setRefreshing(true);
         initBottomMenu();
 
         if (needFold) {
             mAppBar.setExpanded(false);
         }
     }
+
 
     @Override
     public void initHeader() {
@@ -317,6 +295,8 @@ public class ArticleActivity extends PostActivity {
                         mTabLayout.getTitleView(0).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.like), likeCount));
                         mTabLayout.getTitleView(1).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.comment), commentCount));
                         mTabLayout.getTitleView(2).setText(String.format(Locale.CHINA, "%s %d", getString(R.string.share), shareCount));
+                        initChildData(mPagerAdapter);
+                        mSwipeRefresh.setRefreshing(false);
                     } else {
                         Toasty.error(this, "请求错误，请重试", Toasty.LENGTH_SHORT).show();
                     }
@@ -349,8 +329,9 @@ public class ArticleActivity extends PostActivity {
     }
 
     @OnClick(R2.id.ll_edit)
-    void openBottomDialog() {
-        PostCommentUtil.INSTANCE().bottomDialog(pid, this, this, null);
+    void comment() {
+        PostCommentUtil.INSTANCE().comment(pid, this, this, null);
+        FeaturesUtil.update(pid);
     }
 
     @OnClick(R2.id.btn_follow)
@@ -404,6 +385,7 @@ public class ArticleActivity extends PostActivity {
                     .error((code, msg) -> Toasty.error(this, "点赞失败 " + code, Toasty.LENGTH_SHORT).show())
                     .build()
                     .post();
+            FeaturesUtil.update(pid);
         } else {
             RestClient.builder()
                     .url(Api.CANCEL_THUMBSUP_POST)
@@ -434,6 +416,7 @@ public class ArticleActivity extends PostActivity {
                     .error((code, msg) -> Toasty.error(this, "收藏失败 " + code, Toasty.LENGTH_SHORT).show())
                     .build()
                     .post();
+            FeaturesUtil.update(pid);
         } else {
             RestClient.builder()
                     .url(Api.CANCEL_COLLECT_POST)
@@ -451,7 +434,16 @@ public class ArticleActivity extends PostActivity {
 
     @OnClick(R2.id.iv_share)
     void doShare() {
-
+        PostShareUtil
+                .INSTANCE()
+                .share(this, this, mAppBar, 200);
+        FeaturesUtil.update(pid);
+        RestClient.builder()
+                .url(Api.SHARE_POST)
+                .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                .params("pid", pid)
+                .build()
+                .post();
     }
 
     @Override

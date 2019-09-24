@@ -22,6 +22,7 @@ public class Team {
 
     private String introduction;
 
+
     public Team(long uid,
                 String username,
                 String gender,

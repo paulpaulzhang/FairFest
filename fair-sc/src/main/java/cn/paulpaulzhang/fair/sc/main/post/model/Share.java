@@ -7,21 +7,27 @@ package cn.paulpaulzhang.fair.sc.main.post.model;
  * 描述:
  */
 public class Share {
-    private String avatarUrl;
+    private long uid;
 
     private String username;
 
-    public Share(String avatarUrl, String username) {
-        this.avatarUrl = avatarUrl;
+    private String avatar;
+
+    private long time;
+
+    public Share(long uid, String username, String avatar, long time) {
+        this.uid = uid;
         this.username = username;
+        this.avatar = avatar;
+        this.time = time;
     }
 
-    public String getAvatarUrl() {
-        return avatarUrl;
+    public long getUid() {
+        return uid;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setUid(long uid) {
+        this.uid = uid;
     }
 
     public String getUsername() {
@@ -30,5 +36,21 @@ public class Share {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

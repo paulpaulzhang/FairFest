@@ -10,7 +10,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:3.5.0'
         classpath 'com.jakewharton:butterknife-gradle-plugin:10.1.0'
         classpath 'io.objectbox:objectbox-gradle-plugin:2.3.4'
-        classpath "com.mob.sdk:MobSDK:2018.0319.1724"
     }
 }
 

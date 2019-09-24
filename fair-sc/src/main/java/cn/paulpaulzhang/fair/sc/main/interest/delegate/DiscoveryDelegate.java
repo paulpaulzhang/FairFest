@@ -1,5 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main.interest.delegate;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,12 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.alibaba.fastjson.JSON;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.chad.library.adapter.base.loadmore.SimpleLoadMoreView;
 import com.zhihu.matisse.Matisse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -30,15 +34,20 @@ import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache_;
+import cn.paulpaulzhang.fair.sc.database.Entity.Features;
+import cn.paulpaulzhang.fair.sc.database.Entity.Features_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.main.banner.BannerHolderCreator;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
+import cn.paulpaulzhang.fair.sc.main.common.PostShareUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.AnnouncementActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.BreakingNewsActivity;
+import cn.paulpaulzhang.fair.sc.main.interest.activity.MapActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TeamActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.activity.TopicDetailActivity;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.DiscoveryAdapter;
@@ -46,9 +55,11 @@ import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
 import cn.paulpaulzhang.fair.sc.main.interest.model.RecommendUser;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.DynamicActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import es.dmoral.toasty.Toasty;
 import io.objectbox.Box;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -124,6 +135,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
 
         });
 
+
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             Discovery item = (Discovery) adapter.getItem(position);
             if (item == null) {
@@ -131,7 +143,8 @@ public class DiscoveryDelegate extends AbstractDelegate {
             }
             if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
                 if (item.getPostCache().getCommentCount() == 0) {
-                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    PostCommentUtil.INSTANCE().comment(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    FeaturesUtil.update(item.getPostCache().getId());
                 } else {
                     if (item.getItemType() == PostItem.DYNAMIC) {
                         Intent intent = new Intent(getContext(), DynamicActivity.class);
@@ -149,8 +162,19 @@ public class DiscoveryDelegate extends AbstractDelegate {
                         startActivity(intent);
                     }
                 }
-            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
 
+            } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
+                FairLogger.d(adapter.getViewByPosition(position + adapter.getHeaderLayoutCount(), R.id.card_content));
+                PostShareUtil
+                        .INSTANCE()
+                        .share((AppCompatActivity) getActivity(), getContext(), adapter.getViewByPosition(position + adapter.getHeaderLayoutCount(), R.id.card_content), 400);
+                FeaturesUtil.update(item.getPostCache().getId());
+                RestClient.builder()
+                        .url(Api.SHARE_POST)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("pid", item.getPostCache().getId())
+                        .build()
+                        .post();
             }
         });
     }
@@ -179,7 +203,14 @@ public class DiscoveryDelegate extends AbstractDelegate {
             startActivity(intent);
         });
         view.findViewById(R.id.ll_map).setOnClickListener(v -> {
-            Toasty.info(Objects.requireNonNull(getContext()), "敬请期待", Toasty.LENGTH_SHORT).show();
+            if (EasyPermissions.hasPermissions(Objects.requireNonNull(getContext()), Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                startActivity(new Intent(getContext(), MapActivity.class));
+            } else {
+                EasyPermissions.requestPermissions(this, "该功能需要定位权限", 1002,
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+
         });
     }
 

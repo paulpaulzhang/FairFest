@@ -8,8 +8,10 @@ import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
 
+import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.main.post.model.Share;
+import cn.paulpaulzhang.fair.util.date.DateUtil;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -26,8 +28,10 @@ public class ShareAdapter extends BaseQuickAdapter<Share, BaseViewHolder> {
     @Override
     protected void convert(BaseViewHolder helper, Share item) {
         CircleImageView mUser = helper.getView(R.id.civ_user);
-        Glide.with(mContext).load(item.getAvatarUrl()).into(mUser);
-
-        helper.setText(R.id.tv_user, item.getUsername());
+        Glide.with(mContext).
+                load(item.getAvatar() == null ? Constant.DEFAULT_AVATAR : item.getAvatar())
+                .into(mUser);
+        helper.setText(R.id.tv_user, item.getUsername())
+                .setText(R.id.tv_time, DateUtil.getTime(item.getTime()));
     }
 }

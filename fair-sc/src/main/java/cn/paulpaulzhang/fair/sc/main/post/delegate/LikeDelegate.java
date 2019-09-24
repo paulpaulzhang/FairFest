@@ -29,6 +29,7 @@ import cn.paulpaulzhang.fair.sc.main.post.activity.PostActivity;
 import cn.paulpaulzhang.fair.sc.main.post.model.Like;
 import cn.paulpaulzhang.fair.sc.main.post.adapter.LikeAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.activity.UserCenterActivity;
+import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.text.TextUtil;
 import es.dmoral.toasty.Toasty;
 
@@ -41,9 +42,6 @@ import es.dmoral.toasty.Toasty;
 public class LikeDelegate extends FairDelegate {
     @BindView(R2.id.rv_post)
     RecyclerView mRecyclerView;
-
-    @BindView(R2.id.srl_post)
-    SwipeRefreshLayout mSwipeRefresh;
 
     private LikeAdapter mAdapter;
     private long pid;
@@ -59,22 +57,7 @@ public class LikeDelegate extends FairDelegate {
         if (activity != null) {
             pid = activity.getPid();
         }
-        initSwipeRefresh();
         initRecyclerView();
-        mSwipeRefresh.setRefreshing(true);
-        loadData();
-    }
-
-    private void initSwipeRefresh() {
-        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
-                android.R.color.holo_green_light);
-        mSwipeRefresh.setOnRefreshListener(() -> {
-            loadData();
-            PostActivity activity = (PostActivity) getActivity();
-            if (activity != null) {
-                activity.initHeader();
-            }
-        });
     }
 
     private void initRecyclerView() {
@@ -92,7 +75,7 @@ public class LikeDelegate extends FairDelegate {
         });
     }
 
-    private void loadData() {
+    public void loadData() {
         requestData(response -> {
             String result = JSON.parseObject(response).getString("result");
             if (TextUtils.equals(result, "ok")) {
@@ -107,7 +90,7 @@ public class LikeDelegate extends FairDelegate {
                     likes.add(new Like(uid, username, avatar, time));
                 }
                 mAdapter.setNewData(likes);
-                mSwipeRefresh.setRefreshing(false);
+                FairLogger.d("load", pid);
             }
         });
     }

@@ -31,8 +31,10 @@ import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.FollowPostCache;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
+import cn.paulpaulzhang.fair.sc.main.common.PostShareUtil;
 import cn.paulpaulzhang.fair.sc.main.interest.adapter.FollowAdapter;
 import cn.paulpaulzhang.fair.sc.main.interest.model.Follow;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
@@ -118,7 +120,8 @@ public class FollowDelegate extends AbstractDelegate {
             }
             if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
                 if (item.getPostCache().getCommentCount() == 0) {
-                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    PostCommentUtil.INSTANCE().comment(item.getPostCache().getId(), (AppCompatActivity) getActivity(), getContext(), this);
+                    FeaturesUtil.update(item.getPostCache().getId());
                 } else {
                     if (item.getItemType() == PostItem.DYNAMIC) {
                         Intent intent = new Intent(getContext(), DynamicActivity.class);
@@ -137,7 +140,16 @@ public class FollowDelegate extends AbstractDelegate {
                     }
                 }
             } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
-
+                PostShareUtil
+                        .INSTANCE()
+                        .share((AppCompatActivity) getActivity(), getContext(), adapter.getViewByPosition(position, R.id.card_content), 400);
+                FeaturesUtil.update(item.getPostCache().getId());
+                RestClient.builder()
+                        .url(Api.SHARE_POST)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("pid", item.getPostCache().getId())
+                        .build()
+                        .post();
             }
         });
     }

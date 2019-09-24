@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,10 +47,11 @@ import cn.paulpaulzhang.fair.sc.database.Entity.PostCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.UserCache;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
+import cn.paulpaulzhang.fair.sc.main.common.FeaturesUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostAdapter;
 import cn.paulpaulzhang.fair.sc.main.common.PostCommentUtil;
 import cn.paulpaulzhang.fair.sc.main.common.PostItem;
-import cn.paulpaulzhang.fair.sc.main.interest.model.Discovery;
+import cn.paulpaulzhang.fair.sc.main.common.PostShareUtil;
 import cn.paulpaulzhang.fair.sc.main.post.activity.ArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateArticleActivity;
 import cn.paulpaulzhang.fair.sc.main.post.activity.CreateDynamicActivity;
@@ -180,7 +180,8 @@ public class TopicDetailActivity extends FairActivity {
             }
             if (view.getId() == R.id.ll_comment_dynamic || view.getId() == R.id.ll_comment_article) {
                 if (item.getPostCache().getCommentCount() == 0) {
-                    PostCommentUtil.INSTANCE().bottomDialog(item.getPostCache().getId(), this, this, null);
+                    PostCommentUtil.INSTANCE().comment(item.getPostCache().getId(), this, this, null);
+                    FeaturesUtil.update(item.getPostCache().getId());
                 } else {
                     if (item.getItemType() == PostItem.DYNAMIC) {
                         Intent intent = new Intent(this, DynamicActivity.class);
@@ -199,7 +200,16 @@ public class TopicDetailActivity extends FairActivity {
                     }
                 }
             } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
-
+                PostShareUtil
+                        .INSTANCE()
+                        .share(this, this, adapter.getViewByPosition(position, R.id.card_content), 400);
+                FeaturesUtil.update(item.getPostCache().getId());
+                RestClient.builder()
+                        .url(Api.SHARE_POST)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .params("pid", item.getPostCache().getId())
+                        .build()
+                        .post();
             }
         });
     }

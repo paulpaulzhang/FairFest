@@ -89,7 +89,7 @@ public class PostCommentUtil implements IMentionTopicListener {
     private AppCompatImageView mDelete;
     private File imgFile;
 
-    public void bottomDialog(long pid, AppCompatActivity activity, Context context, Fragment fragment) {
+    public void comment(long pid, AppCompatActivity activity, Context context, Fragment fragment) {
         MaterialDialog dialog = new MaterialDialog(Objects.requireNonNull(context), new BottomSheet(LayoutMode.WRAP_CONTENT));
         DialogCustomViewExtKt.customView(dialog, R.layout.dialog_comment_bottom,
                 null, false, true, false, true);

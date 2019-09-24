@@ -21,6 +21,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -63,6 +64,7 @@ import cn.paulpaulzhang.fair.sc.main.user.adapter.ViewPagerAdapter;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.AboutDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.ConcernTopicDelegate;
 import cn.paulpaulzhang.fair.sc.main.user.delegate.DynamicDelegate;
+import cn.paulpaulzhang.fair.ui.view.MySwipeRefreshLayout;
 import cn.paulpaulzhang.fair.util.date.DateUtil;
 import cn.paulpaulzhang.fair.util.dimen.DimenUtil;
 import cn.paulpaulzhang.fair.util.file.FileUtil;
@@ -147,6 +149,9 @@ public class UserCenterActivity extends FairActivity {
     @BindView(R2.id.tv_college)
     AppCompatTextView mCollege;
 
+    @BindView(R2.id.swipe)
+    MySwipeRefreshLayout mSwipeRefresh;
+
     private ViewPagerAdapter mPagerAdapter;
 
     private int lastPosition = 0;
@@ -168,6 +173,7 @@ public class UserCenterActivity extends FairActivity {
         initToolbar(mToolbar);
         initHeader();
         initTab();
+        initSwipeRefresh();
 
         if (uid != -1) {
             requestData();
@@ -351,6 +357,26 @@ public class UserCenterActivity extends FairActivity {
 
             }
         });
+
+
+    }
+
+    private void initSwipeRefresh() {
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_light);
+        mSwipeRefresh.setOnRefreshListener(() -> {
+            if (uid != -1) {
+                requestData();
+            }
+        });
+
+        mAppBarLayout.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+            if (verticalOffset >= 0) {
+                mSwipeRefresh.setEnabled(true);
+            } else {
+                mSwipeRefresh.setEnabled(false);
+            }
+        });
     }
 
     private void loadUserData() {
@@ -422,6 +448,7 @@ public class UserCenterActivity extends FairActivity {
                     user.setTime(object.getLong("time"));
                     loadUserData();
                     loadChildData();
+                    mSwipeRefresh.setRefreshing(false);
                 })
                 .error((code, msg) -> FairLogger.d(code))
                 .build()
@@ -580,13 +607,7 @@ public class UserCenterActivity extends FairActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
-        } else if (item.getItemId() == R.id.refresh) {
-            if (uid != -1) {
-                requestData();
-                Toasty.info(this, "正在刷新", Toasty.LENGTH_SHORT).show();
-            }
-
-        } else if (item.getItemId() == R.id.message) {
+        }  else if (item.getItemId() == R.id.message) {
             if (uid != -1) {
                 Intent intent = new Intent(UserCenterActivity.this, MessageActivity.class);
                 intent.putExtra("uid", String.valueOf(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name())));
