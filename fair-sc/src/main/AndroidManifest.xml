@@ -79,6 +79,7 @@
         <activity android:name=".main.user.activity.CollectActivity" />
         <activity android:name=".main.user.activity.LikeActivity" />
         <activity android:name=".main.interest.activity.MapActivity" />
+        <activity android:name=".main.interest.activity.TeamManageActivity" />
     </application>
 
 

@@ -90,7 +90,6 @@ public class LikeDelegate extends FairDelegate {
                     likes.add(new Like(uid, username, avatar, time));
                 }
                 mAdapter.setNewData(likes);
-                FairLogger.d("load", pid);
             }
         });
     }

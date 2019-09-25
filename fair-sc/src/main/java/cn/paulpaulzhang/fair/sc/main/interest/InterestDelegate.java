@@ -76,7 +76,7 @@ public class InterestDelegate extends FairDelegate implements
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         setHasOptionsMenu(true);
-        mToolbar.inflateMenu(R.menu.interest_menu);
+        mToolbar.inflateMenu(R.menu.menu_interest);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.add) {
                 initBottomDialog();

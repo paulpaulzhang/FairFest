@@ -116,6 +116,9 @@ public class DiscoveryDelegate extends AbstractDelegate {
         mAdapter.setPreLoadNumber(3);
         mAdapter.setOnLoadMoreListener(() -> loadData(Constant.LOAD_MORE_DATA), mRecyclerView);
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (position == Constant.USER_POSITION) {
+                return;
+            }
             Discovery item = (Discovery) adapter.getItem(position);
             if (item != null) {
                 if (item.getItemType() == Discovery.DYNAMIC) {
@@ -124,7 +127,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
                     intent.putExtra("uid", item.getPostCache().getUid());
                     intent.putExtra("isLike", item.isLike());
                     startActivity(intent);
-                } else {
+                } else if (item.getItemType() == Discovery.ARTICLE){
                     Intent intent = new Intent(getContext(), ArticleActivity.class);
                     intent.putExtra("pid", item.getPostCache().getId());
                     intent.putExtra("uid", item.getPostCache().getUid());
@@ -137,6 +140,7 @@ public class DiscoveryDelegate extends AbstractDelegate {
 
 
         mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+
             Discovery item = (Discovery) adapter.getItem(position);
             if (item == null) {
                 return;
@@ -230,18 +234,24 @@ public class DiscoveryDelegate extends AbstractDelegate {
                     items.add(new Discovery(post.getType(), post, isLike));
                 }
 
-                //TODO load user data
-                Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
-                List<RecommendUser> userItems = new ArrayList<>();
-                for (RecommendUserCache user : userBox.getAll()) {
-                    userItems.add(new RecommendUser(user));
-                }
-                if (items.size() != 0 && userItems.size() != 0) {
-                    items.add(Constant.USER_POSITION, new Discovery(2, userItems));
-                }
-
-                mAdapter.setNewData(items);
-                mSwipeRefresh.setRefreshing(false);
+                RestClient.builder()
+                        .url(Api.RECOMMEND_USERS)
+                        .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
+                        .success(response1 -> {
+                            JsonParseUtil.parseRecommendUsers(response1);
+                            Box<RecommendUserCache> userBox = ObjectBox.get().boxFor(RecommendUserCache.class);
+                            List<RecommendUser> userItems = new ArrayList<>();
+                            for (RecommendUserCache user : userBox.getAll()) {
+                                userItems.add(new RecommendUser(user));
+                            }
+                            if (items.size() != 0 && userItems.size() != 0) {
+                                items.add(Constant.USER_POSITION, new Discovery(2, userItems));
+                            }
+                            mAdapter.setNewData(items);
+                            mSwipeRefresh.setRefreshing(false);
+                        })
+                        .build()
+                        .get();
             });
 
         } else if (type == Constant.LOAD_MORE_DATA) {
@@ -286,12 +296,6 @@ public class DiscoveryDelegate extends AbstractDelegate {
                         Toasty.error(Objects.requireNonNull(getContext()), "加载失败" + code, Toasty.LENGTH_SHORT).show();
                         mSwipeRefresh.setRefreshing(false);
                     })
-                    .build()
-                    .get();
-            //TODO
-            RestClient.builder()
-                    .url("recommend")
-                    .success(JsonParseUtil::parseRecommendUsers)
                     .build()
                     .get();
         } else if (type == Constant.LOAD_MORE_DATA) {

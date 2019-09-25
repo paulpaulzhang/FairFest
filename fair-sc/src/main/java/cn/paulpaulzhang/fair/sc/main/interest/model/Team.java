@@ -22,14 +22,10 @@ public class Team {
 
     private String introduction;
 
+    private long time;
 
-    public Team(long uid,
-                String username,
-                String gender,
-                String avatar,
-                String background,
-                String college,
-                String introduction) {
+
+    public Team(long uid, String username, String gender, String avatar, String background, String college, String introduction, long time) {
         this.uid = uid;
         this.username = username;
         this.gender = gender;
@@ -37,6 +33,7 @@ public class Team {
         this.background = background;
         this.college = college;
         this.introduction = introduction;
+        this.time = time;
     }
 
     public long getUid() {
@@ -93,5 +90,13 @@ public class Team {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 }

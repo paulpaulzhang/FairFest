@@ -28,6 +28,8 @@ public class RecommendUserCache {
 
     private long time; //注册时间
 
+    private boolean isFollowed;  //是否被关注
+
     public RecommendUserCache() {
     }
 
@@ -35,14 +37,18 @@ public class RecommendUserCache {
                               String username,
                               int payCount,
                               int fansCount,
+                              int dynamicCount,
                               String avatar,
-                              long time) {
+                              long time,
+                              boolean isFollowed) {
         this.id = id;
         this.username = username;
         this.payCount = payCount;
         this.fansCount = fansCount;
+        this.dynamicCount = dynamicCount;
         this.avatar = avatar;
         this.time = time;
+        this.isFollowed = isFollowed;
     }
 
     public long getId() {
@@ -99,5 +105,13 @@ public class RecommendUserCache {
 
     public void setTime(long time) {
         this.time = time;
+    }
+
+    public boolean isFollowed() {
+        return isFollowed;
+    }
+
+    public void setFollowed(boolean followed) {
+        isFollowed = followed;
     }
 }

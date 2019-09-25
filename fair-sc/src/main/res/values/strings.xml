@@ -114,5 +114,10 @@
     <string name="publish_" translatable="false">发布于</string>
     <string name="my_collection" translatable="false">我的收藏</string>
     <string name="my_dynamic" translatable="false">我的动态</string>
-    <string name="share_to">Share to...</string>
+    <string name="share_to" translatable="false">Share to...</string>
+    <string name="send_team_request" translatable="false">发送组队请求</string>
+    <string name="team_request" translatable="false">组队申请</string>
+    <string name="manage_team_request" translatable="false">管理组队申请</string>
+    <string name="team_info" translatable="false">队伍说明</string>
+    <string name="team_manage" translatable="false">组队管理</string>
 </resources>

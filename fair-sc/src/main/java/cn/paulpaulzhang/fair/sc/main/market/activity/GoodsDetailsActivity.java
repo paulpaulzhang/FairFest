@@ -311,7 +311,7 @@ public class GoodsDetailsActivity extends FairActivity {
 
     @OnClick(R2.id.btn_buy)
     void buy() {
-        String info = "您的宝贝 “" + name + "” 我看上啦，请尽快回复!";
+        String info = "您的宝贝 [~ " + name + " ~] 我看上啦，请尽快回复!";
         Intent intent = new Intent(this, MessageActivity.class);
         intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()) + "");
         intent.putExtra("username", uid + "");

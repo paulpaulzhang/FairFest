@@ -92,7 +92,7 @@ public class DialogDelegate extends FairDelegate
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         setHasOptionsMenu(true);
-        mToolbar.inflateMenu(R.menu.dialog_menu);
+        mToolbar.inflateMenu(R.menu.menu_dialog);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.clear_all) {
                AlertDialog dialog = new MaterialAlertDialogBuilder(Objects.requireNonNull(getContext()))

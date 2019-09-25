@@ -498,14 +498,33 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "70:7006297711356453330",
+      "lastPropertyId": "2:7313726601182938094",
+      "name": "Features",
+      "properties": [
+        {
+          "id": "1:5853982828594025870",
+          "name": "id"
+        },
+        {
+          "id": "2:7313726601182938094",
+          "name": "features"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "69:7845268203745473321",
+  "lastEntityId": "70:7006297711356453330",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
+  "newUidPool": [
+    220645297799652322
+  ],
   "retiredEntityUids": [
     8162000179881785706,
     7326260701169044381,

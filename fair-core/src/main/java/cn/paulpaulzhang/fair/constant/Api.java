@@ -138,4 +138,14 @@ public class Api {
     public static final String GET_SHARE_USERS = "matchstickmen/getSharePostUsersByPid.action";
 
     public static final String SHARE_POST = "matchstickmen/createSharePost.action";
+
+    public static final String RECOMMEND_USERS = "matchstickmen/RecommendUsers.action";
+
+    public static final String GET_TEAM_USERS = "matchstickmen/getTeamUsers.action";
+
+    public static final String CREATE_TEAM = "matchstickmen/createTeam.action";
+
+    public static final String GET_TEAM_LIST_BY_USER = "matchstickmen/getTeamMessageByUid.action";
+
+    public static final String CANCEL_TEAM = "matchstickmen/deleteTeamMessage.action";
 }

@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public class MarketDelegate extends AbstractDelegate {
     @Override
     public void initView(@Nullable Bundle savedInstanceState, View view) {
         setHasOptionsMenu(true);
-        mToolbar.inflateMenu(R.menu.market_menu);
+        mToolbar.inflateMenu(R.menu.menu_market);
         mToolbar.setOnMenuItemClickListener(item -> {
             if (item.getItemId() == R.id.want_buy) {
                 startActivity(new Intent(getContext(), ShoppingCartActivity.class));

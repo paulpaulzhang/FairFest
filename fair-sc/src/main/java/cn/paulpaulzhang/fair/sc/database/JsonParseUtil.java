@@ -327,20 +327,26 @@ public final class JsonParseUtil {
     }
 
     public static void parseRecommendUsers(String response) {
-        JSONObject object = JSON.parseObject(response).getJSONObject("result");
+        String result = JSON.parseObject(response).getString("result");
+        if (!TextUtils.equals(result, "ok")) {
+            return;
+        }
+
+        JSONArray array = JSON.parseObject(response).getJSONArray("list");
         Box<RecommendUserCache> userCacheBox = ObjectBox.get().boxFor(RecommendUserCache.class);
         userCacheBox.removeAll();
-        JSONArray array = object.getJSONArray("users");
         for (int i = 0; i < array.size(); i++) {
             JSONObject jsonObject = array.getJSONObject(i);
-            long id = jsonObject.getLongValue("id");
+            long id = jsonObject.getLongValue("uid");
             String username = jsonObject.getString("username");
             int followers = jsonObject.getIntValue("followers");
             int fans = jsonObject.getIntValue("fans");
             String avatar = jsonObject.getString("avatar");
             long time = jsonObject.getLongValue("time");
+            boolean isFollowed = jsonObject.getBooleanValue("followed");
+            int dynamicCount = jsonObject.getIntValue("dynamicCount");
 
-            RecommendUserCache user = new RecommendUserCache(id, username, followers, fans, avatar, time);
+            RecommendUserCache user = new RecommendUserCache(id, username, followers, fans, dynamicCount, avatar, time, isFollowed);
             userCacheBox.put(user);
         }
     }
