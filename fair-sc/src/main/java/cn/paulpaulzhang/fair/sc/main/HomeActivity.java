@@ -1,7 +1,6 @@
 package cn.paulpaulzhang.fair.sc.main;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -39,6 +38,7 @@ import cn.paulpaulzhang.fair.util.log.FairLogger;
 import cn.paulpaulzhang.fair.util.storage.FairPreference;
 import io.objectbox.Box;
 import pub.devrel.easypermissions.EasyPermissions;
+import pub.devrel.easypermissions.PermissionRequest;
 
 /**
  * 包名：cn.paulpaulzhang.fair.sc.main
@@ -129,12 +129,16 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     }
 
     private void requestPermissions() {
-        EasyPermissions.requestPermissions(this, "应用需要一些必要权限", 1000,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        EasyPermissions.requestPermissions(new PermissionRequest.Builder(this, 1000, Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION);
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+                .setRationale("应用需要一些必要权限")
+                .setNegativeButtonText(getString(R.string.refuse))
+                .setPositiveButtonText(getString(R.string.sure))
+                .setTheme(R.style.DialogTheme_Permission_Theme)
+                .build());
     }
 
     private void initBottomNavigation() {
