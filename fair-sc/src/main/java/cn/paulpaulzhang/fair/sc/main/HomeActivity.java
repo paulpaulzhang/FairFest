@@ -74,6 +74,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                 .statusBarDarkFont(true)
                 .init();
         setUserFeatures();
+        judgeUserInfo();
     }
 
     private void judgeUserInfo() {
@@ -95,14 +96,14 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                                     finish();
                                 })
                                 .setPositiveButton("完善资料", (dialogInterface, i) -> {
+                                    dialogInterface.dismiss();
                                     Intent intent = new Intent(this, EditActivity.class);
                                     intent.putExtra("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
-                                    startActivity(intent);
-                                    dialogInterface.dismiss();
-                                    FairLogger.d("dialog关闭");
+                                    startActivityForResult(intent, 502);
                                 })
                                 .setCancelable(false)
                                 .show();
+
                         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(getColor(android.R.color.holo_red_light));
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.colorAccent));
                     }
@@ -207,6 +208,13 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     @Override
     protected void onResume() {
         super.onResume();
-        judgeUserInfo();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 502 && resultCode == 501) {
+            judgeUserInfo();
+        }
     }
 }

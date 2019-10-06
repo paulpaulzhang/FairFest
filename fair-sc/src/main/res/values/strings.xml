@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">校园派</string>
 
     <string name="phone" translatable="false">手机号</string>
@@ -120,6 +120,8 @@
     <string name="manage_team_request" translatable="false">管理组队申请</string>
     <string name="team_info" translatable="false">队伍说明</string>
     <string name="team_manage" translatable="false">组队管理</string>
-    <string name="refuse">拒绝</string>
-    <string name="sure">同意</string>
+    <string name="refuse" tools:ignore="MissingTranslation">拒绝</string>
+    <string name="sure" translatable="false">同意</string>
+    <string name="slogan" translatable="false">发现兴趣·享受生活·爱上学习</string>
+    <string name="slogan2">玩转校园新生活</string>
 </resources>

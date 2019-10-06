@@ -2,6 +2,7 @@ package cn.paulpaulzhang.fair.sc.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -40,13 +41,13 @@ import es.dmoral.toasty.Toasty;
  * 描述：     启动页
  */
 public class LauncherActivity extends FairActivity implements ITimerListener {
-    @BindView(R2.id.tv_launcher_timer)
+    @BindView(R2.id.tv_jump)
     AppCompatTextView mTvTimer = null;
 
     private Timer mTimer = null;
-    private int mCount = 5;
+    private int mCount = 2;
 
-    @OnClick(R2.id.tv_launcher_timer)
+    @OnClick(R2.id.tv_jump)
     void onClickTimerView() {
         if (mTimer != null) {
             mTimer.cancel();
@@ -76,7 +77,6 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
                             if (i == 0) {
                                 startActivity(new Intent(LauncherActivity.this, HomeActivity.class));
                                 finish();
-                                FairLogger.d("JMessage", "登陆成功");
                             } else {
                                 Toasty.error(LauncherActivity.this, "登陆失败", Toasty.LENGTH_SHORT).show();
                                 startActivity(new Intent(LauncherActivity.this, SignInActivity.class));
@@ -101,7 +101,8 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
 
     @Override
     public void init(@Nullable Bundle savedInstanceState) {
-        ImmersionBar.with(this).init();
+        ImmersionBar.with(this).fitsSystemWindows(true).statusBarDarkFont(true).init();
+        mTvTimer.setVisibility(View.GONE);
         initTimer();
     }
 
@@ -109,7 +110,7 @@ public class LauncherActivity extends FairActivity implements ITimerListener {
     public void onTimer() {
         runOnUiThread(() -> {
             assert mTvTimer != null;
-            mTvTimer.setText(MessageFormat.format("跳过\n{0}s", mCount));
+            mTvTimer.setText(MessageFormat.format("{0} 跳过", mCount));
             mCount--;
             if (mCount < 0) {
                 assert mTimer != null;

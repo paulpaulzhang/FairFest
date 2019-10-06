@@ -33,11 +33,10 @@ public class LauncherScrollActivity extends FairActivity implements OnItemClickL
     private final ArrayList<Integer> images = new ArrayList<>();
 
     private void initBanner() {
-        images.add(R.mipmap.launcher_01);
-        images.add(R.mipmap.launcher_02);
-        images.add(R.mipmap.launcher_03);
-        images.add(R.mipmap.launcher_04);
-        images.add(R.mipmap.launcher_05);
+        images.add(R.mipmap.launcher1);
+        images.add(R.mipmap.launcher2);
+        images.add(R.mipmap.launcher3);
+        images.add(R.mipmap.launcher4);
 
         mConvenientBanner.setPages(new LauncherHolderCreator(), images)
                 .setPageIndicator(new int[]{R.drawable.dot_normal, R.drawable.dot_focus})
