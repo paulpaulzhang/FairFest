@@ -34,8 +34,6 @@ import cn.paulpaulzhang.fair.constant.Constant;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryLikeCache_;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache_;
-import cn.paulpaulzhang.fair.sc.database.Entity.Features;
-import cn.paulpaulzhang.fair.sc.database.Entity.Features_;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
 import cn.paulpaulzhang.fair.sc.database.Entity.DiscoveryPostCache;
 import cn.paulpaulzhang.fair.sc.database.Entity.RecommendUserCache;
@@ -168,7 +166,6 @@ public class DiscoveryDelegate extends AbstractDelegate {
                 }
 
             } else if (view.getId() == R.id.ll_share_dynamic || view.getId() == R.id.ll_share_article) {
-                FairLogger.d(adapter.getViewByPosition(position + adapter.getHeaderLayoutCount(), R.id.card_content));
                 PostShareUtil
                         .INSTANCE()
                         .share((AppCompatActivity) getActivity(), getContext(), adapter.getViewByPosition(position + adapter.getHeaderLayoutCount(), R.id.card_content), 400);

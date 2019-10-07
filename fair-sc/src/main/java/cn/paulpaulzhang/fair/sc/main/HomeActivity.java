@@ -29,7 +29,6 @@ import cn.paulpaulzhang.fair.delegates.FairDelegate;
 import cn.paulpaulzhang.fair.net.RestClient;
 import cn.paulpaulzhang.fair.sc.R;
 import cn.paulpaulzhang.fair.sc.R2;
-import cn.paulpaulzhang.fair.sc.database.Entity.Features;
 import cn.paulpaulzhang.fair.sc.database.Entity.User;
 import cn.paulpaulzhang.fair.sc.database.JsonParseUtil;
 import cn.paulpaulzhang.fair.sc.database.ObjectBox;
@@ -114,7 +113,8 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
     }
 
     private void setUserFeatures() {
-        Box<Features> featuresBox = ObjectBox.get().boxFor(Features.class);
+        Box<User> userBox = ObjectBox.get().boxFor(User.class);
+        User user = userBox.get(FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()));
         RestClient.builder()
                 .url(Api.GET_FEATURES)
                 .params("uid", FairPreference.getCustomAppProfileL(UserConfigs.CURRENT_USER_ID.name()))
@@ -122,8 +122,7 @@ public class HomeActivity extends FairActivity implements EasyPermissions.Permis
                     String result = JSON.parseObject(response).getString("result");
                     if (TextUtils.equals(result, "ok")) {
                         String feature = JSON.parseObject(response).getString("features");
-                        featuresBox.removeAll();
-                        featuresBox.put(new Features(feature));
+                        user.setFeatures(feature);
                     }
                 })
                 .build().get();

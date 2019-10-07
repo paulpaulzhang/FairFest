@@ -420,16 +420,14 @@ public final class JsonParseUtil {
             return new HashMap<>();
         }
 
-        Map<String, Object> map = JSON.parseObject(features).getInnerMap();
-
-        return map;
+        return JSON.parseObject(features).getInnerMap();
     }
 
     public static List<String> parseTopicName(String response) {
         String result = JSON.parseObject(response).getString("result");
         List<String> list = new ArrayList<>();
         if (TextUtils.equals(result, "ok")) {
-            JSONArray array = JSON.parseObject(response).getJSONArray("topic");
+            JSONArray array = JSON.parseObject(response).getJSONArray("topics");
             if (array == null) {
                 return list;
             }
